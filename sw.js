@@ -1,5 +1,5 @@
-const CACHE="prayer-v12";
-const ASSETS=["index.html","manifest.json","icon.svg","logo.png","السريحي.mp3","اقامة.mp3"];
+const CACHE="prayer-v13";
+const ASSETS=["index.html","manifest.json","icon.svg","icon-192.png","icon-512.png","logo.png","السريحي.mp3","اقامة.mp3"];
 self.addEventListener("install",e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));
 });

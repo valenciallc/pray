@@ -254,6 +254,24 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 .s-row input[type="url"],.s-row input[type="text"]{padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;color:var(--text);font-size:.9rem;background:#FFF}
 .s-row select{padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-family:inherit;background:#FFF;color:var(--text);font-size:.9rem}
 .s-row .hint{color:var(--muted);font-size:.75rem;width:100%}
+/* ===== تبويبات الإعدادات الداخلية + ورقة سفلية ===== */
+.sheet-handle{display:none}
+.stabbar{display:flex;gap:6px;margin:0 0 14px;padding:5px;background:rgba(160,120,70,.10);border-radius:14px;position:sticky;top:-2px;z-index:6;backdrop-filter:blur(6px)}
+.stab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;color:var(--muted);font-family:inherit;font-weight:800;font-size:.72rem;padding:9px 4px;border-radius:11px;cursor:pointer;transition:.18s;line-height:1.1}
+.stab .stab-ic{font-size:1.2rem;line-height:1}
+.stab.active{background:linear-gradient(135deg,#F7ECD6,#EFDFC2);color:var(--gold);box-shadow:0 2px 8px rgba(160,120,70,.20)}
+.stab:active{transform:scale(.95)}
+.stab-panel{display:none}
+.stab-panel.active{display:block;animation:stabFade .3s ease}
+@keyframes stabFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* منزلقات صوت لمسية كبيرة */
+input[type=range]{-webkit-appearance:none;appearance:none;height:10px;border-radius:10px;background:var(--line);flex:1;min-width:120px;cursor:pointer;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;border-radius:50%;background:var(--gold);border:3px solid #FFFDF8;box-shadow:0 2px 8px rgba(0,0,0,.28);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--gold);border:3px solid #FFFDF8;box-shadow:0 2px 8px rgba(0,0,0,.28);cursor:pointer}
+.vol-val{min-width:48px;text-align:center;font-weight:800;color:var(--gold);background:rgba(160,120,70,.12);border-radius:9px;padding:4px 6px;direction:ltr}
+[data-theme="dark"] .stabbar{background:rgba(255,255,255,.06)}
+[data-theme="dark"] .stab.active{background:linear-gradient(135deg,#3B2E20,#352A1D);box-shadow:none}
+[data-theme="dark"] .vol-val{background:rgba(255,255,255,.08)}
 .tbl-override{width:100%;border-collapse:collapse;margin-top:8px;font-size:.85rem}
 .tbl-override th,.tbl-override td{padding:6px;border-bottom:1px solid rgba(120,90,50,.12);text-align:center}
 .tbl-override th{color:var(--gold);font-size:.78rem}
@@ -457,8 +475,14 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 
   /* لوحة الإعدادات */
   .settings-overlay{align-items:flex-end;padding:0}
-  .settings-panel{max-width:100%;max-height:92vh;border-radius:22px 22px 0 0;padding:18px 14px 20px}
+  .settings-panel{max-width:100%;max-height:94vh;border-radius:24px 24px 0 0;padding:10px 14px calc(20px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain;touch-action:pan-y}
+  .sheet-handle{display:block;width:46px;height:5px;border-radius:5px;background:var(--line);margin:2px auto 10px}
   .settings-panel h2{font-size:1.05rem}
+  .stabbar{margin-bottom:12px;padding:5px;top:0}
+  .stab{font-size:.66rem;padding:8px 3px}
+  .stab .stab-ic{font-size:1.05rem}
+  .s-row input[type=range]{width:100%;min-height:36px}
+  .vol-val{min-width:54px;font-size:1rem;padding:6px}
   .s-group{padding:12px;border-radius:12px}
   .s-row{flex-direction:column;align-items:stretch;gap:6px}
   .s-row label{min-width:0;font-size:.9rem}
@@ -579,6 +603,10 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 .rm-dua{background:rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;font-family:"Amiri Quran","Amiri",serif;text-align:center;margin-top:12px;font-size:.98rem;line-height:1.9}
 /* ===== الوضع الداكن ===== */
 [data-theme="dark"]{
+  --bg1:#1B1510; --bg2:#120D0A; --card:#2B211A; --card2:#241C15;
+  --line:#3B2F24; --text:#F0E3CE; --muted:#B79E80;
+  --gold:#D8A069; --green:#C98E4B; --red:#C76A4D; --blue:#7FA3D6;
+}
 [data-theme="dark"] body{background-image:radial-gradient(1000px 500px at 80% -10%,rgba(216,160,105,.09),transparent),linear-gradient(160deg,var(--bg1),var(--bg2) 55%,#120D0A)}
 [data-theme="dark"] h1,.clockbox .now{color:var(--text)}
 [data-theme="dark"] .section,[data-theme="dark"] .greet,[data-theme="dark"] .alertbar,[data-theme="dark"] .toast,
@@ -947,8 +975,18 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 <!-- ========================= لوحة الإعدادات ========================= -->
 <div class="settings-overlay" id="settingsOverlay">
   <div class="settings-panel">
+    <div class="sheet-handle" id="sheetHandle"></div>
     <h2>⚙️ الإعدادات <button class="btn sm ghost" id="settingsClose">إغلاق ✕</button></h2>
 
+    <div class="stabbar" id="stabbar" role="tablist">
+      <button class="stab active" data-stab="calc" role="tab"><span class="stab-ic">📍</span><span class="stab-lb" data-i18n="stabCalc">الحساب</span></button>
+      <button class="stab" data-stab="notif" role="tab"><span class="stab-ic">🔔</span><span class="stab-lb" data-i18n="stabNotif">الإشعارات</span></button>
+      <button class="stab" data-stab="audio" role="tab"><span class="stab-ic">🔊</span><span class="stab-lb" data-i18n="stabAudio">الصوت</span></button>
+      <button class="stab" data-stab="look" role="tab"><span class="stab-ic">🎨</span><span class="stab-lb" data-i18n="stabLook">المظهر</span></button>
+    </div>
+    <div class="stab-body" id="stabBody">
+
+    <div class="stab-panel" data-stab-panel="look">
     <div class="s-group">
       <h3 data-i18n="themeGroup">🎨 المظهر <small data-i18n="themeGroupSub">ليلي مريح للعين</small></h3>
       <div class="s-actions" style="justify-content:flex-start">
@@ -959,6 +997,9 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
       <span class="hint" data-i18n="themeHint">النمط التلقائي يتبع مظهر هاتفك، ويتحوّل ليلياً من تلقاء نفسه</span>
     </div>
 
+    </div><!-- /look -->
+
+    <div class="stab-panel active" data-stab-panel="calc">
     <div class="s-group">
       <h3>📍 البلد والمدينة — حساب ذاتي يعمل بجميع الدول دون إنترنت</h3>
       <div class="s-row">
@@ -1013,22 +1054,102 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/prayer-app</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
+    </div><!-- /calc -->
+
+    <div class="stab-panel" data-stab-panel="notif">
     <div class="s-group">
-      <h3>🔔 إشعارات الهاتف <small>أذان كامل + تنبيه الإقامة — يعمل دون إنترنت</small></h3>
-      <label class="s-check"><input type="checkbox" id="notifMaster"> تفعيل الإشعارات في الهاتف</label>
-      <label class="s-check"><input type="checkbox" id="notifAdhan"> تشغيل صوت الأذان كاملاً على الهاتف</label>
-      <label class="s-check"><input type="checkbox" id="notifIqama"> إشعار الإقامة (اصطفّت الصلاة)</label>
-      <label class="s-check"><input type="checkbox" id="notifLead"> تنبيه قبل الإقامة بـ <b id="notifLeadMin">7</b> دقائق</label>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="notifPerm">🔔 طلب إذن الإشعارات</button>
-        <button class="btn sm ghost" id="notifTest">🧪 إشعار تجريبي</button>
-        <button class="btn sm ghost" id="notifSync">🔄 مزامنة الجدول الآن</button>
+      <h3>🔔 الإشعارات والأذان <small data-i18n="notifSub">بسيط — يعمل تلقائياً</small></h3>
+      
+      <div class="notif-master" id="notifMasterWrap">
+        <div class="nm-head">
+          <label class="nm-toggle">
+            <input type="checkbox" id="notifMaster">
+            <span class="nm-slider"></span>
+          </label>
+          <div class="nm-status" id="notifMasterStatus">
+            <span class="nm-dot"></span>
+            <span class="nm-text" data-i18n="notifOff">الإشعارات مطفأة</span>
+          </div>
+        </div>
+        
+        <div class="nm-details hidden" id="notifDetails">
+          <div class="nm-row">
+            <span data-i18n="notifAdhanLabel">🔊 الأذان الكامل</span>
+            <span class="nm-badge" id="badgeAdhan" data-i18n="notifAuto">تلقائي</span>
+          </div>
+          <div class="nm-row">
+            <span data-i18n="notifIqamaLabel">🕌 الإقامة</span>
+            <span class="nm-badge" id="badgeIqama" data-i18n="notifAuto">تلقائي</span>
+          </div>
+          <div class="nm-row">
+            <span data-i18n="notifLeadLabel">⏰ تنبيه مسبق</span>
+            <span class="nm-badge" id="badgeLead">7 د</span>
+          </div>
+          <div class="nm-row">
+            <span data-i18n="notifSoundLabel">🎵 صوت النظام</span>
+            <span class="nm-badge" id="badgeSound" data-i18n="notifSystem">Alarm / Notification</span>
+          </div>
+        </div>
       </div>
-      <button class="btn ghost" id="notifWizard" style="margin-top:6px">🛠️ دليل الإعداد الكامل (الإذونات كلها)</button>
-      <span class="hint" id="notifStatus">اضغط على «طلب إذن الإشعارات» ثم «مزامنة الجدول» ليتنبّه لك التطبيق حتى لو كان مغلقاً</span>
-      <span class="hint">⚠️ من إعدادات هاتفك: البطارية → التطبيقات → أوقات الصلاة والأذان → اختر «غير مقيّد» (أو «بدون قيود»)</span>
+
+      <div class="s-actions" style="justify-content:center;margin-top:10px">
+        <button class="btn" id="notifAction" style="min-width:220px">
+          <span id="notifActionText" data-i18n="notifEnable">🔔 تفعيل الإشعارات بالكامل</span>
+        </button>
+      </div>
+      
+      <div class="nm-status-grid" id="notifStatusGrid">
+        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifPerm">الإذن</span><span class="nm-stat-val" id="statPerm">—</span></div>
+        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifExact">دقة التنبيه</span><span class="nm-stat-val" id="statExact">—</span></div>
+        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifBattery">البطارية</span><span class="nm-stat-val" id="statBattery">—</span></div>
+        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifDnd">تجاوز DND</span><span class="nm-stat-val" id="statDnd">—</span></div>
+        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifScheduled">مجدولة</span><span class="nm-stat-val" id="statSched">—</span></div>
+      </div>
+
+      <span class="hint" id="notifHint" data-i18n="notifHint">اضغط الزر أعلاه — سيتولى التطبيق كل شيء: الأذونات، البطارية، التنبيهات الدقيقة، تجاوز «لا تُزعج»</span>
     </div>
 
+    </div><!-- /notif -->
+
+    <div class="stab-panel" data-stab-panel="audio">
+    <div class="s-group">
+      <h3>🔊 التحكم الصوتي و«لا تُزعج» <small>أصوات النظام + تجاوز الكتم</small></h3>
+      <div class="s-row">
+        <label>صوت الأذان (Alarm):</label>
+        <input type="range" id="volAlarm" min="0" max="100" value="80">
+        <span id="volAlarmVal" class="vol-val">80</span>
+      </div>
+      <div class="s-row">
+        <label>صوت التنبيهات (Notification):</label>
+        <input type="range" id="volNotif" min="0" max="100" value="70">
+        <span id="volNotifVal" class="vol-val">70</span>
+      </div>
+      <div class="s-row">
+        <label>صوت الوسائط (Media):</label>
+        <input type="range" id="volMedia" min="0" max="100" value="60">
+        <span id="volMediaVal" class="vol-val">60</span>
+      </div>
+      <div class="s-row">
+        <label>كتم صوت الأذان:</label>
+        <div class="toggle" id="muteAlarm"></div>
+        <span class="hint" id="muteStatus">مفعّل</span>
+      </div>
+      <div class="s-row">
+        <label>حالة «لا تُزعج»:</label>
+        <span id="dndStatus" style="flex:1;text-align:left;color:var(--muted)">جاري الفحص...</span>
+        <button class="btn sm ghost" id="dndPermBtn">🛡️ طلب تجاوز</button>
+        <button class="btn sm ghost" id="dndOpenBtn">⚙️ إعدادات</button>
+      </div>
+      <div class="s-actions" style="justify-content:flex-start">
+        <button class="btn sm" id="audioRefresh">🔄 تحديث الحالة</button>
+        <button class="btn sm ghost" id="audioApplyAll">✔ تطبيق الكل</button>
+      </div>
+      <span class="hint">يستخدم التطبيق قناة «Alarm» للأذان و«Notification» للإقامة — اضبط كلاً على حدة</span>
+    </div>
+
+    </div><!-- /audio -->
+
+    <div class="stab-panel" data-stab-panel="calc">
     <div class="s-group">
       <h3>📅 تعديل أوقات الصلاة بشكل دائم <small>عدّل يدوياً أو ارجع للحساب الذاتي</small></h3>
       <div class="pray-times-row" id="manualTimes">
@@ -1053,15 +1174,17 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
       </div>
     </div>
 
+    </div><!-- /calc -->
+
+    <div class="stab-panel" data-stab-panel="notif">
     <div class="s-group">
-      <h3>🔔 التذكير بذكر الله</h3>
+      <h3>🔔 التذكير بذكر الله <small>بسيط — يذكرك بأذكار كل فترة</small></h3>
       <div class="s-row">
-        <label>تفعيل التذكير الدوري:</label>
+        <label>تفعيل التذكير:</label>
         <div class="toggle on" id="toggleSRemind"></div>
-        <span class="hint">يظهر تذكير بذكر الله كل فترة مع صوت</span>
       </div>
       <div class="s-row">
-        <label>الفاصل الزمني (دقيقة):</label>
+        <label>الفاصل (دقيقة):</label>
         <select id="remindInterval">
           <option value="5">5 دقائق</option>
           <option value="10" selected>10 دقائق</option>
@@ -1070,24 +1193,12 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
           <option value="60">ساعة</option>
         </select>
       </div>
-      <div class="s-row">
-        <label>نغمة التذكير:</label>
-        <select id="remSoundSel">
-          <option value="bell">جرس (افتراضي)</option>
-          <option value="gen">نغمة مركبة</option>
-          <option value="file">ملف صوتي مخصص</option>
-        </select>
-      </div>
-      <div class="sound-file" id="remFileBox" style="display:none">
-        <label>🎵 اختيار نغمة التذكير <input type="file" id="remFileInput" accept="audio/*"></label>
-        <span class="fname" id="remFileName"></span>
-      </div>
-      <div class="s-row">
-        <label>الرسائل المعروضة (مفصولة بـ |):</label>
-        <textarea id="remMessages" rows="3" style="flex:1;min-width:250px;padding:8px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:.85rem;background:#FFF"></textarea>
-      </div>
+      <span class="hint">يظهر تذكير صوتي بسيط: «أذكر الله» مع نغمة خفيفة — يعمل حتى مع قفل الشاشة</span>
     </div>
 
+    </div><!-- /notif -->
+
+    <div class="stab-panel" data-stab-panel="audio">
     <div class="s-group">
       <h3>🕌 نغمة الأذان والإقامة</h3>
       <div class="s-row">
@@ -1123,6 +1234,9 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
       </div>
     </div>
 
+    </div><!-- /audio -->
+
+    <div class="stab-panel" data-stab-panel="calc">
     <div class="s-group">
       <h3>⟳ إدارة البيانات</h3>
       <div class="s-actions" style="justify-content:flex-start">
@@ -1130,7 +1244,9 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
         <button class="btn sm ghost" id="clearAllData">🗑️ مسح جميع البيانات المخزنة</button>
       </div>
     </div>
+    </div><!-- /calc -->
 
+    </div><!-- /stab-body -->
   </div>
 </div>
 
@@ -1143,34 +1259,7 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 
 /* ======================== إعدادات التذكير بذكر الله ======================== */
 let REMINDER_INTERVAL_MS = 10 * 60 * 1000;
-let REMINDER_MESSAGES = [
-  "سبحان الله وبحمده",
-  "سبحان الله العظيم",
-  "لا إله إلا الله وحده لا شريك له",
-  "الله أكبر كبيراً",
-  "الحمد لله رب العالمين",
-  "أستغفر الله وأتوب إليه",
-  "لا حول ولا قوة إلا بالله",
-  "سبحان الله عدد خلقه",
-  "الحمد لله ملء السماوات والأرض",
-  "الله أكبر كبيراً والحمد لله كثيراً",
-  "لا إله إلا أنت سبحانك إني كنت من الظالمين",
-  "اللهم صل وسلم على نبينا محمد",
-  "رضيت بالله رباً وبالإسلام ديناً وبمحمد نبياً",
-  "اللهم إني أسألك الهدى والتقى والعفاف والغنى",
-  "يا حي يا قيوم برحمتك أستغيث",
-  "ألف الصلاة على سيدنا محمد ﷺ",
-  "اللهم أعني على ذكرك وشكرك وحسن عبادتك",
-  "اللهم انفعنا بما علمتنا وعلمنا ما ينفعنا",
-  "حسبنا الله ونعم الوكيل",
-  "اللهم ثبت قلبي على دينك",
-  "اللهم اجعل خير أعمالنا خواتيمها",
-  "اللهم إنا نسألك الجنة وما قرب إليها من قول أو عمل",
-  "سبحان الله وبحمده عدد خلقه ورضا نفسه وزنة عرشه ومداد كلماته",
-  "لا إله إلا الله وحده لا شريك له له الملك وله الحمد وهو على كل شيء قدير",
-  "اللهم اغفر لي ذنبي كله دقه وجله وأوله وآخره وعلانيته وسره",
-  "اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد"
-];
+const REMINDER_MSG = "🔔 أذكر الله";
 let reminderAudio = null;
 
 /* ======================== باقي المتغيرات الأساسية ======================== */
@@ -1471,7 +1560,12 @@ function loadLoc(){
   }catch(e){}
 }
 function saveLoc(){
-  try{localStorage.setItem(LOC_KEY,JSON.stringify(LOC));localStorage.setItem(LOC_HASH_KEY,calcHash())}catch(e){}
+  try{
+    localStorage.setItem(LOC_KEY,JSON.stringify(Object.assign({},LOC,{
+      method:CALC.method,fajr:CALC.fajr,isha:CALC.isha,ishaMin:CALC.ishaMin,asrF:CALC.asrF
+    })));
+    localStorage.setItem(LOC_HASH_KEY,calcHash());
+  }catch(e){}
 }
 
 /* ====================== الحساب الذاتي للأوقات (خوارزمية فلكية) ====================== */
@@ -1585,7 +1679,8 @@ ar:{
   tabNow:"الآن",tabPray:"الصلاة",tabWird:"الورد",tabDhikr:"الذكر",tabSettings:"الإعدادات",tabRem:"التذكير",
   todayProgress:"🎯 إنجاز صلوات اليوم",ramadanBanner:"رمضان مبارك — سحور وإفطار هذا اليوم",
   suhoorLabel:"🥟 السحور (الإمساك):",iftarLabel:"🍽️ الإفطار (المغرب):",
-  qiblaTitle:"🕋 اتجاه القبلة",themeGroup:"🎨 المظهر",themeGroupSub:"ليلي مريح للعين",
+  qiblaTitle:"🕋 اتجاه القبلة",stabCalc:"الحساب",stabNotif:"الإشعارات",stabAudio:"الصوت",stabLook:"المظهر",
+  themeGroup:"🎨 المظهر",themeGroupSub:"ليلي مريح للعين",
   themeLight:"فاتح",themeDark:"داكن",themeAuto:"تلقائي",themeHint:"النمط التلقائي يتبع مظهر هاتفك، ويتحوّل ليلياً من تلقاء نفسه",
   markDone:"ليميز الصلاة بعد أدائها",
   tabTable:"الجدول",tabQibla:"القبلة",tabRamadan:"رمضان",
@@ -1596,6 +1691,14 @@ ar:{
   ramRamadan:"رمضان كريم",rmCountTitle:"متبقٍ على رمضان",rmToday:"اليوم: {0} رمضان {1}",rmTableTitle:"🗓️ جدول سحور وإفطار الأيام القادمة",
   rmDateCol:"اليوم",rmHijriCol:"هجري",rmSuhoor:"سحور",rmIftar:"إفطار",rmNow:"اليوم",
   km:"كم",daysRemaining:"يوم",
+  dndActive:"مفعّل",dndInactive:"غير مفعّل",
+  muteOn:"مكتم",muteOff:"صوت",
+  volAlarm:"صوت الأذان (Alarm)",volNotif:"صوت التنبيهات (Notification)",volMedia:"صوت الوسائط (Media)",
+  muteLabel:"كتم صوت الأذان",muteStatusOn:"مكتم",muteStatusOff:"صوت",
+  dndStatusLabel:"حالة \"لا تُزعج\"",dndChecking:"جاري الفحص...",dndActiveLabel:"مفعّل (قد يحجب الإشعارات)",dndInactiveLabel:"غير مفعّل",
+  dndPermBtn:"🛡️ طلب تجاوز",dndOpenBtn:"⚙️ إعدادات",
+  audioRefresh:"🔄 تحديث الحالة",audioApplyAll:"✔ تطبيق الكل",
+  audioHint:"يستخدم التطبيق قناة \"Alarm\" للأذان و\"Notification\" للإقامة — اضبط كلاً على حدة",
 },
 en:{
   title:"Prayer & Iqama Times Display",header:"Prayer & Iqama Times Display",
@@ -1624,7 +1727,8 @@ en:{
   tabNow:"Now",tabPray:"Prayer",tabWird:"Wird",tabDhikr:"Dhikr",tabSettings:"Settings",tabRem:"Alert",
   todayProgress:"🎯 Today's prayer progress",ramadanBanner:"Ramadan Mubarak — suhoor & iftar for today",
   suhoorLabel:"🥟 Suhoor (stop eating):",iftarLabel:"🍽️ Iftar (Maghrib):",
-  qiblaTitle:"🕋 Qibla direction",themeGroup:"🎨 Appearance",themeGroupSub:"easy-on-the-eye night mode",
+  qiblaTitle:"🕋 Qibla direction",stabCalc:"Calculation",stabNotif:"Notifications",stabAudio:"Sound",stabLook:"Appearance",
+  themeGroup:"🎨 Appearance",themeGroupSub:"easy-on-the-eye night mode",
   themeLight:"Light",themeDark:"Dark",themeAuto:"Auto",themeHint:"Auto follows your phone's appearance and turns dark on its own",
   markDone:"Tap to mark the prayer as done",
   tabTable:"Schedule",tabQibla:"Qibla",tabRamadan:"Ramadan",
@@ -1635,6 +1739,14 @@ en:{
   ramRamadan:"Ramadan Kareem",rmCountTitle:"Time to Ramadan",rmToday:"Today: {0} Ramadan {1}",rmTableTitle:"🗓️ Suhoor & Iftar for the coming days",
   rmDateCol:"Day",rmHijriCol:"Hijri",rmSuhoor:"Suhoor",rmIftar:"Iftar",rmNow:"Today",
   km:"km",daysRemaining:"days",
+  dndActive:"Active",dndInactive:"Inactive",
+  muteOn:"Muted",muteOff:"Sound",
+  volAlarm:"Adhan Volume (Alarm)",volNotif:"Alert Volume (Notification)",volMedia:"Media Volume",
+  muteLabel:"Mute Adhan",muteStatusOn:"Muted",muteStatusOff:"Sound",
+  dndStatusLabel:"Do Not Disturb",dndChecking:"Checking...",dndActiveLabel:"Active (may block alerts)",dndInactiveLabel:"Inactive",
+  dndPermBtn:"🛡️ Request Override",dndOpenBtn:"⚙️ Settings",
+  audioRefresh:"🔄 Refresh",audioApplyAll:"✔ Apply All",
+  audioHint:"App uses \"Alarm\" channel for Adhan and \"Notification\" for Iqama — adjust each separately",
 },
 ur:{
   title:"نماز اور اقامت کے اوقات",header:"نماز اور اقامت کے اوقات",
@@ -1663,7 +1775,8 @@ ur:{
   tabNow:"ابھی",tabPray:"نماز",tabWird:"ورد",tabDhikr:"ذکر",tabSettings:"ترتیبات",tabRem:"یاد دہانی",
   todayProgress:"🎯 آج کی نمازوں کی تکمیل",ramadanBanner:"رمضان مبارک — آج کے لیے سحری و افطار",
   suhoorLabel:"🥟 سحری (پرہیز کا وقت):",iftarLabel:"🍽️ افطار (مغرب):",
-  qiblaTitle:"🕋 سمت قبلہ",themeGroup:"🎨 شکل و صورت",themeGroupSub:"آنکھوں کو راحت دینے والا رات کا موڈ",
+  qiblaTitle:"🕋 سمت قبلہ",stabCalc:"حساب",stabNotif:"اطلاعات",stabAudio:"آواز",stabLook:"ظاہری شکل",
+  themeGroup:"🎨 شکل و صورت",themeGroupSub:"آنکھوں کو راحت دینے والا رات کا موڈ",
   themeLight:"روشن",themeDark:"اندھیرا",themeAuto:"خودکار",themeHint:"خودکار موڈ آپ کے فون کی شکل کی پیروی کرتا ہے",
   markDone:"نماز ادا کرنے کے بعد نشان لگائیں",
   tabTable:"جدول",tabQibla:"قبلہ",tabRamadan:"رمضان",
@@ -1674,6 +1787,14 @@ ur:{
   ramRamadan:"رمضان مبارک",rmCountTitle:"رمضان میں باقی",rmToday:"آج: {0} رمضان {1}",rmTableTitle:"🗓️ آئندہ دنوں کی سحری و افطار",
   rmDateCol:"دن",rmHijriCol:"ہجری",rmSuhoor:"سحری",rmIftar:"افطار",rmNow:"آج",
   km:"کلومیٹر",daysRemaining:"دن",
+  dndActive:"مفعل",dndInactive:"غیر مفعل",
+  muteOn:"خاموش",muteOff:"آواز",
+  volAlarm:"اذان کا حجم (Alarm)",volNotif:"تنبیہ کا حجم (Notification)",volMedia:"میڈیا کا حجم",
+  muteLabel:"اذان خاموش کریں",muteStatusOn:"خاموش",muteStatusOff:"آواز",
+  dndStatusLabel:"\"परِشاں نہ کریں\"",dndChecking:"جاںچ ہو رہی ہے...",dndActiveLabel:"مفعل (انتباہ روک سکتی ہے)",dndInactiveLabel:"غیر مفعل",
+  dndPermBtn:"🛡️ تجاوز کی درخواست",dndOpenBtn:"⚙️ ترتیبات",
+  audioRefresh:"🔄 تازہ کاری",audioApplyAll:"✔ سب لاگو کریں",
+  audioHint:"ایپ \"Alarm\" چینل استعمال کرتا ہے اذان کے لیے اور \"Notification\" اقامت کے لیے — الگ الگ ایڈجسٹ کریں",
 }
 };
 const PRAYER_NAMES={
@@ -1907,22 +2028,8 @@ function playSound(type,vol){
 }
 
 /* ======================== دالة تشغيل صوت التذكير ======================== */
-const REM_SOUND_KEY="prayerApp_v3_remSound";
-function getRemSoundType(){
-  try{return localStorage.getItem(REM_SOUND_KEY)||"bell"}catch(e){return "bell"}
-}
 function playReminderSound(vol) {
-  const type=getRemSoundType();
-  if(type==="file"&&reminderAudio){
-    try{
-      reminderAudio.volume = Math.max(0, Math.min(1, vol || 0.6));
-      reminderAudio.currentTime = 0;
-      const p = reminderAudio.play();
-      if (p && p.catch) p.catch(() => playBell(vol || 0.6));
-      return;
-    } catch(e) { playBell(vol || 0.6); }
-  } else if(type==="gen"){ playGen1(vol||0.6); }
-  else { playBell(vol || 0.6); }
+  playBell(vol || 0.6);
 }
 
 /* ======================== دوال التذكير ======================== */
@@ -1936,8 +2043,7 @@ function showReminderToast(msg) {
 }
 function fireReminder() {
   if (!reminderActive) return;
-  const msg = REMINDER_MESSAGES[Math.floor(Math.random() * REMINDER_MESSAGES.length)];
-  showReminderToast(msg);
+  showReminderToast(REMINDER_MSG);
   playReminderSound(VOL);
 }
 function restartReminderTimer(){
@@ -3081,18 +3187,71 @@ function requestNotifPerm(){
   window.AndroidUpdater.requestNotifyPermission();
   toast("🔔 أُرسل طلب الإذن — وافق عليه من النافذة");
 }
-function testNotif(){
-  if(!window.AndroidUpdater){toast("✖ متاح داخل نسخة Android فقط","err");return}
-  window.AndroidUpdater.postTestNotification();
-  toast("🧪 يتم إرسال إشعار تجريبي...");
-}
 function _bindNotif(){
   ["notifMaster","notifAdhan","notifIqama","notifLead"].forEach(function(id){const el=$(id);if(el)el.addEventListener("change",function(){pushSchedule()})});
-  const s=$("notifSync"),p=$("notifPerm"),t=$("notifTest");
+  const s=$("notifSync"),p=$("notifPerm");
   if(s)s.addEventListener("click",syncNotif);
   if(p)p.addEventListener("click",requestNotifPerm);
-  if(t)t.addEventListener("click",testNotif);
   const w=$("notifWizard");if(w)w.addEventListener("click",openSetup);
+}
+
+/* ============================= التحكم الصوتي و DND ============================= */
+let AUDIO_SAVED={alarm:80,notif:70,media:60,mute:false};
+function loadAudioPrefs(){
+  try{const s=localStorage.getItem("prayerApp_v3_audio");if(s)AUDIO_SAVED=JSON.parse(s)}catch(e){}
+}
+function saveAudioPrefs(){
+  try{localStorage.setItem("prayerApp_v3_audio",JSON.stringify(AUDIO_SAVED))}catch(e){}
+}
+function applyAudioUI(s){
+  if(!s)s={};
+  const av=$("volAlarm"),nv=$("volNotif"),mv=$("volMedia"),mt=$("muteAlarm"),ms=$("muteStatus"),ds=$("dndStatus");
+  if(av){av.value=s.alarmVolume!=null?s.alarmVolume:AUDIO_SAVED.alarm;$("volAlarmVal").textContent=av.value}
+  if(nv){nv.value=s.notificationVolume!=null?s.notificationVolume:AUDIO_SAVED.notif;$("volNotifVal").textContent=nv.value}
+  if(mv){mv.value=s.mediaVolume!=null?s.mediaVolume:AUDIO_SAVED.media;$("volMediaVal").textContent=mv.value}
+  if(mt){mt.classList.toggle("on",s.alarmMuted===true);ms.textContent=s.alarmMuted?T("muteStatusOn"):T("muteStatusOff")}
+  if(ds){
+    if(!window.AndroidUpdater)ds.textContent="متاح في نسخة الأندرويد";
+    else if(s.dndActive===true)ds.textContent=T("dndActiveLabel");
+    else ds.textContent=T("dndInactiveLabel");
+  }
+}
+async function refreshAudioStatus(){
+  const br=window.AndroidUpdater;if(!br){applyAudioUI(null);return}
+  try{
+    const txt=await br.getAudioStatus();
+    const s=JSON.parse(txt||"{}");
+    applyAudioUI(s);
+    AUDIO_SAVED={alarm:s.alarmVolume||80,notif:s.notificationVolume||70,media:s.mediaVolume||60,mute:s.alarmMuted||false};
+    saveAudioPrefs();
+    toast("✔ تم تحديث حالة الصوت");
+  }catch(e){toast("✖ تعذّر قراءة حالة الصوت","err")}
+}
+function applyAudioSettings(){
+  const br=window.AndroidUpdater;if(!br){toast("✖ ميزة الصوت متاحة في نسخة Android فقط","err");return}
+  AUDIO_SAVED.alarm=parseInt($("volAlarm").value)||80;
+  AUDIO_SAVED.notif=parseInt($("volNotif").value)||70;
+  AUDIO_SAVED.media=parseInt($("volMedia").value)||60;
+  AUDIO_SAVED.mute=$("muteAlarm").classList.contains("on");
+  br.setStreamVolume("alarm",AUDIO_SAVED.alarm);
+  br.setStreamVolume("notification",AUDIO_SAVED.notif);
+  br.setStreamVolume("media",AUDIO_SAVED.media);
+  br.setMute(AUDIO_SAVED.mute);
+  saveAudioPrefs();
+  toast("✔ تم تطبيق إعدادات الصوت");
+}
+function _bindAudio(){
+  loadAudioPrefs();
+  const br=window.AndroidUpdater;
+  ["volAlarm","volNotif","volMedia"].forEach(id=>{
+    const el=$(id);if(el){el.addEventListener("input",function(){const v=$(id+"Val");if(v)v.textContent=this.value})}
+  });
+  const mt=$("muteAlarm");if(mt){mt.addEventListener("click",function(){this.classList.toggle("on");const ms=$("muteStatus");if(ms)ms.textContent=this.classList.contains("on")?T("muteStatusOn"):T("muteStatusOff")})}
+  const rf=$("audioRefresh");if(rf)rf.addEventListener("click",refreshAudioStatus);
+  const aa=$("audioApplyAll");if(aa)aa.addEventListener("click",applyAudioSettings);
+  const dp=$("dndPermBtn");if(dp)dp.addEventListener("click",function(){if(br)br.requestDndPermission()});
+  const doBtn=$("dndOpenBtn");if(doBtn)doBtn.addEventListener("click",function(){if(br)br.openDndSettings()});
+  refreshAudioStatus();
 }
 /* ====== معالج تفعيل الصلاحيات خطوة بخطوة ====== */
 const SETUP_STEPS=[
@@ -3157,12 +3316,46 @@ function _bindSetup(){
   if(pv)pv.addEventListener("click",function(){navSetup(-1)});
   if(cl)cl.addEventListener("click",closeSetup);
 }
+function switchStab(name){
+  document.querySelectorAll(".stab").forEach(b=>b.classList.toggle("active",b.getAttribute("data-stab")===name));
+  document.querySelectorAll(".stab-panel").forEach(p=>p.classList.toggle("active",p.getAttribute("data-stab-panel")===name));
+  try{localStorage.setItem("prayerApp_v3_stab",name)}catch(e){}
+  const panel=document.querySelector(".settings-panel");
+  if(panel)panel.scrollTop=0;
+}
+function _bindStabs(){
+  document.querySelectorAll(".stab").forEach(b=>{
+    b.addEventListener("click",function(){switchStab(this.getAttribute("data-stab"))});
+  });
+  const panel=document.querySelector(".settings-panel");
+  if(!panel)return;
+  let sy=0,dy=0,dragging=false;
+  panel.addEventListener("touchstart",function(e){
+    if(panel.scrollTop>0)return;
+    if(e.target&&e.target.closest&&e.target.closest("input,button,select,textarea,a,label,.toggle"))return;
+    sy=e.touches[0].clientY;dy=0;dragging=true;
+  },{passive:true});
+  panel.addEventListener("touchmove",function(e){
+    if(!dragging)return;
+    dy=e.touches[0].clientY-sy;
+    if(dy>0){panel.style.transition="none";panel.style.transform="translateY("+dy+"px)"}
+  },{passive:true});
+  panel.addEventListener("touchend",function(){
+    if(!dragging)return;dragging=false;
+    panel.style.transition="";panel.style.transform="";
+    if(dy>110)closeSettings();
+  });
+}
 function openSettings(){
   $("settingsOverlay").classList.add("open");
   loadSettings();
   fillLocCountry();
+  let st="calc";try{st=localStorage.getItem("prayerApp_v3_stab")||"calc"}catch(e){}
+  switchStab(st);
 }
 function closeSettings(){
+  const panel=document.querySelector(".settings-panel");
+  if(panel){panel.style.transform="";panel.style.transition=""}
   $("settingsOverlay").classList.remove("open");
 }
 function loadSettings(){
@@ -3179,10 +3372,6 @@ function loadSettings(){
   $("volControl").value=Math.round(VOL*100);
   $("leadMin").value=cfg.iqamaLead;
   $("remindInterval").value=(REMINDER_INTERVAL_MS/60000).toString();
-  $("remMessages").value=REMINDER_MESSAGES.join(" | ");
-  const rs=getRemSoundType();
-  $("remSoundSel").value=rs;
-  $("remFileBox").style.display=rs==="file"?"block":"none";
   $("adhanSoundSel").value=cfg.soundType;
   $("adhanFileBox").style.display=cfg.soundType==="file"?"block":"none";
   $("iqamaSoundSel").value=cfg.iqamaSound||"file";
@@ -3190,6 +3379,7 @@ function loadSettings(){
   const t=$("toggleSRemind");
   t.classList.toggle("on",reminderActive);
   $("toggleSRemind").dataset.active=reminderActive?"1":"0";
+  refreshAudioStatus();
 }
 function canUseLocalFile(url){return /^data:|^blob:/.test(url)}
 function setCustomAudio(which,dataUrl,name){
@@ -3358,16 +3548,6 @@ $("remindInterval").addEventListener("change",e=>{
   localStorage.setItem("prayerApp_v3_remInterval",String(REMINDER_INTERVAL_MS));
   restartReminderTimer();
 });
-$("remMessages").addEventListener("change",e=>{
-  const parts=e.target.value.split("|").map(s=>s.trim()).filter(Boolean);
-  if(parts.length){REMINDER_MESSAGES=parts;localStorage.setItem("prayerApp_v3_remMsgs",e.target.value)}
-});
-$("remSoundSel").addEventListener("change",e=>{
-  const v=e.target.value;
-  localStorage.setItem(REM_SOUND_KEY,v);
-  $("remFileBox").style.display=v==="file"?"block":"none";
-  if(v!=="file"&&customAudio){stopAllSound()}
-});
 $("adhanSoundSel").addEventListener("change",e=>{
   cfg.soundType=e.target.value;
   $("adhanFileBox").style.display=cfg.soundType==="file"?"block":"none";
@@ -3376,13 +3556,7 @@ $("iqamaSoundSel").addEventListener("change",e=>{
   cfg.iqamaSound=e.target.value;
 });
 
-/* رفع الملفات الصوتية */
-$("remFileInput").addEventListener("change",e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>setCustomAudio("rem",r.result,f.name);
-  r.readAsDataURL(f);
-});
+/* رفع ملف الأذان */
 $("adhanFileInput").addEventListener("change",e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
@@ -3410,22 +3584,20 @@ try{
   }
   const iv=localStorage.getItem("prayerApp_v3_remInterval");
   if(iv)REMINDER_INTERVAL_MS=parseInt(iv);
-  const mv=localStorage.getItem("prayerApp_v3_remMsgs");
-  if(mv){const p=mv.split("|").map(s=>s.trim()).filter(Boolean);if(p.length)REMINDER_MESSAGES=p}
   const vv=localStorage.getItem("prayerApp_v3_vol");
   if(vv)VOL=parseFloat(vv);
   const iq=localStorage.getItem("prayerApp_v3_iqama");
   if(iq)IQAMA_OFFSET=JSON.parse(iq);
   const cs=localStorage.getItem("prayerApp_v3_customSound");
   if(cs){try{customAudio.src=cs;customAudio.preload="auto";customAudio.load();cfg.soundType="custom"}catch(e){}}
-  const cr=localStorage.getItem("prayerApp_v3_customRem");
-  if(cr){try{reminderAudio=new Audio(cr);reminderAudio.preload="auto"}catch(e){}}
 }catch(e){}
 applyLang();
 updateLocText();
 fillUpdateUI();
 _bindNotif();
 _bindSetup();
+_bindAudio();
+_bindStabs();
 fillNotifUI();
 const _n=new Date();
 viewYM={y:_n.getFullYear(),m:_n.getMonth()};
