@@ -1,1 +1,7 @@
-{ "version": 12, "index": "index.html" }
+{
+  "version": 13,
+  "index": "index.html",
+  "sha256": "8d90bd0b170173188bafdbda83d51c37be706902592ec3398de799dcda34e0e3",
+  "size": 338723,
+  "releasedAt": "2026-10-27T04:36:53.127Z"
+}
