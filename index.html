@@ -1296,14 +1296,14 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <h3>🔄 تحديث التطبيق من الداخل <small>يُفحص تلقائياً عند فتح التطبيق — دون إعادة تثبيت</small></h3>
       <div class="s-row">
         <label>رابط صفحة التحديثات:</label>
-        <input type="url" id="updateUrl" placeholder="https://username.github.io/prayer-app" style="flex:1;min-width:150px;direction:ltr">
+        <input type="url" id="updateUrl" placeholder="https://username.github.io/repo" style="flex:1;min-width:150px;direction:ltr">
       </div>
       <div class="s-actions" style="justify-content:flex-start">
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
       <span class="hint" id="updateStatus">الإصدار 13 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
-      <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/prayer-app</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
+      <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
     </div><!-- /calc -->
@@ -3778,7 +3778,14 @@ function updateLocText(){
   if(f)f.textContent="أوقات محسوبة ذاتياً داخل التطبيق لمدينة: "+LOC.city+" · "+LOC.country+" · حساب فلكي دقيق يعمل دون إنترنت";
 }
 /* ====== التحديث الذاتي من داخل التطبيق (نسخة Android) ====== */
-const DEFAULT_UPDATE_URL="https://valenciallc.github.io/prayer-app";
+const PUBLISHED_UPDATE_URL="https://valenciallc.github.io/pray";
+const DEFAULT_UPDATE_URL=(function(){
+  try{
+    const u=new URL("./",location.href);
+    if(u.protocol==="https:"&&!/^(localhost|127\.|0\.0\.0\.0)$/i.test(u.hostname))return u.href.replace(/\/$/,"");
+  }catch(e){}
+  return PUBLISHED_UPDATE_URL;
+})();
 function fillUpdateUI(){
   const st=$("updateStatus");
   const br=window.AndroidUpdater;
