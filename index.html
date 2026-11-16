@@ -8,6 +8,11 @@
 <title>شاشة أوقات الصلاة والإقامة</title>
 <meta name="description" content="شاشة عرض لأوقات الصلاة والإقامة لسنوات كاملة مع الأذكار والأحاديث والورد القرآني والدعاء — الشارقة">
 <meta name="theme-color" content="#EFE3CF">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="أوقات الصلاة">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -23,6 +28,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{font-size:calc(16px * var(--fs))}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+.skip-link{position:absolute;top:-60px;right:12px;z-index:500;background:var(--gold);color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.18);transition:top .2s ease}
+.skip-link:focus{top:12px}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 body{
@@ -36,6 +43,10 @@ body{
 }
 h1,h2,h3,.section h2,.cd-title,.nb-title,.qb-title,.dh-title{text-wrap:balance}
 .wrap{max-width:1200px;margin:0 auto}
+.net-status{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.55);color:var(--muted)}
+.net-status.online{color:#1E7A34;background:rgba(76,175,80,.12);border-color:rgba(76,175,80,.25)}
+.net-status.offline{color:#9A6A00;background:rgba(216,160,105,.18);border-color:rgba(216,160,105,.35)}
+#installAppBtn{border-style:dashed}
 header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
 h1{font-size:1.35rem;display:flex;align-items:center;gap:10px}
 .clockbox{text-align:left;font-size:0.95rem}
@@ -776,6 +787,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 </style>
 </head>
 <body>
+<a href="#mainContent" class="skip-link">تخطي إلى المحتوى</a>
 <noscript><div style="direction:rtl;font-family:Tahoma,Arial,sans-serif;background:#F7F0E4;color:#5C3A1E;padding:28px;text-align:center;line-height:1.9">🕌 يحتاج هذا التطبيق إلى JavaScript لعرض أوقات الصلاة وحسابها محلياً.<br>فعّل JavaScript في المتصفح ثم أعد تحميل الصفحة.</div></noscript>
 <div class="ios-hint hidden" id="iosHint" data-i18n="iosHint">📱 اضغط في أي مكان على الشاشة مرة واحدة لتفعيل صوت الأذان</div>
 <div class="wrap">
@@ -796,6 +808,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   <header>
     <h1><img src="logo.png" alt="" class="brand-logo"> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
+      <button class="btn sm ghost hidden" id="installAppBtn" type="button">⬇️ تثبيت التطبيق</button>
       <button class="reminder-btn" id="reminderBtn">🔔 تفعيل التذكير</button>
       <button class="settings-btn" id="settingsBtn">⚙️ الإعدادات</button>
       <button class="lang-btn" id="langBtn" title="Change language">English</button>
@@ -804,10 +817,11 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <div class="now" id="clockNow">--:--:--</div>
       <div class="date" id="dateNow">---</div>
       <div class="hijri" id="hijriNow">…</div>
+      <div class="net-status online" id="netStatus" aria-live="polite">متصل</div>
     </div>
   </header>
 
-  <div class="tabs-view">
+  <main id="mainContent" class="tabs-view">
 
     <!-- ===== تبويب: الآن ===== -->
     <div class="tab-panel active" data-tab="now">
@@ -1107,7 +1121,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       </section>
     </div>
 
-  </div>
+  </main>
 
   <div class="foot" id="footText">أوقات محسوبة ذاتياً داخل التطبيق</div>
 </div>
@@ -5134,6 +5148,51 @@ if(window.AndroidUpdater&&_sd==null){
   setTimeout(openSetup,1500);
 }
 if(isIOS&&!audioUnlocked)$("iosHint").classList.remove("hidden");
+/* اتصال الشبكة + تثبيت PWA */
+let _deferredInstallPrompt=null;
+function updateNetStatus(){
+  const el=$("netStatus");
+  if(!el)return;
+  const on=navigator.onLine!==false;
+  const ar=(document.documentElement.lang||"ar").startsWith("ar");
+  el.textContent=on?(ar?"متصل":"Online"):(ar?"غير متصل":"Offline");
+  el.classList.toggle("online",on);
+  el.classList.toggle("offline",!on);
+  el.title=on?(ar?"الاتصال متوفر":"Network available"):(ar?"لا يوجد اتصال بالإنترنت — التطبيق يعمل دون اتصال":"No internet connection — app works offline");
+}
+window.addEventListener("online",function(){
+  updateNetStatus();
+  try{verifyRemoteUpdate()}catch(e){}
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:"VERIFY_UPDATE"});
+});
+window.addEventListener("offline",updateNetStatus);
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  _deferredInstallPrompt=e;
+  const btn=$("installAppBtn");
+  if(btn){btn.classList.remove("hidden");}
+});
+window.addEventListener("appinstalled",function(){
+  _deferredInstallPrompt=null;
+  const btn=$("installAppBtn");
+  if(btn){btn.classList.add("hidden");}
+  try{toast((document.documentElement.lang||"ar").startsWith("ar")?"تم تثبيت التطبيق بنجاح":"App installed successfully")}catch(e){}
+});
+(function(){
+  const btn=$("installAppBtn");
+  if(!btn)return;
+  btn.addEventListener("click",async function(){
+    if(!_deferredInstallPrompt)return;
+    try{
+      _deferredInstallPrompt.prompt();
+      await _deferredInstallPrompt.userChoice;
+    }catch(e){}
+    _deferredInstallPrompt=null;
+    btn.classList.add("hidden");
+  });
+})();
+updateNetStatus();
+
 if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{
     navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(function(reg){
@@ -5143,7 +5202,6 @@ if("serviceWorker" in navigator){
     setInterval(function(){navigator.serviceWorker.getRegistration().then(function(r){if(r)r.update()}).catch(function(){})},4*3600*1000);
   });
 }
-window.addEventListener("online",function(){verifyRemoteUpdate();if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage({type:"VERIFY_UPDATE"})});
 </script>
 </body>
 </html>
