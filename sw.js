@@ -1,9 +1,9 @@
-/* أوقات الصلاة — عامل الخدمة v17
+/* أوقات الصلاة — عامل الخدمة v18
    - تحديث آمن: يُتحقق من index.html عبر SHA-256 قبل تخزينه.
    - أوقات الصلاة تعمل دون إنترنت، وprayer_update.json يُجلب من الشبكة أولاً.
 */
 "use strict";
-const SW_VERSION = 17;
+const SW_VERSION = 18;
 const CACHE = "prayer-v" + SW_VERSION;
 const CORE = [
   "manifest.json",
@@ -84,6 +84,37 @@ function broadcast(msg) {
   self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then(list => {
     list.forEach(c => c.postMessage(msg));
   });
+}
+
+/* الجدولة المسبقة للإشعارات في المتصفحات التي تدعم Notification Triggers.
+   نحتفظ بالوسوم في Cache Storage لإلغاء الإشعارات القديمة عند تحديث الجدول. */
+const SCHEDULE_STORE = "prayer-schedule-v1";
+let scheduledTags = [];
+async function loadScheduledTags() {
+  try {
+    const cache = await caches.open(SCHEDULE_STORE);
+    const r = await cache.match("tags");
+    const j = r ? await r.json() : [];
+    scheduledTags = Array.isArray(j) ? j.filter(x => typeof x === "string") : [];
+  } catch (e) { scheduledTags = []; }
+}
+async function saveScheduledTags(tags) {
+  scheduledTags = tags;
+  try {
+    const cache = await caches.open(SCHEDULE_STORE);
+    await cache.put("tags", new Response(JSON.stringify(tags), {
+      headers: { "Content-Type": "application/json" }
+    }));
+  } catch (e) {}
+}
+async function closeScheduledNotifications(tags) {
+  if (!self.registration.getNotifications) return;
+  for (const tag of tags) {
+    try {
+      const list = await self.registration.getNotifications({ tag });
+      list.forEach(n => n.close());
+    } catch (e) {}
+  }
 }
 
 async function verifiedIndexResponse(request) {
@@ -174,6 +205,41 @@ self.addEventListener("message", (event) => {
   const data = event.data || {};
   const port = event.ports && event.ports[0];
   if (data.type === "SKIP_WAITING") { self.skipWaiting(); return; }
+  if (data.type === "SCHEDULE_WEB_NOTIFS") {
+    event.waitUntil((async () => {
+      const supported = typeof self.TimestampTrigger === "function";
+      const events = Array.isArray(data.events) ? data.events : [];
+      await loadScheduledTags();
+      await closeScheduledNotifications(scheduledTags);
+      const tags = [];
+      if (supported) {
+        const now = Date.now();
+        for (const ev of events.slice(0, 60)) {
+          const when = Number(ev && ev.epoch);
+          if (!Number.isFinite(when) || when <= now + 1000) continue;
+          const raw = String((ev && ev.id) || ((ev && ev.kind) || "event") + "-" + when);
+          const tag = "prayer-sched-" + raw.replace(/[^\w\-:|]/g, "_");
+          try {
+            await self.registration.showNotification(String((ev && ev.title) || "🕌 أوقات الصلاة"), {
+              body: String((ev && ev.text) || "حان وقت الصلاة"),
+              icon: urlOf("icon-192.png"),
+              badge: urlOf("icon-192.png"),
+              tag: tag,
+              dir: "rtl",
+              lang: "ar",
+              vibrate: [120, 60, 120],
+              data: { url: urlOf("index.html") },
+              showTrigger: new self.TimestampTrigger(when)
+            });
+            tags.push(tag);
+          } catch (e) {}
+        }
+      }
+      await saveScheduledTags(tags);
+      broadcast({ type: "WEB_SCHEDULE_READY", count: tags.length, supported: supported });
+    })());
+    return;
+  }
   if (data.type === "GET_VERSION") {
     if (port) port.postMessage({ version: SW_VERSION, cache: CACHE, meta: updateMeta });
     return;

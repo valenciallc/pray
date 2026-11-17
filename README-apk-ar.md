@@ -25,7 +25,7 @@
 
 ## 2) الإصدار الحالي
 
-- **النسخة الحالية: 17**
+- **النسخة الحالية: 18**
 - الرقم نفسه موجود في `prayer_update.json` و`sw.js` (`SW_VERSION`) و`index.html` (`APP_VERSION`) وهذا الدليل.
 - التحديث الذاتي يتحقق من **SHA-256** قبل تخزين أي نسخة جديدة؛ لذلك لا تُعدّل `prayer_update.json` يدوياً أبداً.
 
@@ -39,12 +39,13 @@
 2. ادفع ملفات الجذر المحدّثة إلى `main`:
    ```bash
    git add index.html sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-   git commit -m "Prayer app v17"
+   git commit -m "Prayer app v18 - mobile UI, notifications, pro settings"
    git push
    ```
 3. من المستودع: **Settings ← Pages ← Source: Deploy from a branch ← main ← /(root) ← Save**.
 4. افتح `https://valenciallc.github.io/pray/` مرة واحدة على الإنترنت ليخزّن عامل الخدمة الملفات؛ بعدها يعمل دون إنترنت.
-5. داخل التطبيق: الإعدادات ← «تحديث التطبيق من الداخل» ← ضع الرابط ← «حفظ رابط التحديثات».
+5. اضغط زر 🔕 في الشريط لتفعيل إشعارات المتصفح، وجرّبها من الإعدادات ← «⚡ متقدم».
+6. داخل التطبيق: الإعدادات ← «تحديث التطبيق من الداخل» ← ضع الرابط ← «حفظ رابط التحديثات».
 
 ## 4) إصدار تحديث جديد (الطريقة الصحيحة)
 

@@ -47,7 +47,7 @@
   },5000);
 })();
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta name="referrer" content="no-referrer">
 <title>شاشة أوقات الصلاة والإقامة</title>
@@ -908,6 +908,44 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   .do-event{padding:12px 16px;border-radius:16px}
   .do-time-chip{min-width:70px;padding:6px 8px}
 }
+
+/* ===== تحسينات الجوال والإعدادات الاحترافية v18 ===== */
+html{-webkit-tap-highlight-color:transparent}
+header{padding-top:calc(6px + env(safe-area-inset-top,0px))}
+@media(max-width:700px){
+  main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .pcard{padding:12px 8px}
+  .pcard .pname{font-size:.98rem;margin-bottom:6px}
+  .toolbar{gap:6px}
+  .toolbar .btn,.toolbar .reminder-btn,.toolbar .settings-btn,.toolbar .lang-btn{font-size:.78rem;padding:7px 9px}
+  .countdown{padding:14px 12px}
+  .cd-num{font-size:2.1rem;letter-spacing:1px}
+  .section{padding:12px;margin-bottom:12px}
+}
+@media(max-width:380px){
+  .toolbar .btn,.toolbar .reminder-btn,.toolbar .settings-btn,.toolbar .lang-btn{font-size:.72rem;padding:6px 7px}
+  .cards{gap:7px}
+}
+/* زر الإشعارات السريع */
+.notif-quick{position:relative}
+.notif-quick .nq-dot{position:absolute;top:4px;left:5px;width:8px;height:8px;border-radius:50%;background:#C0392B;box-shadow:0 0 0 2px var(--card)}
+.notif-quick.on .nq-dot{background:#1E7A34}
+/* بحث الإعدادات */
+.settings-search{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:6px 10px;margin-bottom:10px}
+.settings-search input{flex:1;min-width:0;border:0;background:transparent;color:var(--text);font-family:inherit;font-size:.9rem;outline:none}
+.settings-search button{border:0;background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;min-height:32px}
+.no-results{display:none;text-align:center;color:var(--muted);font-size:.9rem;padding:18px 8px}
+.no-results.show{display:block}
+/* تبويب متقدم */
+.pro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:8px}
+.pro-grid .btn{width:100%;min-height:46px;font-size:.82rem}
+.pro-note{font-size:.78rem;color:var(--muted);line-height:1.7;margin-top:10px;display:block}
+.pro-status{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pro-chip{background:var(--card2);border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:.72rem;color:var(--muted)}
+.pro-chip b{color:var(--gold)}
+[data-eco="1"] *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 </style>
 </head>
 <body>
@@ -934,6 +972,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <h1><img src="logo.png" alt="" class="brand-logo"> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
       <button class="btn sm ghost hidden" id="installAppBtn" type="button">⬇️ تثبيت التطبيق</button>
+      <button class="btn sm ghost notif-quick" id="notifQuickBtn" type="button" title="إشعارات الصلاة" aria-label="تفعيل إشعارات الصلاة">🔕<span class="nq-dot"></span></button>
       <button class="btn sm" id="displayBtn" type="button" title="شاشة عرض بأرقام كبيرة" aria-label="فتح شاشة العرض الكبيرة">🖥️ شاشة العرض</button>
       <button class="reminder-btn" id="reminderBtn">🔔 تفعيل التذكير</button>
       <button class="settings-btn" id="settingsBtn">⚙️ الإعدادات</button>
@@ -1339,12 +1378,19 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <div class="sheet-handle" id="sheetHandle"></div>
     <h2>⚙️ الإعدادات <button class="btn sm ghost" id="settingsClose">إغلاق ✕</button></h2>
 
+    <div class="settings-search">
+      <span aria-hidden="true">🔎</span>
+      <input type="search" id="settingsSearch" placeholder="ابحث في الإعدادات... (مثلاً: إشعارات، صوت، تباين)" aria-label="البحث في الإعدادات">
+      <button type="button" id="settingsSearchClear" aria-label="مسح البحث">✕</button>
+    </div>
+
     <div class="stabbar" id="stabbar" role="tablist">
       <button class="stab active" data-stab="calc" role="tab"><span class="stab-ic">📍</span><span class="stab-lb" data-i18n="stabCalc">الحساب</span></button>
       <button class="stab" data-stab="notif" role="tab"><span class="stab-ic">🔔</span><span class="stab-lb" data-i18n="stabNotif">الإشعارات</span></button>
       <button class="stab" data-stab="audio" role="tab"><span class="stab-ic">🔊</span><span class="stab-lb" data-i18n="stabAudio">الصوت</span></button>
       <button class="stab" data-stab="look" role="tab"><span class="stab-ic">🎨</span><span class="stab-lb" data-i18n="stabLook">المظهر</span></button>
       <button class="stab" data-stab="health" role="tab"><span class="stab-ic">🩺</span><span class="stab-lb" data-i18n="stabHealth">الصحة</span></button>
+      <button class="stab" data-stab="pro" role="tab"><span class="stab-ic">⚡</span><span class="stab-lb">متقدم</span></button>
     </div>
     <div class="stab-body" id="stabBody">
 
@@ -1470,7 +1516,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 17 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 18 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -1527,6 +1573,16 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       </div>
 
       <span class="hint" id="notifHint" data-i18n="notifHint">اضغط الزر أعلاه — سيتولى التطبيق كل شيء: الأذونات، البطارية، التنبيهات الدقيقة، تجاوز «لا تُزعج»</span>
+    </div>
+
+    <div class="s-group" id="webScheduleGroup">
+      <h3>🧾 إشعارات عند إغلاق الصفحة <small>حيثما يدعم المتصفح ذلك</small></h3>
+      <div class="s-row">
+        <label for="webScheduleToggle">الجدولة المسبقة:</label>
+        <div class="toggle" id="webScheduleToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الإشعارات المجدولة"></div>
+        <span class="hint" id="webScheduleStatus">غير مفعّلة</span>
+      </div>
+      <span class="setting-note">عند التفعيل يُرسل جدول الصلوات إلى عامل الخدمة لعرض إشعارات حتى مع إغلاق الصفحة في المتصفحات الداعمة. في المتصفحات الأخرى تستمر الإشعارات أثناء فتح التطبيق فقط.</span>
     </div>
 
     <div class="s-group" id="reminderSystemGroup">
@@ -1812,7 +1868,42 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     </div>
     </div><!-- /health -->
 
+    <div class="stab-panel" data-stab-panel="pro">
+      <div class="s-group">
+        <h3>⚡ لوحة الإجراءات السريعة</h3>
+        <div class="pro-grid">
+          <button class="btn sm" id="proTestNotify" type="button">🧪 إشعار تجريبي</button>
+          <button class="btn sm" id="proTestAdhan" type="button">🔊 تجربة الأذان</button>
+          <button class="btn sm ghost" id="proDisplay" type="button">🖥️ شاشة العرض</button>
+          <button class="btn sm ghost" id="proExport" type="button">⬇️ نسخة احتياطية</button>
+          <button class="btn sm ghost" id="proImport" type="button">⬆️ استيراد</button>
+          <button class="btn sm ghost" id="proReset" type="button">🗑️ إعادة ضبط</button>
+          <button class="btn sm ghost" id="proCopyReport" type="button">📋 نسخ تقرير الحالة</button>
+          <button class="btn sm ghost" id="proHealth" type="button">🩺 فحص الصحة</button>
+        </div>
+        <input type="file" id="proImportFile" accept="application/json,.json" class="hidden">
+        <div class="pro-status" id="proStatus"></div>
+        <span class="pro-note">كل الإجراءات تعمل محلياً على جهازك. النسخة الاحتياطية لا تحتوي كلمات مرور.</span>
+      </div>
+
+      <div class="s-group">
+        <h3>🔋 الوضع الاقتصادي <small>توفير البطارية والأداء</small></h3>
+        <div class="s-row">
+          <label for="ecoToggle">تفعيل الوضع الاقتصادي:</label>
+          <div class="toggle" id="ecoToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الوضع الاقتصادي"></div>
+          <span class="hint" id="ecoStatus">متوقف</span>
+        </div>
+        <span class="setting-note">يقلّل تحديثات الشاشة من كل ثانية إلى كل 5 ثوانٍ ويُوقف الحركات، مع إبقاء الأوقات والعدّاد دقيقين.</span>
+      </div>
+
+      <div class="s-group">
+        <h3>ℹ️ معلومات البناء</h3>
+        <div class="pro-status" id="proBuildInfo"></div>
+      </div>
+    </div><!-- /pro -->
+
     </div><!-- /stab-body -->
+    <div class="no-results" id="settingsNoResults">لا توجد إعدادات مطابقة للبحث.</div>
   </div>
 </div>
 
@@ -2078,12 +2169,12 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=17;
+const APP_VERSION=18;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
 const EXTRA_KEY="prayerApp_v3_extra",FONT_KEY="prayerApp_v3_font",WAKE_KEY="prayerApp_v3_wake",CONTRAST_KEY="prayerApp_v3_contrast";
-let EXTRA={silentPrayer:false,silentDuration:15,silentMode:"silent",haptic:true,adhanMode:"full",fajrMode:"default",webNotify:false,wake:false,themePrayer:true,shareTheme:"gold"};
+let EXTRA={silentPrayer:false,silentDuration:15,silentMode:"silent",haptic:true,adhanMode:"full",fajrMode:"default",webNotify:false,webSchedule:false,eco:false,wake:false,themePrayer:true,shareTheme:"gold"};
 try{const _ex=JSON.parse(localStorage.getItem(EXTRA_KEY)||"null");if(_ex&&typeof _ex==="object")EXTRA=Object.assign(EXTRA,_ex)}catch(e){}
 function saveExtra(){try{localStorage.setItem(EXTRA_KEY,JSON.stringify(EXTRA))}catch(e){}}
 let FONT_SCALE=parseFloat(localStorage.getItem(FONT_KEY)||"1")||1;
@@ -3866,6 +3957,7 @@ function checkAlerts(ds,events,now){
       }
     }
   }
+  if(Date.now()-_lastWebScheduleAt>60000){_lastWebScheduleAt=Date.now();pushWebSchedule()}
 }
 
 /* ============================= Toast ============================= */
@@ -4268,6 +4360,7 @@ function fillNotifUI(){
   if(hint)hint.textContent=br
     ?"افعّل المفتاح ثم اضغط الزر — سيتولى التطبيق طلب الأذونات والبطارية والتنبيهات الدقيقة وتجاوز «لا تُزعج»."
     :"في نسخة الويب نستخدم إشعارات المتصفح (تعمل أثناء فتح الصفحة أو عبر Service Worker). التنبيهات الدقيقة والبطارية و«لا تُزعج» تحتاج تطبيق Android المثبّت.";
+  updateNotifQuick();
 }
 function pushSchedule(){
   const br=window.AndroidUpdater;if(!br)return;
@@ -4302,7 +4395,7 @@ function toggleNotifications(){
     if(window.AndroidUpdater)requestNotifPerm();
     else ensureWebNotify();
   }else{
-    EXTRA.webNotify=false;saveExtra();
+    EXTRA.webNotify=false;saveExtra();clearWebSchedule(true);
     if(window.AndroidUpdater)pushSchedule();
   }
   fillNotifUI();
@@ -4460,6 +4553,7 @@ function switchStab(name){
   try{localStorage.setItem("prayerApp_v3_stab",name)}catch(e){}
   if(name==="health")renderHealth();
   if(name==="notif"){fillNotifUI(); try{syncReminderUI()}catch(e){}}
+  if(name==="pro")renderProStatus();
   if(name==="audio")refreshAudioStatus();
   const panel=document.querySelector(".settings-panel");
   if(panel)panel.scrollTop=0;
@@ -5172,10 +5266,10 @@ async function notifyWeb(title,body,tag){
 }
 async function enableWebNotify(){
   if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return false}
-  if(Notification.permission==="granted"){EXTRA.webNotify=true;saveExtra();toast(T("webNotifyOn"));return true}
+  if(Notification.permission==="granted"){EXTRA.webNotify=true;saveExtra();toast(T("webNotifyOn"));updateNotifQuick();if(EXTRA.webSchedule)pushWebSchedule(true);return true}
   try{
     const p=await Notification.requestPermission();
-    if(p==="granted"){EXTRA.webNotify=true;saveExtra();toast(T("webNotifyOn"));return true}
+    if(p==="granted"){EXTRA.webNotify=true;saveExtra();toast(T("webNotifyOn"));updateNotifQuick();if(EXTRA.webSchedule)pushWebSchedule(true);return true}
     toast(T("webNotifyDenied"),true);return false;
   }catch(e){toast(T("webNotifyDenied"),true);return false}
 }
@@ -5205,6 +5299,126 @@ function _bindWebNotify(){
   if(b)b.addEventListener("click",enableWebNotify);
   if(t)t.addEventListener("click",testWebNotify);
   if("Notification" in window&&Notification.permission==="granted")EXTRA.webNotify=EXTRA.webNotify!==false;
+}
+
+/* ---------- إشعارات مجدولة + اختصارات الإشعارات والإعدادات المتقدمة ---------- */
+let _lastWebScheduleKey="",_lastWebScheduleAt=0;
+function clearWebSchedule(force){
+  if(!force&&!_lastWebScheduleKey)return;
+  _lastWebScheduleKey="";
+  try{navigator.serviceWorker.getRegistration().then(r=>{if(r&&r.active)r.active.postMessage({type:"SCHEDULE_WEB_NOTIFS",events:[]})}).catch(()=>{})}catch(e){}
+}
+async function pushWebSchedule(force){
+  if(!EXTRA.webSchedule||!EXTRA.webNotify){clearWebSchedule();return}
+  if(!("Notification" in window)||Notification.permission!=="granted"){clearWebSchedule();return}
+  if(!(navigator.serviceWorker&&navigator.serviceWorker.getRegistration))return;
+  let reg=null;try{reg=await navigator.serviceWorker.getRegistration()}catch(e){}
+  if(!reg||!reg.showNotification)return;
+  const evs=collectSchedule().filter(e=>!NOTIF_SETTINGS.master||NOTIF_SETTINGS[e.kind]!==false).slice(0,40);
+  const key=evs.map(e=>e.id).join("|");
+  if(!force&&key===_lastWebScheduleKey)return;
+  _lastWebScheduleKey=key;
+  try{var worker=reg.active||reg.waiting||reg.installing;if(worker)worker.postMessage({type:"SCHEDULE_WEB_NOTIFS",events:evs})}catch(e){}
+}
+function applyWebScheduleUI(){
+  const on=!!EXTRA.webSchedule,t=$("webScheduleToggle"),s=$("webScheduleStatus");
+  if(t){t.classList.toggle("on",on);t.setAttribute("aria-checked",on?"true":"false")}
+  if(s)s.textContent=on?"مفعّلة — إشعارات حتى مع إغلاق الصفحة":"غير مفعّلة — أثناء فتح الصفحة فقط";
+}
+function toggleWebSchedule(){
+  EXTRA.webSchedule=!EXTRA.webSchedule;saveExtra();applyWebScheduleUI();
+  if(EXTRA.webSchedule){
+    if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);EXTRA.webSchedule=false;saveExtra();applyWebScheduleUI();return}
+    if(Notification.permission!=="granted")enableWebNotify().then(ok=>{
+      if(!ok){EXTRA.webSchedule=false;saveExtra();clearWebSchedule(true)}
+      else pushWebSchedule(true);
+      applyWebScheduleUI();renderProStatus();
+    });
+    else pushWebSchedule(true);
+  }else{
+    clearWebSchedule(true);
+  }
+  renderProStatus();
+}
+function updateNotifQuick(){
+  const b=$("notifQuickBtn");if(!b)return;
+  const on=!!EXTRA.webNotify&&("Notification" in window)&&Notification.permission==="granted";
+  b.classList.toggle("on",on);
+  if(b.firstChild)b.firstChild.textContent=on?"🔔":"🔕";
+  b.setAttribute("aria-label",on?"إشعارات الصلاة مفعّلة":"تفعيل إشعارات الصلاة");
+}
+function notifQuickClick(){
+  if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return}
+  if(Notification.permission==="denied"){toast("الإشعارات مرفوضة — فعّلها من إعدادات المتصفح",true);return}
+  if(Notification.permission!=="granted"){
+    enableWebNotify().then(ok=>{updateNotifQuick();if(ok&&NOTIF_SETTINGS.master)pushWebSchedule(true)});
+    return;
+  }
+  if(!NOTIF_SETTINGS.master){toggleNotifications();updateNotifQuick();return}
+  toast("🔔 الإشعارات مفعّلة — افتح الإعدادات للتخصيص");
+  openSettings();switchStab("notif");
+}
+function applyEco(on){
+  EXTRA.eco=!!on;saveExtra();
+  if(EXTRA.eco)document.documentElement.setAttribute("data-eco","1");
+  else document.documentElement.removeAttribute("data-eco");
+  const t=$("ecoToggle"),s=$("ecoStatus");
+  if(t){t.classList.toggle("on",EXTRA.eco);t.setAttribute("aria-checked",EXTRA.eco?"true":"false")}
+  if(s)s.textContent=EXTRA.eco?"مفعّل — توفير البطارية":"متوقف";
+  if(typeof startTicker==="function")startTicker();
+  renderProStatus();
+}
+function filterSettings(q){
+  const needle=String(q||"").trim().toLowerCase();let hits=0;
+  document.querySelectorAll(".stab-panel .s-group").forEach(g=>{
+    const ok=!needle||String(g.textContent||"").toLowerCase().indexOf(needle)>-1;
+    g.classList.toggle("hidden",!ok);if(ok)hits++;
+  });
+  const nr=$("settingsNoResults");if(nr)nr.classList.toggle("show",!!needle&&hits===0);
+}
+function proChip(label,value){return '<span class="pro-chip">'+label+': <b>'+value+'</b></span>'}
+function renderProStatus(){
+  const box=$("proStatus");if(box){
+    const perm=("Notification" in window)?Notification.permission:"unsupported";
+    const ptxt=perm==="granted"?"ممنوح ✓":(perm==="denied"?"مرفوض ✖":"بانتظار الإذن");
+    box.innerHTML=proChip("الإشعارات",ptxt)+proChip("الجدولة",EXTRA.webSchedule?"مفعّلة":"متوقفة")+proChip("الاقتصادي",EXTRA.eco?"مفعّل":"متوقف")+proChip("البطاقات",$("cards")?$("cards").children.length:"0");
+  }
+  const bi=$("proBuildInfo");if(bi){
+    bi.innerHTML=proChip("الإصدار",APP_VERSION)+proChip("عامل الخدمة",(navigator.serviceWorker?"مدعوم":"غير مدعوم"))+proChip("اللغة",lang||"ar")+proChip("حجم الخط",Math.round(FONT_SCALE*100)+"%");
+  }
+  updateNotifQuick();
+}
+async function copyDiagnostics(){
+  const perm=("Notification" in window)?Notification.permission:"unsupported";
+  let sw="غير متاح";try{const r=await navigator.serviceWorker.getRegistration();if(r)sw="متاح"}catch(e){}
+  const text=["تقرير حالة تطبيق أوقات الصلاة","الإصدار: "+APP_VERSION,"الإشعارات: "+perm,"الجدولة المسبقة: "+(EXTRA.webSchedule?"مفعّلة":"متوقفة"),"عامل الخدمة: "+sw,"الوضع الاقتصادي: "+(EXTRA.eco?"مفعّل":"متوقف"),"اللغة: "+lang,"التوقيت: "+fmtOffset(LOC.tz),"المدينة: "+(LOC.city||"—")].join("\n");
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);toast("📋 تم نسخ تقرير الحالة")}
+    else{const a=document.createElement("textarea");a.value=text;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();toast("📋 تم نسخ تقرير الحالة")}
+  }catch(e){toast("تعذّر نسخ التقرير",true)}
+}
+function _bindPro(){
+  const ws=$("webScheduleToggle");
+  if(ws){ws.addEventListener("click",toggleWebSchedule);ws.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleWebSchedule()}})}
+  const ec=$("ecoToggle");
+  if(ec){ec.addEventListener("click",()=>applyEco(!EXTRA.eco));ec.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();applyEco(!EXTRA.eco)}})}
+  const q=$("settingsSearch"),qc=$("settingsSearchClear");
+  if(q)q.addEventListener("input",()=>filterSettings(q.value));
+  if(qc)qc.addEventListener("click",()=>{if(q)q.value="";filterSettings("");if(q)q.focus()});
+  const nq=$("notifQuickBtn");if(nq)nq.addEventListener("click",notifQuickClick);
+  const map={
+    proTestNotify:()=>testWebNotify(),
+    proTestAdhan:()=>{try{playAdhanFor("Fajr")}catch(e){toast("تعذّر تشغيل الأذان",true)}},
+    proDisplay:()=>toggleDisplay(),
+    proExport:()=>exportSettings(),
+    proImport:()=>{const f=$("proImportFile");if(f)f.click()},
+    proReset:()=>clearAllData(),
+    proCopyReport:()=>copyDiagnostics(),
+    proHealth:()=>switchStab("health")
+  };
+  Object.keys(map).forEach(id=>{const el=$(id);if(el)el.addEventListener("click",map[id])});
+  const pf=$("proImportFile");if(pf)pf.addEventListener("change",()=>{if(pf.files&&pf.files[0])importSettings(pf.files[0])});
+  applyWebScheduleUI();applyEco(EXTRA.eco);renderProStatus();
 }
 
 /* ---------- فحص الصحة ---------- */
@@ -5431,6 +5645,11 @@ function _bindUpdate(){
     const d=e.data||{};
     if(d.type==="UPDATE_VERIFIED"){lastUpdateVerify={ok:true,at:Date.now(),msg:"sw",version:d.version||APP_VERSION};toast(T("updateVerified"));renderHealth()}
     else if(d.type==="UPDATE_TAMPERED"){lastUpdateVerify={ok:false,at:Date.now(),msg:"sw",version:d.version||APP_VERSION};toast(T("updateTampered"),true);renderHealth()}
+    else if(d.type==="WEB_SCHEDULE_READY"){
+      const s=$("webScheduleStatus");
+      if(s&&EXTRA.webSchedule)s.textContent=d.supported?("مفعّلة — "+d.count+" إشعاراً مجدولاً"):"مفعّلة — الجدولة غير مدعومة هنا، الإشعارات أثناء فتح الصفحة فقط";
+      renderProStatus();
+    }
   });
   setTimeout(()=>{const us=$("updateStatus");if(us)us.textContent=T("updateStatusVersion",APP_VERSION);verifyRemoteUpdate()},3500);
   setInterval(verifyRemoteUpdate,6*3600*1000);
@@ -5464,9 +5683,12 @@ function _tick(ts){
   _tickRaf=requestAnimationFrame(_tick);
 }
 function startTicker(){
-  if(_tickRaf)cancelAnimationFrame(_tickRaf);
+  if(_tickRaf)cancelAnimationFrame(_tickRaf);_tickRaf=null;
   if(_tickTimer){clearInterval(_tickTimer);_tickTimer=null}
-  if(document.hidden){
+  if(EXTRA.eco){
+    // الوضع الاقتصادي: تحديث كل 5 ثوانٍ بدل 60 إطاراً في الثانية.
+    _tickTimer=setInterval(()=>{if(!document.hidden)render()},5000);
+  }else if(document.hidden){
     _tickTimer=setInterval(()=>{render()},10000);
   }else{
     _lastTick=0;_tickRaf=requestAnimationFrame(_tick);
@@ -5492,6 +5714,7 @@ _bindShare();
 _bindLook();
 _bindSilent();
 _bindWebNotify();
+_bindPro();
 _bindHealth();
 _bindTz();
 _bindBackup();
