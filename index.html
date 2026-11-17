@@ -2,6 +2,51 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<!-- ===== حاجز الأخطاء: يمنع ظهور صفحة فارغة إذا تعطل السكربت ===== -->
+<script>
+(function(){
+  "use strict";
+  var shown=false;
+  function showFatal(msg){
+    if(shown)return;
+    shown=true;
+    try{
+      var box=document.createElement("div");
+      box.id="fatalErrorBox";
+      box.setAttribute("role","alert");
+      box.setAttribute("dir","rtl");
+      box.style.cssText="position:fixed;inset:0;z-index:2147483647;background:#0b1020;color:#f6ead5;font-family:system-ui,Tahoma,sans-serif;padding:20px;display:flex;align-items:center;justify-content:center";
+      box.innerHTML='<div style="max-width:560px;width:100%;background:#17203a;border:2px solid #ffd98f;border-radius:18px;padding:22px;text-align:center;box-shadow:0 20px 60px #0008">'+
+        '<div style="font-size:2rem">⚠️</div>'+
+        '<h1 style="font-size:1.25rem;margin:6px 0">تعذّر تشغيل التطبيق</h1>'+
+        '<p style="color:#e7d6bb;margin:0 0 12px;line-height:1.8">حدث خطأ غير متوقع أثناء التحميل. بياناتك ومواعيدك محفوظة على جهازك ولن تُحذف.</p>'+
+        '<pre id="fatalErrorMsg" style="white-space:pre-wrap;word-break:break-word;background:#0009;padding:10px;border-radius:10px;font-size:.78rem;color:#ffb4a2;text-align:left" dir="ltr"></pre>'+
+        '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">'+
+        '<button id="fatalRetry" type="button" style="min-height:44px;padding:8px 18px;border:0;border-radius:10px;background:#ffd98f;color:#241a0b;font-weight:800;cursor:pointer">🔄 إعادة المحاولة</button>'+
+        '<button id="fatalReset" type="button" style="min-height:44px;padding:8px 18px;border:1px solid #ffd98f;border-radius:10px;background:transparent;color:#ffd98f;cursor:pointer">🗑️ مسح الذاكرة وإعادة التحميل</button>'+
+        '</div></div>';
+      var m=box.querySelector("#fatalErrorMsg");
+      if(m&&msg)m.textContent=String(msg).slice(0,500);
+      (document.body||document.documentElement).appendChild(box);
+      var r=box.querySelector("#fatalRetry");
+      if(r)r.onclick=function(){location.reload()};
+      var c=box.querySelector("#fatalReset");
+      if(c)c.onclick=function(){try{localStorage.clear()}catch(e){};try{location.reload(true)}catch(e){location.reload()}};
+    }catch(e){}
+  }
+  window.__prayFatal=showFatal;
+  window.__prayFatalShown=function(){return !!document.getElementById("fatalErrorBox")};
+  window.addEventListener("error",function(e){
+    if(e.target&&e.target!==window)return; // تجاهل أخطاء تحميل الصور والصوت
+    showFatal((e&&e.message)||"Unknown script error");
+  });
+  // حارس احتياطي: إن لم تعمل الساعة خلال 5 ثوانٍ فالتطبيق لم يُهيّأ.
+  setTimeout(function(){
+    var c=document.getElementById("clockNow");
+    if(c&&/^--:--/.test((c.textContent||"").trim()))showFatal("لم تتم تهيئة التطبيق خلال 5 ثوانٍ");
+  },5000);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta name="referrer" content="no-referrer">
@@ -866,6 +911,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 </style>
 </head>
 <body>
+<noscript><div style="position:fixed;inset:0;z-index:2147483647;background:#0b1020;color:#f6ead5;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:Tahoma,sans-serif;line-height:1.9">يرجى تفعيل JavaScript في المتصفح لعرض أوقات الصلاة.</div></noscript>
 <a href="#mainContent" class="skip-link">تخطي إلى المحتوى</a>
 <noscript><div style="direction:rtl;font-family:Tahoma,Arial,sans-serif;background:#F7F0E4;color:#5C3A1E;padding:28px;text-align:center;line-height:1.9">🕌 يحتاج هذا التطبيق إلى JavaScript لعرض أوقات الصلاة وحسابها محلياً.<br>فعّل JavaScript في المتصفح ثم أعد تحميل الصفحة.</div></noscript>
 <div class="ios-hint hidden" id="iosHint" data-i18n="iosHint">📱 اضغط في أي مكان على الشاشة مرة واحدة لتفعيل صوت الأذان</div>
@@ -1424,7 +1470,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 16 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 17 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -2032,7 +2078,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=16;
+const APP_VERSION=17;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
