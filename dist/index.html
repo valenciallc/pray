@@ -1424,7 +1424,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 15 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 16 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -1813,8 +1813,9 @@ function saveReminder(){
   try{localStorage.setItem("prayerApp_v3_remInterval",String(REMINDER.intervalMin))}catch(e){}
   REMINDER_INTERVAL_MS=REMINDER.intervalMin*60000;
 }
-loadReminder();
+// يجب أن يُعلَن قبل استدعاء loadReminder() لأنها تكتب فيه (نطاق let الزمني).
 let REMINDER_INTERVAL_MS = REMINDER.intervalMin * 60000;
+loadReminder();
 const REMINDER_MSG = "🔔 أذكر الله";
 let reminderAudio = null;
 let reminderActive = !!REMINDER.enabled;
@@ -2031,7 +2032,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=15;
+const APP_VERSION=16;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
