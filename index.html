@@ -784,6 +784,85 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 [data-theme="dark"] .health-row.warn{background:linear-gradient(135deg,#3A301C,#2F2717)}
 .badge-live{display:inline-block;background:#E4F5E6;color:#1E7A34;border-radius:20px;padding:2px 9px;font-size:.68rem;font-weight:800;margin-right:6px}
 .badge-live.off{background:#FCE8E8;color:#C0392B}
+
+/* ===================== تحسينات الوصولية والتصميم ===================== */
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:8px;box-shadow:0 0 0 5px rgba(120,90,50,.18)}
+
+/* أهداف لمس أكبر على الأجهزة التي تعمل باللمس */
+@media(pointer:coarse){
+  button,[role="button"],select,.icon-btn,.tp-pill,.tabsbar .tb,.stab,.dh-picker button{min-height:44px}
+  .icon-btn{min-width:44px;display:inline-flex;align-items:center;justify-content:center;padding:6px 10px}
+  input[type="time"],input[type="number"],input[type="url"],input[type="text"]{min-height:44px}
+  input[type=range]{height:14px}
+  input[type=range]::-webkit-slider-thumb{width:34px;height:34px}
+  input[type=range]::-moz-range-thumb{width:30px;height:30px}
+}
+
+/* ===== نمط التباين العالي ===== */
+[data-contrast="high"]{
+  --bg1:#FFFFFF;--bg2:#FFFFFF;--card:#FFFFFF;--card2:#F2F2F2;
+  --line:#8A6A45;--text:#1A120B;--muted:#4A3B2C;
+  --gold:#6D4A22;--green:#4E6B18;--red:#9B2C1F;--blue:#234A80;
+}
+[data-contrast="high"] body{background:#FFFFFF;background-image:none}
+[data-contrast="high"] a{text-decoration:underline}
+[data-contrast="high"] .section,[data-contrast="high"] .pcard,[data-contrast="high"] .agenda,
+[data-contrast="high"] .tprog-sec,[data-contrast="high"] .occ-sec,[data-contrast="high"] .s-group,
+[data-contrast="high"] .azk-item,[data-contrast="high"] .azk-card,[data-contrast="high"] .dua-card,
+[data-contrast="high"] .notif-master,[data-contrast="high"] .health-row,[data-contrast="high"] .stat-box{border:2px solid var(--line)}
+[data-contrast="high"] .hadith,[data-contrast="high"] .ayah,[data-contrast="high"] .countdown,
+[data-contrast="high"] .quran-band,[data-contrast="high"] .dhikr-band,[data-contrast="high"] .ramadan-band,
+[data-contrast="high"] .ramadan,[data-contrast="high"] .qibla-band{background-image:none;background-color:#F6EAD5;color:var(--text);border:2px solid var(--line);box-shadow:none}
+[data-contrast="high"] .hd-text,[data-contrast="high"] .ay-text,[data-contrast="high"] .dua-card,
+[data-contrast="high"] .azk-item .azk-text,[data-contrast="high"] .rm-dua{color:var(--text)}
+[data-contrast="high"] .qb-title,[data-contrast="high"] .qb-chip b,[data-contrast="high"] .qb-rem,
+[data-contrast="high"] .qb-plan label,[data-contrast="high"] .qb-khatma,[data-contrast="high"] .qb-khatma b,
+[data-contrast="high"] .dh-title,[data-contrast="high"] .dh-status,[data-contrast="high"] .dh-count,
+[data-contrast="high"] .dh-auto label,[data-contrast="high"] .dh-auto .status,
+[data-contrast="high"] .rm-title,[data-contrast="high"] .rm-status,[data-contrast="high"] .rm-sub,
+[data-contrast="high"] .qibla-band .qibla-title,[data-contrast="high"] .qibla-band .qibla-deg,
+[data-contrast="high"] .qibla-band .qibla-dir,[data-contrast="high"] .qibla-stats b,[data-contrast="high"] .qibla-stats span,
+[data-contrast="high"] .cd-label,[data-contrast="high"] .cd-title,[data-contrast="high"] .cd-num,[data-contrast="high"] .cd-unit,
+[data-contrast="high"] .sub-chip,[data-contrast="high"] .sub-chip b{color:var(--text)}
+[data-contrast="high"] .btn,[data-contrast="high"] .tb{border:1px solid var(--line)}
+[data-theme="dark"][data-contrast="high"]{
+  --bg1:#000000;--bg2:#000000;--card:#111111;--card2:#1A1A1A;--line:#D9B97F;--text:#FFFFFF;--muted:#EFE2CD;
+  --gold:#FFD98F;--green:#B7E077;--red:#FFA99C;--blue:#A9C9FF;
+}
+[data-theme="dark"][data-contrast="high"] body{background:#000000;background-image:none}
+[data-theme="dark"][data-contrast="high"] .hadith,[data-theme="dark"][data-contrast="high"] .ayah,
+[data-theme="dark"][data-contrast="high"] .countdown,[data-theme="dark"][data-contrast="high"] .quran-band,
+[data-theme="dark"][data-contrast="high"] .dhikr-band,[data-theme="dark"][data-contrast="high"] .ramadan-band,
+[data-theme="dark"][data-contrast="high"] .ramadan,[data-theme="dark"][data-contrast="high"] .qibla-band{background-color:#1B1B1B;color:#FFFFFF}
+[data-theme="dark"][data-contrast="high"] .qb-plan select,[data-theme="dark"][data-contrast="high"] .dh-auto select{background:#000000;color:#FFFFFF}
+
+/* ===== وضع العرض ملء الشاشة ===== */
+.display-overlay{
+  position:fixed;inset:0;z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:26px 18px calc(26px + env(safe-area-inset-bottom,0px));text-align:center;
+  background:radial-gradient(900px 480px at 50% -10%,rgba(216,160,105,.18),transparent),linear-gradient(160deg,#131A2B,#0B1020 60%,#070A14);
+  color:#F6EAD5;overscroll-behavior:contain;
+}
+.display-overlay.open{display:flex}
+.do-exit{position:absolute;top:16px;left:16px;min-height:48px;padding:10px 18px;font-size:1rem;z-index:2}
+.do-clock{font-size:clamp(4rem,15vw,11rem);font-weight:800;letter-spacing:2px;direction:ltr;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 40px rgba(255,220,150,.25)}
+.do-date{font-size:clamp(1rem,3vw,1.8rem);color:#E7D6BB}
+.do-hijri{font-size:clamp(.9rem,2.4vw,1.4rem);color:#FFD98F;font-weight:800}
+.do-event{margin-top:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,217,143,.35);border-radius:22px;padding:18px 26px;min-width:min(520px,92vw)}
+.do-label{font-size:.95rem;color:#CFE0F4;letter-spacing:.5px}
+.do-prayer{font-size:clamp(2rem,7vw,4rem);font-weight:800;color:#FFE9C8;margin:2px 0}
+.do-time{font-size:1.2rem;color:#FFD98F;direction:ltr;font-variant-numeric:tabular-nums}
+.do-count{font-size:clamp(2.4rem,10vw,6rem);font-weight:800;direction:ltr;line-height:1.1;color:#FFF2CF;font-variant-numeric:tabular-nums}
+.do-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.do-time-chip{display:flex;flex-direction:column;gap:2px;min-width:88px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:8px 12px}
+.do-time-chip span{font-size:.72rem;color:#CFE0F4}
+.do-time-chip b{font-size:1.05rem;color:#FFE9C8;direction:ltr;font-variant-numeric:tabular-nums}
+@media(max-width:600px){
+  .display-overlay{gap:10px;padding-top:70px}
+  .do-exit{top:10px;left:10px;right:10px;width:calc(100% - 20px)}
+  .do-event{padding:12px 16px;border-radius:16px}
+  .do-time-chip{min-width:70px;padding:6px 8px}
+}
 </style>
 </head>
 <body>
@@ -809,6 +888,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <h1><img src="logo.png" alt="" class="brand-logo"> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
       <button class="btn sm ghost hidden" id="installAppBtn" type="button">⬇️ تثبيت التطبيق</button>
+      <button class="btn sm" id="displayBtn" type="button" title="شاشة عرض بأرقام كبيرة" aria-label="فتح شاشة العرض الكبيرة">🖥️ شاشة العرض</button>
       <button class="reminder-btn" id="reminderBtn">🔔 تفعيل التذكير</button>
       <button class="settings-btn" id="settingsBtn">⚙️ الإعدادات</button>
       <button class="lang-btn" id="langBtn" title="Change language">English</button>
@@ -1166,6 +1246,21 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   </button>
 </nav>
 
+<!-- ===== شاشة العرض الكبيرة ===== -->
+<div class="display-overlay" id="displayOverlay" role="dialog" aria-modal="true" aria-label="شاشة عرض أوقات الصلاة">
+  <button class="btn sm ghost do-exit" id="doExit" type="button" aria-label="إغلاق شاشة العرض">✕ إغلاق العرض</button>
+  <div class="do-clock" id="doClock">--:--:--</div>
+  <div class="do-date" id="doDate">---</div>
+  <div class="do-hijri" id="doHijri">…</div>
+  <div class="do-event">
+    <div class="do-label" id="doLabel">الحدث التالي</div>
+    <div class="do-prayer" id="doPrayer">—</div>
+    <div class="do-time" id="doTime">--:--</div>
+    <div class="do-count" id="doCount">--:--:--</div>
+  </div>
+  <div class="do-chips" id="doChips"></div>
+</div>
+
 <div class="alertbar" id="alertbar">
   <div class="ab-title" id="abTitle"></div>
   <div class="ab-dua hidden" id="abDua"></div>
@@ -1225,9 +1320,22 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm ghost" data-fs="1" aria-label="حجم الخط الافتراضي">أ</button>
         <button class="btn sm ghost" data-fs="1.15" aria-label="تكبير الخط">أ+</button>
         <button class="btn sm ghost" data-fs="1.3" aria-label="تكبير الخط كثيراً">أ++</button>
+        <button class="btn sm ghost" data-fs="1.5" aria-label="تكبير الخط كبيراً جداً">أ+++</button>
         <span class="wake-status" id="fsValue">100%</span>
       </div>
       <span class="setting-note" data-i18n="a11yNote">يُحفظ حجم الخط على جهازك، وتعمل جميع الأزرار مع TalkBack وقارئ الشاشة.</span>
+    </div>
+
+    <div class="s-group">
+      <h3>◼️ تباين عالٍ <small>نصوص أوضح وحدود أقوى لضعاف البصر</small></h3>
+      <div class="wake-row">
+        <div class="toggle" id="contrastToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل التباين العالي"></div>
+        <span class="wake-status" id="contrastStatus">غير مفعّل</span>
+      </div>
+      <div class="s-actions" style="justify-content:flex-start;margin-top:10px">
+        <button class="btn sm ghost" id="displayBtn2" type="button">🖥️ فتح شاشة العرض الكبيرة</button>
+      </div>
+      <span class="setting-note">يزيل التمويجات والتدرجات ويقوّي الحدود والنصوص، ويعمل مع الوضع الفاتح والداكن. شاشة العرض تعرض الساعة والصلاة القادمة بأرقام كبيرة لوضعها على التلفاز أو في المسجد.</span>
     </div>
 
     <div class="s-group">
@@ -1316,7 +1424,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 14 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 15 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -1923,16 +2031,25 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=14;
+const APP_VERSION=15;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
-const EXTRA_KEY="prayerApp_v3_extra",FONT_KEY="prayerApp_v3_font",WAKE_KEY="prayerApp_v3_wake";
+const EXTRA_KEY="prayerApp_v3_extra",FONT_KEY="prayerApp_v3_font",WAKE_KEY="prayerApp_v3_wake",CONTRAST_KEY="prayerApp_v3_contrast";
 let EXTRA={silentPrayer:false,silentDuration:15,silentMode:"silent",haptic:true,adhanMode:"full",fajrMode:"default",webNotify:false,wake:false,themePrayer:true,shareTheme:"gold"};
 try{const _ex=JSON.parse(localStorage.getItem(EXTRA_KEY)||"null");if(_ex&&typeof _ex==="object")EXTRA=Object.assign(EXTRA,_ex)}catch(e){}
 function saveExtra(){try{localStorage.setItem(EXTRA_KEY,JSON.stringify(EXTRA))}catch(e){}}
 let FONT_SCALE=parseFloat(localStorage.getItem(FONT_KEY)||"1")||1;
-function applyFontScale(s){FONT_SCALE=Math.max(.85,Math.min(1.4,parseFloat(s)||1));document.documentElement.style.setProperty("--fs",String(FONT_SCALE));try{localStorage.setItem(FONT_KEY,String(FONT_SCALE))}catch(e){};const v=$("fsValue");if(v)v.textContent=Math.round(FONT_SCALE*100)+"%";document.querySelectorAll("[data-fs]").forEach(b=>b.classList.toggle("gold",Math.abs(parseFloat(b.getAttribute("data-fs"))-FONT_SCALE)<.02))}
+function applyFontScale(s){FONT_SCALE=Math.max(.85,Math.min(1.6,parseFloat(s)||1));document.documentElement.style.setProperty("--fs",String(FONT_SCALE));try{localStorage.setItem(FONT_KEY,String(FONT_SCALE))}catch(e){};const v=$("fsValue");if(v)v.textContent=Math.round(FONT_SCALE*100)+"%";document.querySelectorAll("[data-fs]").forEach(b=>b.classList.toggle("gold",Math.abs(parseFloat(b.getAttribute("data-fs"))-FONT_SCALE)<.02))}
+let HIGH_CONTRAST=(function(){try{return localStorage.getItem(CONTRAST_KEY)==="1"}catch(e){return false}})();
+function applyContrast(on){
+  HIGH_CONTRAST=!!on;
+  document.documentElement.setAttribute("data-contrast",HIGH_CONTRAST?"high":"normal");
+  try{localStorage.setItem(CONTRAST_KEY,HIGH_CONTRAST?"1":"0")}catch(e){}
+  const t=$("contrastToggle"),s=$("contrastStatus");
+  if(t){t.classList.toggle("on",HIGH_CONTRAST);t.setAttribute("aria-checked",HIGH_CONTRAST?"true":"false")}
+  if(s)s.textContent=HIGH_CONTRAST?"مفعّل — نصوص أوضح":"غير مفعّل";
+}
 
 
 /* ====== قاعدة بيانات الدول العربية والإسلامية (مدن رئيسية + إحداثيات) ====== */
@@ -2958,7 +3075,44 @@ function render(){
   renderAgenda(now,ds);
   renderRamadanTab(now);
   renderExtras(now,ds);
+  renderDisplay();
 }
+/* ============================= شاشة العرض الكبيرة ============================= */
+let displayOn=false,displayReturnFocus=null;
+function renderDisplay(){
+  if(!displayOn)return;
+  const now=new Date(),ds=dateStr(now),d=getDayData(ds);
+  const clock=$("doClock");if(!clock)return;
+  clock.textContent=nowStr();
+  $("doDate").textContent=now.toLocaleDateString(LOCALE[lang]||"ar-IQ",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+  $("doHijri").textContent=d&&d.hijri?d.hijri:"";
+  const next=nextMain(ds,buildEvents(ds),now),main=next.adhan||next.iqama;
+  if(main){
+    $("doLabel").textContent=T(main.type==="iqama"?"nextIqama":"nextAdhan")+(main.isTomorrow?" · "+T("tomorrowEvent"):"");
+    $("doPrayer").textContent=main.prayer;
+    $("doTime").textContent=main.time;
+    $("doCount").textContent=hms(main.dt-now);
+  }else{
+    $("doLabel").textContent=T("noEvent");$("doPrayer").textContent="—";$("doTime").textContent="--:--";$("doCount").textContent="--:--:--";
+  }
+  if(d)$("doChips").innerHTML=PRAYER_DEFS.map(p=>'<div class="do-time-chip"><span>'+PN(p.key)+'</span><b>'+(d[p.key]||"—")+'</b></div>').join("");
+}
+function openDisplay(){
+  displayOn=true;
+  displayReturnFocus=document.activeElement;
+  const ov=$("displayOverlay");if(ov)ov.classList.add("open");
+  const ex=$("doExit");if(ex)ex.focus();
+  renderDisplay();
+  try{if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}
+}
+function closeDisplay(){
+  displayOn=false;
+  const ov=$("displayOverlay");if(ov)ov.classList.remove("open");
+  try{if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}catch(e){}
+  if(displayReturnFocus&&displayReturnFocus.focus)displayReturnFocus.focus();
+  displayReturnFocus=null;
+}
+function toggleDisplay(){displayOn?closeDisplay():openDisplay()}
 /* ============================= إنجاز صلوات اليوم ============================= */
 function isManuallySet(ds,key){try{return !!(attendance.manual&&attendance.manual[ds+"|"+key])}catch(e){return false}}
 function toggleAttend(ds,key){
@@ -4923,6 +5077,13 @@ function _bindLook(){
     if(!document.hidden&&EXTRA.wake&&!wakeSentinel)setWake(true).catch(()=>{});
   });
   applyFontScale(FONT_SCALE);
+  const ct=$("contrastToggle");
+  if(ct){
+    ct.addEventListener("click",()=>applyContrast(!HIGH_CONTRAST));
+    ct.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();applyContrast(!HIGH_CONTRAST)}});
+  }
+  applyContrast(HIGH_CONTRAST);
+  const db2=$("displayBtn2");if(db2)db2.addEventListener("click",toggleDisplay);
   applyWakeUI();
 }
 function _bindSilent(){
@@ -5341,6 +5502,9 @@ render();
 renderQuran();
 renderDhikr();
 applyFontScale(FONT_SCALE);
+const db=$("displayBtn");if(db)db.addEventListener("click",toggleDisplay);
+const dex=$("doExit");if(dex)dex.addEventListener("click",closeDisplay);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&displayOn)closeDisplay()});
 startTicker();
 setInterval(renderAzkar,60000);
 setTimeout(function(){renderHealth();if(EXTRA.wake)setWake(true).catch(function(){})},1200);
