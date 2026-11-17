@@ -1316,7 +1316,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 13 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 14 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -1373,6 +1373,69 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       </div>
 
       <span class="hint" id="notifHint" data-i18n="notifHint">اضغط الزر أعلاه — سيتولى التطبيق كل شيء: الأذونات، البطارية، التنبيهات الدقيقة، تجاوز «لا تُزعج»</span>
+    </div>
+
+    <div class="s-group" id="reminderSystemGroup">
+      <h3>🔔 نظام التذكير بالأذكار <small>تذكيرات دورية منظمة (ذكر / أذكار / أدعية)</small></h3>
+      <div class="s-row">
+        <label for="reminderToggleBtn">تفعيل التذكير:</label>
+        <div class="toggle reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="false" tabindex="0"></div>
+        <span class="hint" id="reminderStatusText">متوقف</span>
+      </div>
+      <div class="s-row">
+        <label for="reminderIntervalMin">كل (دقيقة):</label>
+        <select id="reminderIntervalMin">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="45">45</option>
+          <option value="60">60</option>
+          <option value="120">120</option>
+        </select>
+      </div>
+      <div class="s-row">
+        <label for="reminderMode">نوع التذكير:</label>
+        <select id="reminderMode">
+          <option value="dhikr">أذكار قصيرة (تسبيح/استغفار)</option>
+          <option value="azkar">من مكتبة الأذكار</option>
+          <option value="dua">أدعية</option>
+          <option value="custom">نص مخصص</option>
+        </select>
+      </div>
+      <div class="s-row">
+        <label for="reminderSource">مصدر الأذكار:</label>
+        <select id="reminderSource">
+          <option value="auto">تلقائي (حسب الوقت)</option>
+          <option value="morning">أذكار الصباح</option>
+          <option value="evening">أذكار المساء</option>
+          <option value="afterPrayer">بعد الصلاة</option>
+          <option value="sleep">النوم</option>
+          <option value="wake">الاستيقاظ</option>
+          <option value="mosque">المسجد</option>
+          <option value="food">الطعام</option>
+          <option value="travel">السفر</option>
+          <option value="rain">المطر</option>
+          <option value="distress">الهم/الكرب</option>
+          <option value="home">المنزل</option>
+          <option value="sick">المرض</option>
+          <option value="anger">الغضب</option>
+        </select>
+      </div>
+      <div class="s-row">
+        <label for="reminderCustomText">النص المخصص:</label>
+        <input type="text" id="reminderCustomText" placeholder="اكتب نص التذكير..." style="flex:1;min-width:180px">
+      </div>
+      <div class="s-row">
+        <label><input type="checkbox" id="reminderSound" checked> صوت التنبيه</label>
+        <label><input type="checkbox" id="reminderNotify"> إشعار المتصفح (إن توفر الإذن)</label>
+      </div>
+      <div class="s-actions" style="justify-content:flex-start">
+        <button class="btn sm" id="reminderTestBtn" type="button">🔔 تجربة تذكير الآن</button>
+        <button class="btn sm ghost" id="reminderWebPermBtn" type="button">إذن إشعارات المتصفح</button>
+      </div>
+      <span class="setting-note">يعمل هذا النظام داخل التطبيق/المتصفح أثناء فتحه، مع إمكانية إظهار إشعار متصفح عند تفعيل الإذن. تنبيهات الأذان والإقامة المجدولة بالنظام تُدار من إعدادات الإشعارات أعلاه (وخاصة في تطبيق Android).</span>
     </div>
 
     <div class="s-group">
@@ -1607,9 +1670,47 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
    ============================================================ */
 
 /* ======================== إعدادات التذكير بذكر الله ======================== */
-let REMINDER_INTERVAL_MS = 10 * 60 * 1000;
+const REMINDER_KEY="prayerApp_v3_reminder";
+const REMINDER_DEFAULTS={
+  enabled:false,
+  intervalMin:10,
+  mode:"dhikr",        // dhikr | azkar | dua | custom
+  source:"auto",       // auto/category/custom
+  sound:true,
+  notify:false,
+  customText:"أذكر الله"
+};
+let REMINDER=Object.assign({},REMINDER_DEFAULTS);
+function loadReminder(){
+  try{
+    const r=JSON.parse(localStorage.getItem(REMINDER_KEY)||"null");
+    if(r&&typeof r==="object")REMINDER=Object.assign({},REMINDER_DEFAULTS,r);
+  }catch(e){}
+  // توافق مع الإعدادات القديمة
+  try{
+    const iv=localStorage.getItem("prayerApp_v3_remInterval");
+    if(iv&&!rHasInterval())REMINDER.intervalMin=Math.max(1,parseInt(iv,10)||10);
+  }catch(e){}
+  try{
+    if(localStorage.getItem("reminderActive")==="true"&&REMINDER.enabled!==true)REMINDER.enabled=true;
+  }catch(e){}
+  REMINDER.intervalMin=Math.max(1,Math.min(180,parseInt(REMINDER.intervalMin,10)||10));
+  REMINDER_INTERVAL_MS=REMINDER.intervalMin*60000;
+}
+function rHasInterval(){try{return !!JSON.parse(localStorage.getItem(REMINDER_KEY)||"null");}catch(e){return false}}
+function saveReminder(){
+  REMINDER.intervalMin=Math.max(1,Math.min(180,parseInt(REMINDER.intervalMin,10)||10));
+  try{localStorage.setItem(REMINDER_KEY,JSON.stringify(REMINDER))}catch(e){}
+  try{localStorage.setItem("reminderActive",REMINDER.enabled?"true":"false")}catch(e){}
+  try{localStorage.setItem("prayerApp_v3_remInterval",String(REMINDER.intervalMin))}catch(e){}
+  REMINDER_INTERVAL_MS=REMINDER.intervalMin*60000;
+}
+loadReminder();
+let REMINDER_INTERVAL_MS = REMINDER.intervalMin * 60000;
 const REMINDER_MSG = "🔔 أذكر الله";
 let reminderAudio = null;
+let reminderActive = !!REMINDER.enabled;
+let reminderIntervalId = null;
 
 /* ======================== باقي المتغيرات الأساسية ======================== */
 const PRAYER_DEFS = [
@@ -1822,7 +1923,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=13;
+const APP_VERSION=14;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -2605,67 +2706,114 @@ function playSound(type,vol){
 
 /* ======================== دالة تشغيل صوت التذكير ======================== */
 function playReminderSound(vol) {
+  if(REMINDER&&REMINDER.sound===false)return;
   playBell(vol || 0.6);
 }
 
 /* ======================== دوال التذكير ======================== */
+function getReminderMessage(){
+  try{
+    if(REMINDER.mode==="custom"){
+      return String(REMINDER.customText||REMINDER_MSG).trim()||REMINDER_MSG;
+    }
+    if(REMINDER.mode==="dua"){
+      if(Array.isArray(DUAS)&&DUAS.length){
+        return DUAS[Math.floor(Math.random()*DUAS.length)].t||REMINDER_MSG;
+      }
+    }
+    if(REMINDER.mode==="azkar"){
+      const keys=Array.isArray(AZK_ORDER)&&AZK_ORDER.length?AZK_ORDER.slice():Object.keys(AZKAR||{});
+      let key=REMINDER.source&&REMINDER.source!=="auto"?REMINDER.source:"auto";
+      if(key==="auto") key=(typeof pickAzkKey==="function"?pickAzkKey():(keys[0]||"morning"));
+      let list=(AZKAR&&AZKAR[key])||[];
+      if(!list.length){ key=keys[0]||"morning"; list=(AZKAR&&AZKAR[key])||[]; }
+      if(list.length){
+        const it=list[Math.floor(Math.random()*list.length)];
+        return (it&&it.t)?it.t:REMINDER_MSG;
+      }
+    }
+    // dhikr default: rotate between short adhkar phrases (from tasbih) + general remembrance
+    const pool=[];
+    if(Array.isArray(DHIKR_PHRASES)) DHIKR_PHRASES.forEach(p=>{if(p&&p.t)pool.push(p.t)});
+    pool.push("أذكر الله","سبحان الله وبحمده","استغفر الله","لا حول ولا قوة إلا بالله");
+    return pool[Math.floor(Math.random()*pool.length)]||REMINDER_MSG;
+  }catch(e){return REMINDER_MSG}
+}
 function showReminderToast(msg) {
-  const t = $("toast");
-  t.textContent = "🕌 " + msg;
+  const t = $("toast"); if(!t)return;
+  const text=String(msg||REMINDER_MSG).replace(/\s+/g," ").trim();
+  t.textContent = "🔔 " + (text.length>140?text.slice(0,137)+"…":text);
   t.classList.remove("err");
   t.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 6000);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 7000);
 }
-function fireReminder() {
-  if (!reminderActive) return;
-  showReminderToast(REMINDER_MSG);
+function reminderBrowserNotify(msg){
+  if(!REMINDER.notify) return;
+  try{
+    if(typeof notifyWeb==="function") notifyWeb("🔔 تذكير", msg, "dhikr-reminder-"+Date.now());
+  }catch(e){}
+}
+function fireReminder(force) {
+  if (!force && !reminderActive) return;
+  const msg=getReminderMessage();
+  showReminderToast(msg);
   playReminderSound(VOL);
+  try{haptic([40,40,40])}catch(e){}
+  reminderBrowserNotify(msg);
 }
 function restartReminderTimer(){
   if(reminderIntervalId){clearInterval(reminderIntervalId);reminderIntervalId=null}
-  if(reminderActive)reminderIntervalId=setInterval(fireReminder,REMINDER_INTERVAL_MS);
+  if(reminderActive)reminderIntervalId=setInterval(function(){fireReminder(false)},REMINDER_INTERVAL_MS);
+}
+function syncReminderUI(){
+  const on=!!reminderActive;
+  const btn=$("reminderBtn");
+  if(btn){
+    btn.textContent=on?"🔕 إيقاف التذكير":"🔔 تفعيل التذكير";
+    btn.classList.toggle("active",on);
+  }
+  document.querySelectorAll("#toggleSRemind,.reminder-toggle").forEach(t=>{
+    t.classList.toggle("on",on);
+    t.dataset.active=on?"1":"0";
+    if(t.setAttribute)t.setAttribute("aria-checked",on?"true":"false");
+  });
+  const im=$("reminderIntervalMin"); if(im) im.value=String(REMINDER.intervalMin||10);
+  document.querySelectorAll("#remindInterval").forEach(sel=>{ try{sel.value=String(REMINDER.intervalMin||10)}catch(e){} });
+  const mode=$("reminderMode"); if(mode) mode.value=REMINDER.mode||"dhikr";
+  const src=$("reminderSource"); if(src){ src.value=REMINDER.source||"auto"; src.disabled=(REMINDER.mode!=="azkar"); }
+  const snd=$("reminderSound"); if(snd) snd.checked=REMINDER.sound!==false;
+  const noti=$("reminderNotify"); if(noti) noti.checked=!!REMINDER.notify;
+  const custom=$("reminderCustomText"); if(custom){ custom.value=REMINDER.customText||""; custom.disabled=(REMINDER.mode!=="custom"); }
+  const st=$("reminderStatusText");
+  if(st) st.textContent=on?("مفعّل — كل "+(REMINDER.intervalMin||10)+" دقيقة"):"متوقف";
+}
+function setReminderEnabled(on){
+  reminderActive=!!on;
+  REMINDER.enabled=reminderActive;
+  saveReminder();
+  restartReminderTimer();
+  updateFab();
+  syncReminderUI();
 }
 function updateFab(){
-  const b=$("tabReminder");const ic=b.querySelector?b.querySelector(".tb-ic"):null;
+  const b=$("tabReminder");const ic=b&&b.querySelector?b.querySelector(".tb-ic"):null;
   if(!b)return;
   b.classList.toggle("active-stop",reminderActive);
   if(ic)ic.textContent=reminderActive?"🔕":"🔔";
 }
 function toggleReminder() {
-  reminderActive = !reminderActive;
-  const btn = $("reminderBtn");
-  if (reminderActive) {
-    btn.textContent = "🔕 إيقاف التذكير";
-    btn.classList.add("active");
-    restartReminderTimer();
-    localStorage.setItem('reminderActive', 'true');
-  } else {
-    btn.textContent = "🔔 تفعيل التذكير";
-    btn.classList.remove("active");
-    if (reminderIntervalId) { clearInterval(reminderIntervalId); reminderIntervalId=null; }
-    localStorage.setItem('reminderActive', 'false');
-  }
-  updateFab();
+  setReminderEnabled(!reminderActive);
 }
-let reminderActive=false;
-let reminderIntervalId=null;
 try {
   const savedTab=localStorage.getItem("prayerApp_v3_tab");
   if(savedTab&&["now","pray","wird","dhikr"].indexOf(savedTab)>-1)switchTab(savedTab);
 }catch(e){}
 try {
-  const savedReminder = localStorage.getItem('reminderActive');
-  if (savedReminder === 'true') {
-    reminderActive = true;
-    setTimeout(() => {
-      const btn = $("reminderBtn");
-      btn.textContent = "🔕 إيقاف التذكير";
-      btn.classList.add("active");
-      restartReminderTimer();
-      updateFab();
-    }, 2000);
-  }
+  reminderActive=!!REMINDER.enabled;
+  syncReminderUI();
+  updateFab();
+  if(reminderActive) restartReminderTimer();
 } catch(e) {}
 
 /* ======================== باقي دوال العرض ======================== */
@@ -4110,7 +4258,7 @@ function switchStab(name){
   document.querySelectorAll(".stab-panel").forEach(p=>p.classList.toggle("active",p.getAttribute("data-stab-panel")===name));
   try{localStorage.setItem("prayerApp_v3_stab",name)}catch(e){}
   if(name==="health")renderHealth();
-  if(name==="notif")fillNotifUI();
+  if(name==="notif"){fillNotifUI(); try{syncReminderUI()}catch(e){}}
   if(name==="audio")refreshAudioStatus();
   const panel=document.querySelector(".settings-panel");
   if(panel)panel.scrollTop=0;
@@ -4138,6 +4286,57 @@ function _bindStabs(){
     if(dy>110)closeSettings();
   });
 }
+function _bindReminder(){
+  const mode=$("reminderMode");
+  const src=$("reminderSource");
+  const custom=$("reminderCustomText");
+  const sound=$("reminderSound");
+  const notify=$("reminderNotify");
+  const interval=$("reminderIntervalMin");
+  const test=$("reminderTestBtn");
+  const perm=$("reminderWebPermBtn");
+  if(interval) interval.addEventListener("change",e=>{
+    REMINDER.intervalMin=Math.max(1,Math.min(180,parseInt(e.target.value,10)||10));
+    saveReminder(); restartReminderTimer(); syncReminderUI();
+  });
+  if(mode) mode.addEventListener("change",e=>{
+    REMINDER.mode=e.target.value||"dhikr";
+    saveReminder(); syncReminderUI();
+  });
+  if(src) src.addEventListener("change",e=>{
+    REMINDER.source=e.target.value||"auto";
+    saveReminder();
+  });
+  if(custom) custom.addEventListener("input",e=>{
+    REMINDER.customText=e.target.value||"";
+    saveReminder();
+  });
+  if(sound) sound.addEventListener("change",e=>{
+    REMINDER.sound=!!e.target.checked;
+    saveReminder();
+  });
+  if(notify) notify.addEventListener("change",async e=>{
+    REMINDER.notify=!!e.target.checked;
+    if(REMINDER.notify && typeof ensureWebNotify==="function"){
+      const ok=await ensureWebNotify();
+      REMINDER.notify=!!ok;
+      if(!ok && e.target) e.target.checked=false;
+    }
+    saveReminder();
+  });
+  if(test) test.addEventListener("click",function(){ fireReminder(true); });
+  if(perm) perm.addEventListener("click",async function(){
+    if(typeof ensureWebNotify==="function"){
+      const ok=await ensureWebNotify();
+      if(ok){ REMINDER.notify=true; saveReminder(); }
+      syncReminderUI();
+      toast(ok?"تم تفعيل إشعارات المتصفح":"تعذر تفعيل إشعارات المتصفح",!ok);
+    }else{
+      toast("إشعارات المتصفح غير متاحة هنا",true);
+    }
+  });
+}
+
 function openSettings(){
   $("settingsOverlay").classList.add("open");
   loadSettings();
@@ -4329,15 +4528,16 @@ $("leadMin").addEventListener("change",e=>{
   pushSchedule();
 });
 $("toggleLead").onclick=function(){cfg.lead=!cfg.lead;this.classList.toggle("on",cfg.lead)};
-$("toggleSRemind").onclick=function(){
-  toggleReminder();
-  const t=$("toggleSRemind");
-  t.classList.toggle("on",reminderActive);
-};
-$("remindInterval").addEventListener("change",e=>{
-  REMINDER_INTERVAL_MS=parseInt(e.target.value)*60000;
-  localStorage.setItem("prayerApp_v3_remInterval",String(REMINDER_INTERVAL_MS));
-  restartReminderTimer();
+document.querySelectorAll("#toggleSRemind,.reminder-toggle").forEach(t=>{
+  t.onclick=function(){ toggleReminder(); };
+});
+document.querySelectorAll("#remindInterval").forEach(sel=>{
+  sel.addEventListener("change",e=>{
+    REMINDER.intervalMin=Math.max(1,Math.min(180,parseInt(e.target.value,10)||10));
+    saveReminder();
+    restartReminderTimer();
+    syncReminderUI();
+  });
 });
 $("adhanSoundSel").addEventListener("change",e=>{
   cfg.soundType=e.target.value;
@@ -5118,7 +5318,9 @@ _bindNotif();
 _bindSetup();
 _bindAudio();
 _bindStabs();
+try{if(typeof _bindReminder==="function")_bindReminder()}catch(e){}
 fillNotifUI();
+try{syncReminderUI();updateFab()}catch(e){}
 const _n=new Date();
 viewYM={y:_n.getFullYear(),m:_n.getMonth()};
 viewYear=_n.getFullYear();
