@@ -101,7 +101,6 @@
       <button class="settings-btn icon-only" id="settingsBtn" type="button" title="الإعدادات" aria-label="الإعدادات">⚙️</button>
       <button class="btn sm ghost icon-only" id="moreBtn" type="button" aria-expanded="false" aria-label="المزيد">⋯</button>
       <div class="more-menu hidden" id="moreMenu">
-        <button type="button" id="reminderBtn">🔔 تفعيل التذكير</button>
         <button type="button" id="displayBtn">🖥️ شاشة العرض</button>
         <button type="button" id="installAppBtn" class="hidden">⬇️ تثبيت التطبيق</button>
         <button type="button" id="langBtn" title="Change language">English</button>
@@ -110,7 +109,6 @@
         <button type="button" data-go="qibla" data-i18n="tabQibla">القبلة</button>
         <button type="button" data-go="ramadan" data-i18n="tabRamadan">رمضان</button>
         <button type="button" data-go="wird" data-i18n="tabWird">الورد</button>
-        <button type="button" id="tabReminder">🔔 التذكير</button>
       </div>
     </div>
     <div class="clockbox">
@@ -647,7 +645,7 @@
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 22 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 23 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -717,11 +715,11 @@
     </div>
 
     <div class="s-group" id="reminderSystemGroup">
-      <h3>🔔 نظام التذكير بالأذكار <small>تذكيرات دورية منظمة (ذكر / أذكار / أدعية)</small></h3>
+      <h3>🔔 نظام التذكير بالأذكار <small>يعمل تلقائياً — الإيقاف من هنا فقط</small></h3>
       <div class="s-row">
         <label for="reminderToggleBtn">تفعيل التذكير:</label>
-        <div class="toggle reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="false" tabindex="0"></div>
-        <span class="hint" id="reminderStatusText">متوقف</span>
+        <div class="toggle on reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="true" tabindex="0"></div>
+        <span class="hint" id="reminderStatusText">مفعّل — كل 10 دقيقة</span>
       </div>
       <div class="s-row">
         <label for="reminderIntervalMin">كل (دقيقة):</label>
@@ -874,7 +872,7 @@
 
     <div class="stab-panel" data-stab-panel="notif">
     <div class="s-group">
-      <h3>🔔 التذكير بذكر الله <small>بسيط — يذكرك بأذكار كل فترة</small></h3>
+      <h3>🔔 التذكير بذكر الله <small>يعمل تلقائياً — للإيقاف استخدم المفتاح أدناه</small></h3>
       <div class="s-row">
         <label>تفعيل التذكير:</label>
         <div class="toggle on" id="toggleSRemind"></div>
@@ -1011,6 +1009,7 @@
           <button class="btn sm ghost" id="proReset" type="button">🗑️ إعادة ضبط</button>
           <button class="btn sm ghost" id="proCopyReport" type="button">📋 نسخ تقرير الحالة</button>
           <button class="btn sm ghost" id="proHealth" type="button">🩺 فحص الصحة</button>
+          <button class="btn sm ghost" id="setupOpenBtn" type="button">🛠️ تفعيل الصلاحيات</button>
         </div>
         <input type="file" id="proImportFile" accept="application/json,.json" class="hidden">
         <div class="pro-status" id="proStatus"></div>

@@ -24,7 +24,7 @@ function setBarWidth(el,pct,sticky){
 /* ======================== إعدادات التذكير بذكر الله ======================== */
 const REMINDER_KEY="prayerApp_v3_reminder";
 const REMINDER_DEFAULTS={
-  enabled:false,
+  enabled:true,   // يعمل تلقائياً؛ الإيقاف من الإعدادات فقط
   intervalMin:10,
   mode:"dhikr",        // dhikr | azkar | dua | custom
   source:"auto",       // auto/category/custom
@@ -45,6 +45,14 @@ function loadReminder(){
   }catch(e){}
   try{
     if(localStorage.getItem("reminderActive")==="true"&&REMINDER.enabled!==true)REMINDER.enabled=true;
+  }catch(e){}
+  // v23: يُفعّل التذكير تلقائياً مرة واحدة عند الترقية، وبعدها يُحترم اختيار المستخدم من الإعدادات.
+  try{
+    if(localStorage.getItem("prayerApp_v3_reminderAuto")!=="1"){
+      REMINDER.enabled=true;
+      localStorage.setItem("prayerApp_v3_reminderAuto","1");
+      saveReminder();
+    }
   }catch(e){}
   REMINDER.intervalMin=Math.max(1,Math.min(180,parseInt(REMINDER.intervalMin,10)||10));
   REMINDER_INTERVAL_MS=REMINDER.intervalMin*60000;
@@ -276,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=22;
+const APP_VERSION=23;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -1130,11 +1138,7 @@ function restartReminderTimer(){
 }
 function syncReminderUI(){
   const on=!!reminderActive;
-  const btn=$("reminderBtn");
-  if(btn){
-    btn.textContent=on?"🔕 إيقاف التذكير":"🔔 تفعيل التذكير";
-    btn.classList.toggle("active",on);
-  }
+  // الإيقاف من الإعدادات فقط — لا توجد أزرار تذكير في الواجهة أو القائمة.
   document.querySelectorAll("#toggleSRemind,.reminder-toggle").forEach(t=>{
     t.classList.toggle("on",on);
     t.dataset.active=on?"1":"0";
@@ -1155,14 +1159,7 @@ function setReminderEnabled(on){
   REMINDER.enabled=reminderActive;
   saveReminder();
   restartReminderTimer();
-  updateFab();
   syncReminderUI();
-}
-function updateFab(){
-  const b=$("tabReminder");const ic=b&&b.querySelector?b.querySelector(".tb-ic"):null;
-  if(!b)return;
-  b.classList.toggle("active-stop",reminderActive);
-  if(ic)ic.textContent=reminderActive?"🔕":"🔔";
 }
 function toggleReminder() {
   setReminderEnabled(!reminderActive);
@@ -1174,7 +1171,6 @@ try {
 try {
   reminderActive=!!REMINDER.enabled;
   syncReminderUI();
-  updateFab();
   if(reminderActive) restartReminderTimer();
 } catch(e) {}
 
@@ -2640,6 +2636,18 @@ async function refreshAudioStatus(){
     toast("✔ تم تحديث حالة الصوت");
   }catch(e){toast("✖ تعذّر قراءة حالة الصوت","err")}
 }
+/* يستدعيه غلاف أندرويد بعد ضغط أزرار الصوت الفيزيائية — يحدّث الواجهة بلا إشعار منبثق. */
+function syncAudioFromNative(){
+  const br=window.AndroidUpdater;if(!br)return;
+  try{
+    const s=JSON.parse(br.getAudioStatus()||"{}");
+    applyAudioUI(s);
+    if(s.alarmVolume!=null)AUDIO_SAVED.alarm=s.alarmVolume;
+    if(s.notificationVolume!=null)AUDIO_SAVED.notif=s.notificationVolume;
+    if(s.mediaVolume!=null)AUDIO_SAVED.media=s.mediaVolume;
+    saveAudioPrefs();
+  }catch(e){}
+}
 function applyAudioSettings(){
   const br=window.AndroidUpdater;if(!br){toast("✖ ميزة الصوت متاحة في نسخة Android فقط","err");return}
   AUDIO_SAVED.alarm=parseInt($("volAlarm").value)||80;
@@ -2724,10 +2732,12 @@ function finishSetup(){
   toast("✔ تم تفعيل كل شيء — ستأتيك التنبيهات في وقتها");
 }
 function _bindSetup(){
-  const nx=$("setupNext"),pv=$("setupPrev"),cl=$("setupClose");
+  const nx=$("setupNext"),pv=$("setupPrev"),cl=$("setupClose"),op=$("setupOpenBtn");
   if(nx)nx.addEventListener("click",function(){navSetup(1)});
   if(pv)pv.addEventListener("click",function(){navSetup(-1)});
   if(cl)cl.addEventListener("click",closeSetup);
+  // لا نافذة تلقائية عند الفتح — المعالج يُفتح فقط من الإعدادات المتقدمة عند الطلب.
+  if(op)op.addEventListener("click",openSetup);
 }
 function switchStab(name){
   document.querySelectorAll(".stab").forEach(b=>b.classList.toggle("active",b.getAttribute("data-stab")===name));
@@ -2875,9 +2885,8 @@ function setCustomAudio(which,dataUrl,name){
 $("abPlay").onclick=()=>{stopAllSound();playSound(cfg.soundType,VOL)};
 $("abClose").onclick=()=>$("alertbar").classList.remove("show");
 $("langBtn").onclick=()=>setLang(LANG_ORDER[(LANG_ORDER.indexOf(lang)+1)%LANG_ORDER.length]);
-$("reminderBtn").onclick=toggleReminder;
 /* شريط التنقل السفلي للهاتف */
-/* التبويبات + زر التذكير العائم */
+/* التبويبات — التذكير مفعّل تلقائياً ويُضبط من الإعدادات فقط */
 function switchTab(name){
   const panels=document.querySelectorAll(".tab-panel");
   panels.forEach(p=>p.classList.toggle("active",p.getAttribute("data-tab")===name));
@@ -2891,8 +2900,6 @@ document.querySelectorAll(".tabsbar .tb").forEach(b=>{
   if(b.getAttribute("data-go"))b.onclick=()=>switchTab(b.getAttribute("data-go"));
 });
 $("tabSettings").onclick=openSettings;
-$("tabReminder").onclick=toggleReminder;
-updateFab();
 
 /* أزرار الورد القرآني */
 $("qbDone").onclick=qbDone;
@@ -3996,7 +4003,7 @@ _bindAudio();
 _bindStabs();
 try{if(typeof _bindReminder==="function")_bindReminder()}catch(e){}
 fillNotifUI();
-try{syncReminderUI();updateFab()}catch(e){}
+try{syncReminderUI()}catch(e){}
 const _n=new Date();
 viewYM={y:_n.getFullYear(),m:_n.getMonth()};
 viewYear=_n.getFullYear();
@@ -4024,10 +4031,6 @@ startTicker();
 setInterval(renderAzkar,60000);
 setTimeout(function(){renderHealth();if(EXTRA.wake)setWake(true).catch(function(){})},1200);
 setTimeout(function(){const us=$("updateStatus");if(us)us.textContent=T("updateStatusVersion",APP_VERSION);openTzNotice(false)},2000);
-const _sd=(function(){try{return localStorage.getItem("prayerApp_v3_setupDone")}catch(e){return "1"}})();
-if(window.AndroidUpdater&&_sd==null){
-  setTimeout(openSetup,1500);
-}
 if(isIOS&&!audioUnlocked)$("iosHint").classList.remove("hidden");
 /* اتصال الشبكة + تثبيت PWA */
 let _deferredInstallPrompt=null;

@@ -94,6 +94,9 @@ public final class UpdaterBridge {
                 o.put("mediaVolume", am.getStreamVolume(AudioManager.STREAM_MUSIC));
                 o.put("alarmMuted", prefs.getBoolean("muted", false)
                         || am.getRingerMode() == AudioManager.RINGER_MODE_SILENT);
+                boolean quiet = AudioHelper.isQuiet(activity);
+                o.put("quiet", quiet);
+                o.put("dndActive", quiet);
             }
         } catch (Exception ignored) {
         }

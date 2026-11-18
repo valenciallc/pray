@@ -11,7 +11,7 @@ python3 tools/release.py --check
 npm test        # يشغّل sw_test.js ثم smoke_test.js
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 22` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 23` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -20,7 +20,7 @@ npm test        # يشغّل sw_test.js ثم smoke_test.js
 
 ```bash
 git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v22 - calm elegant UI and self-updating Android shell"
+git commit -m "Prayer app v23 - automatic reminder, quiet-aware audio, gentle permissions"
 git push
 ```
 
@@ -57,6 +57,7 @@ python3 tools/release.py --check
 - من v20: `index.html` يشير إلى `styles.css` و`app.js` في الجذر، و`prayer_update.json` يحمل بصمتهما؛ انسخ الملفات الثلاثة معاً عند كل تحديث.
 - من v21: أضف `logo.webp` مع `logo.png` في الجذر؛ كلاهما مخزّن في عامل الخدمة، والصفحة تختار WebP تلقائياً مع fallback.
 - من v22: شريط التبويبات ٤ عناصر فقط، وقائمة «المزيد» للوظائف الثانوية، والإعدادات المتقدمة مخفية خلف زر واحد. انسخ `index.html` و`styles.css` و`app.js` معاً دائماً.
+- من v23: التذكير يعمل تلقائياً بلا زر، والإيقاف من الإعدادات فقط. لا نافذة صلاحيات تلقائية عند الفتح.
 - عامل الخدمة يسجّل من الجذر، ونطاقه يصبح `/pray/` تلقائياً.
 - ملفات الأذان (`السريحي.mp3`, `اقامة.mp3`) في الجذر، لذلك يعمل الأذان دون إنترنت.
 - إن ظهرت شاشة «تعذّر تشغيل التطبيق»، استخدم زر **إعادة المحاولة** أو **مسح الذاكرة وإعادة التحميل**؛ بياناتك لا تُحذف إلا بالزر الأخير.

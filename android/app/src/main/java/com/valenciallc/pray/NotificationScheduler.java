@@ -112,7 +112,9 @@ final class NotificationScheduler {
         int silent = data.getIntExtra("silentMinutes", 0);
         if (silent > 0) AudioHelper.setSilentFor(c, silent, data.getStringExtra("silentMode"));
 
-        if ("adhan".equals(kind) && adhanMode != null && !"none".equals(adhanMode)) {
+        // الصامت و«لا تُزعج»: يبقى الإشعار والاهتزاز فقط، بلا أذان مسموع.
+        if ("adhan".equals(kind) && adhanMode != null && !"none".equals(adhanMode)
+                && !AudioHelper.isQuiet(c)) {
             Intent svc = new Intent(c, AdhanPlaybackService.class);
             svc.putExtra("file", "السريحي.mp3");
             try {

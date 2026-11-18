@@ -36,6 +36,12 @@
 
         <receiver android:name=".AlarmReceiver" android:exported="false" />
         <receiver android:name=".RestoreAudioReceiver" android:exported="false" />
+        <receiver android:name=".PhoneModeReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.media.RINGER_MODE_CHANGED" />
+                <action android:name="android.app.action.INTERRUPTION_FILTER_CHANGED" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".BootReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

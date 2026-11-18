@@ -1,13 +1,15 @@
 package com.valenciallc.pray;
 
-import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -25,11 +27,20 @@ public final class MainActivity extends Activity {
     private SharedPreferences prefs;
     private int port = -1;
     private int knownVersion = 0;
+    private boolean quietUiRegistered;
+
+    private final BroadcastReceiver quietUiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            syncAudioUi();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = getSharedPreferences("pray_updater", MODE_PRIVATE);
+        prefs.edit().putBoolean(PhoneModeReceiver.PREF_QUIET, AudioHelper.isQuiet(this)).apply();
         updater = new ContentUpdater(this);
         updater.installBundledIfNeeded();
         knownVersion = updater.currentVersion();
@@ -87,10 +98,7 @@ public final class MainActivity extends Activity {
         webView.loadUrl(url);
 
         NotificationScheduler.reschedule(this);
-        if (Build.VERSION.SDK_INT >= 33 &&
-                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1001);
-        }
+        // لا طلب إذن تلقائي عند الإقلاع — المستخدم يطلبه بنفسه من الإعدادات عند الحاجة.
         maybeAutoCheck();
     }
 
@@ -101,10 +109,46 @@ public final class MainActivity extends Activity {
         updater.checkAsync(false);
     }
 
+    private void syncAudioUi() {
+        if (webView != null) webView.evaluateJavascript("syncAudioFromNative()", null);
+    }
+
+    /** أزرار الصوت الفيزيائية تتحكم في تيار الأذان (Alarm) مباشرة. */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            AudioHelper.adjustAlarmVolume(this, keyCode == KeyEvent.KEYCODE_VOLUME_UP ? 1 : -1);
+            syncAudioUi();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        if (!quietUiRegistered) {
+            IntentFilter f = new IntentFilter(PhoneModeReceiver.ACTION_QUIET);
+            if (Build.VERSION.SDK_INT >= 33)
+                registerReceiver(quietUiReceiver, f, Context.RECEIVER_NOT_EXPORTED);
+            else
+                registerReceiver(quietUiReceiver, f);
+            quietUiRegistered = true;
+        }
+        syncAudioUi();
         if (updater != null) maybeAutoCheck();
+    }
+
+    @Override
+    protected void onPause() {
+        if (quietUiRegistered) {
+            try {
+                unregisterReceiver(quietUiReceiver);
+            } catch (Exception ignored) {
+            }
+            quietUiRegistered = false;
+        }
+        super.onPause();
     }
 
     @Override
