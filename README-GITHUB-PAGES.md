@@ -11,7 +11,7 @@ python3 tools/release.py --check
 npm test
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 18` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 19` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -20,7 +20,7 @@ npm test
 
 ```bash
 git add index.html sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v18 - mobile UI, notifications, pro settings"
+git commit -m "Prayer app v19 - smarter daily experience"
 git push
 ```
 

@@ -25,7 +25,8 @@
 
 ## 2) الإصدار الحالي
 
-- **النسخة الحالية: 18**
+- **النسخة الحالية: 19** — «تجربة يومية أذكى».
+- تلميح سياقي حسب وقت الصلاة (إقامة، أذكار، رمضان، جمعة، أذان وشيك) مع زر إجراء، واختصارات سريعة للأذكار والورد والمسبحة، وتحية وعدّاد مبنيّان على أوقات اليوم الفعلية.
 - الرقم نفسه موجود في `prayer_update.json` و`sw.js` (`SW_VERSION`) و`index.html` (`APP_VERSION`) وهذا الدليل.
 - التحديث الذاتي يتحقق من **SHA-256** قبل تخزين أي نسخة جديدة؛ لذلك لا تُعدّل `prayer_update.json` يدوياً أبداً.
 
@@ -39,7 +40,7 @@
 2. ادفع ملفات الجذر المحدّثة إلى `main`:
    ```bash
    git add index.html sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-   git commit -m "Prayer app v18 - mobile UI, notifications, pro settings"
+   git commit -m "Prayer app v19 - smarter daily experience"
    git push
    ```
 3. من المستودع: **Settings ← Pages ← Source: Deploy from a branch ← main ← /(root) ← Save**.

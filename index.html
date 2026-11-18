@@ -946,6 +946,25 @@ header{padding-top:calc(6px + env(safe-area-inset-top,0px))}
 .pro-chip{background:var(--card2);border:1px solid var(--line);border-radius:20px;padding:4px 10px;font-size:.72rem;color:var(--muted)}
 .pro-chip b{color:var(--gold)}
 [data-eco="1"] *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+
+/* ===== تجربة يومية أذكى v19 ===== */
+.smart-nudge{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#FFF9EC,#F7E8CE);border:1px solid var(--gold);border-radius:14px;padding:10px 12px;margin-bottom:12px;box-shadow:0 6px 16px rgba(120,90,50,.10)}
+.smart-nudge .sn-ic{font-size:1.55rem;line-height:1;flex:0 0 auto}
+.smart-nudge .sn-body{flex:1;min-width:0}
+.smart-nudge .sn-title{font-weight:800;color:#8A5F2E;font-size:.95rem}
+.smart-nudge .sn-text{color:var(--muted);font-size:.78rem;line-height:1.6;margin-top:2px}
+.smart-nudge .sn-btn{border:0;border-radius:10px;background:var(--gold);color:#FFFDF8;font-weight:800;font-size:.78rem;padding:8px 12px;min-height:40px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.qa-btn{min-height:56px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--text);font-family:inherit;font-size:.82rem;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;box-shadow:0 3px 10px rgba(120,90,50,.08)}
+.qa-btn span{font-size:1.15rem;line-height:1}
+.qa-btn:active{transform:scale(.97)}
+[data-theme="dark"] .smart-nudge{background:linear-gradient(135deg,#2E2419,#241C15)}
+[data-theme="dark"] .smart-nudge .sn-title{color:var(--gold)}
+[data-contrast="high"] .smart-nudge{background:#1B1B1B;color:#FFFFFF}
+@media(max-width:380px){
+  .smart-nudge .sn-btn{font-size:.72rem;padding:7px 9px}
+  .qa-btn{font-size:.74rem;min-height:52px}
+}
 </style>
 </head>
 <body>
@@ -1001,6 +1020,21 @@ header{padding-top:calc(6px + env(safe-area-inset-top,0px))}
       <div class="greet" id="greetBox">
         <span class="gr-main" id="grMain">…</span>
         <span class="gr-tip" id="grTip"></span>
+      </div>
+
+      <div class="smart-nudge" id="smartNudge" role="status" aria-live="polite">
+        <span class="sn-ic" id="snIcon">✨</span>
+        <div class="sn-body">
+          <div class="sn-title" id="snTitle">جارٍ تجهيز يومك…</div>
+          <div class="sn-text" id="snText">سيظهر هنا ما يهمّك الآن حسب وقت الصلاة.</div>
+        </div>
+        <button class="sn-btn" id="snAction" type="button" data-act="">عرض</button>
+      </div>
+
+      <div class="quick-actions" aria-label="اختصارات اليوم">
+        <button class="qa-btn" id="qaAzkar" type="button"><span>🌅</span><b id="qaAzkarLabel">أذكار الصباح</b></button>
+        <button class="qa-btn" id="qaWird" type="button"><span>📖</span>ورد اليوم</button>
+        <button class="qa-btn" id="qaDhikr" type="button"><span>📿</span>المسبحة</button>
       </div>
 
       <section class="countdown">
@@ -1516,7 +1550,7 @@ header{padding-top:calc(6px + env(safe-area-inset-top,0px))}
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 18 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 19 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -2169,7 +2203,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=18;
+const APP_VERSION=19;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -3198,6 +3232,7 @@ function render(){
   renderCountdown(next,now);
   renderNowBox(now,ds);
   renderGreet(now);
+  renderSmartNudge(now,ds,next);
   const pk=curPrayerKey(ds,now);
   if(pk&&!isManuallySet(ds,pk)&&markAttend(ds,pk)){lastWeekKey="";renderWeek()}
   renderWeek();
@@ -3467,11 +3502,14 @@ function renderClock(now){
 function renderCountdown(next,now){
   const main=next.adhan||next.iqama;
   if(main){
-    if(main.isTomorrow&&main.type==="adhan"){
+    if(main.type==="iqama"&&main.dt-now<120000){
+      $("cdLabel").textContent="🕌 الصلاة قامت الآن";
+      $("cdTitle").innerHTML=main.icon+" "+main.prayer+" <small>"+T("iqamaOf",main.prayer)+" · "+main.time+"</small>";
+    }else if(main.isTomorrow&&main.type==="adhan"){
       $("cdLabel").textContent=T("tomorrowEvent");
       $("cdTitle").innerHTML=main.icon+" "+main.prayer+" <small>"+T("adhanTomorrow",main.prayer)+" · "+main.time+"</small>";
     }else{
-      $("cdLabel").textContent=main.type==="iqama"?T("nextIqama"):T("nextAdhan");
+      $("cdLabel").textContent=main.type==="iqama"?T("nextIqama"):(main.dt-now<15*60000?"⏳ استعد للأذان":T("nextAdhan"));
       $("cdTitle").innerHTML=main.icon+" "+main.prayer+" <small>"+(main.type==="iqama"?T("iqamaOf",main.prayer):T("adhanOf",main.prayer))+" · "+main.time+"</small>";
     }
     $("cdNum").textContent=hms(main.dt-now);
@@ -3535,6 +3573,65 @@ function renderNowBox(now,ds){
   }
 }
 
+/* ===== التلميح الذكي حسب وقت اليوم ===== */
+let lastSmartKey="";
+function renderSmartNudge(now,ds,next){
+  const box=$("smartNudge");if(!box)return;
+  const d=getDayData(ds);
+  const toMin=hm=>{const a=String(hm||"00:00").split(":");return (parseInt(a[0],10)||0)*60+(parseInt(a[1],10)||0)};
+  const nm=now.getHours()*60+now.getMinutes();
+  const main=next.adhan||next.iqama;
+  const mins=main?Math.max(0,Math.round((main.dt-now)/60000)):9999;
+  let icon="✨",title="",text="",act="none",label="عرض",attKey="";
+
+  let iqamaNow="";
+  if(d){
+    for(const p of PRAYER_DEFS){
+      const ti=d[p.key+"I"];if(!ti)continue;
+      const dt=hmToDate(ds,ti);
+      if(now>=dt&&now-dt<6*60000){iqamaNow=p.key;break}
+    }
+  }
+
+  if(iqamaNow){
+    icon="🕌";title="قامت الصلاة — "+PN(iqamaNow);
+    text="الإقامة كانت "+d[iqamaNow+"I"]+" · يمكنك تسجيل حضورك بضغطة واحدة.";
+    act="attend";label="✅ تسجيل الحضور";attKey=iqamaNow;
+  }else if(d&&d.Fajr&&now<hmToDate(ds,d.Fajr)){
+    icon="🌙";title="أذكار المساء";
+    text="قبل الفجر — ورد قصير يختم يومك ويهيّئك للصلاة.";act="azkar";label="الأذكار";
+  }else if(d&&d.Isha&&nm>=toMin(d.Isha)){
+    icon="🌙";title="أذكار المساء";text="بعد العشاء — ذكر قصير يختم به يومك.";act="azkar";label="الأذكار";
+  }else if(isRamadanDay(d)){
+    icon="🌙";title="رمضان مبارك";
+    text=(d.Fajr&&now<hmToDate(ds,d.Fajr))?"السحور قريب — تهيّأ له.":"الإفطار على موعده — لا تنسَ الدعاء.";
+    act="ramadan";label="شاشة رمضان";
+  }else if(now.getDay()===5&&nm<toMin(d&&d.Maghrib||"18:00")){
+    icon="📖";title="يوم الجمعة";text="اغتسل وبكّر، واقرأ سورة الكهف قبل المغرب.";act="wird";label="سورة الكهف";
+  }else if(main&&mins<=20){
+    icon=main.type==="iqama"?"🕌":"🔔";
+    title=(main.type==="iqama"?"الإقامة خلال ":"الأذان خلال ")+mins+" دقيقة";
+    text=(main.prayer||"الصلاة")+" · "+(main.time||"--")+(main.isTomorrow?" (غداً)":"");
+    act="display";label="شاشة العرض";
+  }else{
+    icon="✨";title="خطتك اليومية جاهزة";
+    text=main?((main.prayer||"الصلاة القادمة")+" · "+(main.time||"--")):"ستظهر الأوقات قريباً.";
+    act="none";label="حسناً";
+  }
+
+  const qal=$("qaAzkarLabel");
+  if(qal)qal.textContent=(d&&d.Maghrib&&nm>=toMin(d.Maghrib))||(d&&d.Fajr&&nm<toMin(d.Fajr))?"أذكار المساء":"أذكار الصباح";
+
+  const key=ds+"|"+Math.floor(now.getTime()/60000)+"|"+title+"|"+act+"|"+attKey;
+  if(key===lastSmartKey)return;
+  lastSmartKey=key;
+  $("snIcon").textContent=icon;
+  $("snTitle").textContent=title;
+  $("snText").textContent=text;
+  const btn=$("snAction");
+  if(btn){btn.textContent=label;btn.setAttribute("data-act",act);btn.setAttribute("data-key",attKey)}
+}
+
 /* ============================= لمسات ذكية ============================= */
 const ATTEND_KEY="prayerApp_v3_attend";
 let attendance={history:{},celebrated:[]};
@@ -3551,9 +3648,21 @@ function renderGreet(now){
   if(d&&d.hijri&&d.hijri.indexOf("رمضان")!==-1)main=T("ramadan");
   else if(now.getDay()===5)main=T("friday");
   else{
-    const h=now.getHours();
-    const pool=h>=4&&h<12?GREETINGS[lang].dawn:h<16?GREETINGS[lang].noon:h<21?GREETINGS[lang].evening:GREETINGS[lang].night;
-    main=pool[(dayOfYear(now)+Math.floor(h/4))%pool.length];
+    const G=GREETINGS[lang]||GREETINGS.ar;
+    let pool;
+    if(d&&d.Fajr&&d.Dhuhr&&d.Maghrib&&d.Isha){
+      const m=hm=>{const a=String(hm||"00:00").split(":");return (parseInt(a[0],10)||0)*60+(parseInt(a[1],10)||0)};
+      const nm=now.getHours()*60+now.getMinutes();
+      if(nm<m(d.Fajr))pool=G.night;
+      else if(nm<m(d.Dhuhr))pool=G.dawn;
+      else if(nm<m(d.Maghrib))pool=G.noon;
+      else if(nm<m(d.Isha))pool=G.evening;
+      else pool=G.night;
+    }else{
+      const h=now.getHours();
+      pool=h>=4&&h<12?G.dawn:h<16?G.noon:h<21?G.evening:G.night;
+    }
+    main=pool[(dayOfYear(now)+Math.floor(now.getHours()/4))%pool.length];
   }
   $("grMain").textContent=main;
 }
@@ -5397,6 +5506,28 @@ async function copyDiagnostics(){
     else{const a=document.createElement("textarea");a.value=text;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();toast("📋 تم نسخ تقرير الحالة")}
   }catch(e){toast("تعذّر نسخ التقرير",true)}
 }
+function _bindSmart(){
+  function goAzkar(){
+    switchTab("now");
+    const el=$("azkTitle");
+    if(el&&el.scrollIntoView){try{el.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){try{el.scrollIntoView()}catch(e2){}}}
+  }
+  const a=$("snAction");
+  if(a)a.addEventListener("click",()=>{
+    const act=a.getAttribute("data-act")||"none";
+    if(act==="azkar")goAzkar();
+    else if(act==="wird")switchTab("wird");
+    else if(act==="ramadan")switchTab("ramadan");
+    else if(act==="display")toggleDisplay();
+    else if(act==="attend"){
+      const key=a.getAttribute("data-key")||"";
+      if(key){markAttend(todayStr(),key);toast("🕌 "+PN(key)+" ✓")}
+    }
+  });
+  const qa=$("qaAzkar");if(qa)qa.addEventListener("click",goAzkar);
+  const qw=$("qaWird");if(qw)qw.addEventListener("click",()=>switchTab("wird"));
+  const qd=$("qaDhikr");if(qd)qd.addEventListener("click",()=>switchTab("dhikr"));
+}
 function _bindPro(){
   const ws=$("webScheduleToggle");
   if(ws){ws.addEventListener("click",toggleWebSchedule);ws.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();toggleWebSchedule()}})}
@@ -5714,6 +5845,7 @@ _bindShare();
 _bindLook();
 _bindSilent();
 _bindWebNotify();
+_bindSmart();
 _bindPro();
 _bindHealth();
 _bindTz();
