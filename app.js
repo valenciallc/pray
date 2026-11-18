@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=26;
+const APP_VERSION=27;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -3482,7 +3482,21 @@ async function notifyWeb(title,body,tag){
     else new Notification(title,{body:body,tag:tag,icon:"icon-192.png"});
   }catch(e){}
 }
+/* في غلاف أندرويد WebView لا يوفّر واجهة Notification؛ الإشعارات تتم أصلياً عبر الجسر. */
+function hasNativeNotify(){
+  return !!(window.AndroidUpdater&&typeof window.AndroidUpdater.requestNotifyPermission==="function");
+}
+function nativeNotifyPerm(){
+  if(!hasNativeNotify())return "unsupported";
+  try{const s=JSON.parse(window.AndroidUpdater.permStatus()||"{}");return s.notification||"unknown"}catch(e){return "unknown"}
+}
 async function enableWebNotify(){
+  if(hasNativeNotify()){
+    try{window.AndroidUpdater.requestNotifyPermission()}catch(e){}
+    EXTRA.webNotify=true;saveExtra();updateNotifQuick();
+    toast("🔔 أُرسل طلب الإذن — وافق عليه من النافذة");
+    return true;
+  }
   if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return false}
   if(Notification.permission==="granted"){EXTRA.webNotify=true;saveExtra();toast(T("webNotifyOn"));updateNotifQuick();if(EXTRA.webSchedule)pushWebSchedule(true);return true}
   try{
@@ -3504,6 +3518,12 @@ function ensureWebNotify(){
   });
 }
 async function testWebNotify(){
+  if(hasNativeNotify()){
+    if(nativeNotifyPerm()!=="granted"){await enableWebNotify();return}
+    try{window.AndroidUpdater.showTestNotification();toast("🧪 أُرسل إشعار تجريبي")}
+    catch(e){toast("✖ تعذّر إرسال الإشعار التجريبي",true)}
+    return;
+  }
   if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return}
   if(Notification.permission!=="granted"){const ok=await enableWebNotify();if(Notification.permission!=="granted")return}
   try{
@@ -3545,6 +3565,11 @@ function applyWebScheduleUI(){
 }
 function toggleWebSchedule(){
   EXTRA.webSchedule=!EXTRA.webSchedule;saveExtra();applyWebScheduleUI();
+  if(hasNativeNotify()){
+    pushSchedule();applyWebScheduleUI();renderProStatus();
+    toast(EXTRA.webSchedule?"🔔 الجدولة تُدار أصلياً في تطبيق أندرويد":"تم إيقاف الجدولة");
+    return;
+  }
   if(EXTRA.webSchedule){
     if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);EXTRA.webSchedule=false;saveExtra();applyWebScheduleUI();return}
     if(Notification.permission!=="granted")enableWebNotify().then(ok=>{
@@ -3560,12 +3585,20 @@ function toggleWebSchedule(){
 }
 function updateNotifQuick(){
   const b=$("notifQuickBtn");if(!b)return;
-  const on=!!EXTRA.webNotify&&("Notification" in window)&&Notification.permission==="granted";
+  const on=hasNativeNotify()
+    ? nativeNotifyPerm()==="granted"&&!!NOTIF_SETTINGS.master
+    : !!EXTRA.webNotify&&("Notification" in window)&&Notification.permission==="granted";
   b.classList.toggle("on",on);
   if(b.firstChild)b.firstChild.textContent=on?"🔔":"🔕";
   b.setAttribute("aria-label",on?"إشعارات الصلاة مفعّلة":"تفعيل إشعارات الصلاة");
 }
 function notifQuickClick(){
+  if(hasNativeNotify()){
+    if(nativeNotifyPerm()!=="granted"){enableWebNotify().then(updateNotifQuick);return}
+    if(!NOTIF_SETTINGS.master){toggleNotifications();updateNotifQuick();return}
+    toast("🔔 الإشعارات مفعّلة — افتح الإعدادات للتخصيص");
+    openSettings();switchStab("notif");return;
+  }
   if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return}
   if(Notification.permission==="denied"){toast("الإشعارات مرفوضة — فعّلها من إعدادات المتصفح",true);return}
   if(Notification.permission!=="granted"){
@@ -3597,7 +3630,7 @@ function filterSettings(q){
 function proChip(label,value){return '<span class="pro-chip">'+label+': <b>'+value+'</b></span>'}
 function renderProStatus(){
   const box=$("proStatus");if(box){
-    const perm=("Notification" in window)?Notification.permission:"unsupported";
+    const perm=hasNativeNotify()?nativeNotifyPerm():("Notification" in window?Notification.permission:"unsupported");
     const ptxt=perm==="granted"?"ممنوح ✓":(perm==="denied"?"مرفوض ✖":"بانتظار الإذن");
     box.innerHTML=proChip("الإشعارات",ptxt)+proChip("الجدولة",EXTRA.webSchedule?"مفعّلة":"متوقفة")+proChip("الاقتصادي",EXTRA.eco?"مفعّل":"متوقف")+proChip("البطاقات",$("cards")?$("cards").children.length:"0");
   }
@@ -3607,7 +3640,7 @@ function renderProStatus(){
   updateNotifQuick();
 }
 async function copyDiagnostics(){
-  const perm=("Notification" in window)?Notification.permission:"unsupported";
+  const perm=hasNativeNotify()?nativeNotifyPerm():("Notification" in window?Notification.permission:"unsupported");
   let sw="غير متاح";try{const r=await navigator.serviceWorker.getRegistration();if(r)sw="متاح"}catch(e){}
   const text=["تقرير حالة تطبيق أوقات الصلاة","الإصدار: "+APP_VERSION,"الإشعارات: "+perm,"الجدولة المسبقة: "+(EXTRA.webSchedule?"مفعّلة":"متوقفة"),"عامل الخدمة: "+sw,"الوضع الاقتصادي: "+(EXTRA.eco?"مفعّل":"متوقف"),"اللغة: "+lang,"التوقيت: "+fmtOffset(LOC.tz),"المدينة: "+(LOC.city||"—")].join("\n");
   try{

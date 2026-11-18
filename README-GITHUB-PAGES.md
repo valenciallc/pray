@@ -11,7 +11,7 @@ python3 tools/release.py --check
 npm test        # يشغّل sw_test.js ثم smoke_test.js
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 26` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 27` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -20,7 +20,7 @@ npm test        # يشغّل sw_test.js ثم smoke_test.js
 
 ```bash
 git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v26 - English default and persistent language choice"
+git commit -m "Prayer app v27 - native notifications without browser unsupported error"
 git push
 ```
 
@@ -61,6 +61,7 @@ python3 tools/release.py --check
 - من v24: بيان `assets` في `prayer_update.json` يضمن تنزيل أي ملف جديد في إصدار لاحق دون تثبيت APK جديد.
 - من v25: زر الاستماع يفضّل نطق أندرويد الأصلي عبر `AndroidUpdater.speak()`، مع `speechSynthesis` كبديل في المتصفح.
 - من v26: اللغة الافتراضية `en` وتُحفظ فوراً؛ اختيار المستخدم يُقرأ أولاً ولا يُستبدل عند تحديث المحتوى.
+- من v27: أزرار الإشعارات تفضّل الجسر الأصلي في غلاف أندرويد، فلا تظهر رسالة «متصفحك لا يدعم الإشعارات»؛ زر التجربة يرسل إشعاراً نظامياً.
 - عامل الخدمة يسجّل من الجذر، ونطاقه يصبح `/pray/` تلقائياً.
 - ملفات الأذان (`السريحي.mp3`, `اقامة.mp3`) في الجذر، لذلك يعمل الأذان دون إنترنت.
 - إن ظهرت شاشة «تعذّر تشغيل التطبيق»، استخدم زر **إعادة المحاولة** أو **مسح الذاكرة وإعادة التحميل**؛ بياناتك لا تُحذف إلا بالزر الأخير.

@@ -72,6 +72,15 @@ final class NotificationScheduler {
         }
     }
 
+    /** إشعار تجريبي يُرسل من زر «تجربة إشعار» داخل WebView. */
+    static void testNotification(Context c) {
+        Intent data = new Intent();
+        data.putExtra("title", "🔔 إشعار تجريبي");
+        data.putExtra("text", "إشعارات الصلاة تعمل بنجاح");
+        data.putExtra("kind", "test");
+        show(c, data);
+    }
+
     static void reschedule(Context c) {
         String json = c.getSharedPreferences(PREF, Context.MODE_PRIVATE).getString(KEY_JSON, "");
         if (json != null && !json.isEmpty()) schedule(c, json);

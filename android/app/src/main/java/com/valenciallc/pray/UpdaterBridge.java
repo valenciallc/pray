@@ -264,6 +264,17 @@ public final class UpdaterBridge {
         });
     }
 
+    /** إشعار تجريبي حقيقي من النظام، بدل إشعار المتصفح غير المتاح في WebView. */
+    @JavascriptInterface
+    public void showTestNotification() {
+        activity.runOnUiThread(() -> {
+            try {
+                NotificationScheduler.testNotification(activity);
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
     @JavascriptInterface
     public void openBatterySettings() {
         activity.runOnUiThread(() -> {
