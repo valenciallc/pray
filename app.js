@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=28;
+const APP_VERSION=29;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -630,6 +630,10 @@ const I18N_MORE={
  ar:{
   occTitle:"🌙 أيام ومواسم مميزة",occFriday:"📖 الكهف اليوم",statsTitle:"📊 إحصاءات الصلاة والسلسلة",
   statStreak:"🔥 سلسلة حالية (يوم)",statBest:"🏆 أفضل سلسلة",statMonth:"📅 إنجاز الشهر",statTotal:"✅ صلوات مؤداة",
+  insightsTitle:"📈 تحليلات الأداء",insightsSub:"آخر ٧ و٣٠ يوماً",insTrend:"الاتجاه الأسبوعي",insByPrayer:"الصلوات الأكثر التزاماً",insBestDay:"أفضل يوم",insConsistency:"الانتظام",insDays:"يوم",insUp:"↑ تحسّن",insDown:"↓ تراجع",insSame:"→ ثبات",
+  voiceTitle:"🎙️ الأوامر الصوتية",voiceReady:"جاهز للأمر",voiceListening:"أصغي… تكلّم الآن",voiceHint:"قل: «الصلاة التالية»، «الأذكار»، «المسبحة»، «الإعدادات»، أو «إيقاف التذكير».",voiceFallback:"التعرّف على الصوت غير متاح هنا؛ اضغط أي أمر أدناه وسيُقرأ عليك.",voiceError:"تعذّر تشغيل الميكروفون",voiceTapHint:"أوامر جاهزة — اضغط أياً منها",voiceDone:"تم: {0}",voiceUnknown:"لم أفهم الأمر — جرّب أحد الأوامر أدناه",voiceStartBtn:"🎙️ ابدأ التحدث",voiceStopBtn:"⏹ إيقاف الاستماع",voiceNext:"الصلاة القادمة",
+  voiceCmdNow:"الآن",voiceCmdPrayer:"الصلاة",voiceCmdTable:"الجدول",voiceCmdQibla:"القبلة",voiceCmdWird:"الورد",voiceCmdDhikr:"المسبحة",voiceCmdSettings:"الإعدادات",voiceCmdReminderOn:"تفعيل التذكير",voiceCmdReminderOff:"إيقاف التذكير",voiceCmdListen:"استمع",voiceCmdStop:"توقف",voiceCmdEnglish:"اللغة الإنجليزية",voiceCmdArabic:"اللغة العربية",voiceCmdHelp:"مساعدة",
+  shortcutTitle:"اختصارات لوحة المفاتيح",shortcutHint:"اضغط ? للاختصارات، v للأوامر الصوتية، n للآن، p للصلاة، d للذكر، s للإعدادات.",
   qbKhatma:"تقدّم الختمة",qbTodayTarget:"ورد اليوم:",qbPages:"صفحة",qbTargetPage:"إلى الصفحة:",qbPlan:"الخطة",qbDaily:"صفحات يومياً",qbRestart:"↺ بدء خطة جديدة",
   dhSpeed:"السرعة",stabHealth:"الصحة",a11yGroup:"حجم الخط وسهولة القراءة",a11ySub:"مناسب لكبار السن وقارئات الشاشة",
   a11yNote:"يُحفظ حجم الخط على جهازك، وتعمل جميع الأزرار مع TalkBack وقارئ الشاشة.",
@@ -671,6 +675,10 @@ const I18N_MORE={
  en:{
   occTitle:"🌙 Special days & seasons",occFriday:"📖 Al-Kahf today",statsTitle:"📊 Prayer stats & streak",
   statStreak:"🔥 Current streak (days)",statBest:"🏆 Best streak",statMonth:"📅 Month progress",statTotal:"✅ Prayers marked",
+  insightsTitle:"📈 Performance insights",insightsSub:"Last 7 and 30 days",insTrend:"Weekly trend",insByPrayer:"Most consistent prayers",insBestDay:"Best day",insConsistency:"Consistency",insDays:"days",insUp:"↑ Improving",insDown:"↓ Declining",insSame:"→ Steady",
+  voiceTitle:"🎙️ Voice commands",voiceReady:"Ready for a command",voiceListening:"Listening… speak now",voiceHint:"Say: “next prayer”, “azkar”, “tasbih”, “settings”, or “stop reminder”.",voiceFallback:"Speech recognition is unavailable here; tap any command below and it will be read aloud.",voiceError:"Microphone could not be started",voiceTapHint:"Quick commands — tap any",voiceDone:"Done: {0}",voiceUnknown:"Command not recognised — try one below",voiceStartBtn:"🎙️ Start speaking",voiceStopBtn:"⏹ Stop listening",voiceNext:"Next prayer",
+  voiceCmdNow:"Now",voiceCmdPrayer:"Prayer",voiceCmdTable:"Table",voiceCmdQibla:"Qibla",voiceCmdWird:"Wird",voiceCmdDhikr:"Tasbih",voiceCmdSettings:"Settings",voiceCmdReminderOn:"Enable reminder",voiceCmdReminderOff:"Stop reminder",voiceCmdListen:"Listen",voiceCmdStop:"Stop",voiceCmdEnglish:"English language",voiceCmdArabic:"Arabic language",voiceCmdHelp:"Help",
+  shortcutTitle:"Keyboard shortcuts",shortcutHint:"Press ? for shortcuts, v for voice, n for Now, p for Prayer, d for Dhikr, s for Settings.",
   qbKhatma:"Khatma progress",qbTodayTarget:"Today's share:",qbPages:"pages",qbTargetPage:"Up to page:",qbPlan:"Plan",qbDaily:"Pages per day",qbRestart:"↺ Start new plan",
   dhSpeed:"Speed",stabHealth:"Health",a11yGroup:"Font size & accessibility",a11ySub:"Friendly for elders and screen readers",
   a11yNote:"Font size is saved on your device. All controls work with TalkBack and screen readers.",
@@ -948,7 +956,8 @@ function setLang(l){
   renderWeek();
   renderMonthTabs();
   renderTable();
-  lastRenderKey="";lastQuranKey="";lastDhikrKey="";lastTprogKey="";lastStatsKey="";lastOccKey="";
+  try{renderVoiceCommands()}catch(e){}
+  lastRenderKey="";lastQuranKey="";lastDhikrKey="";lastTprogKey="";lastStatsKey="";lastInsightsKey="";lastOccKey="";
   render();
 }
 
@@ -3097,8 +3106,59 @@ function bestStreak(){
   }
   return best;
 }
+/* تحليلات هادئة من سجل الحضور المخزّن محلياً — بلا اتصال أو خدمة خارجية. */
+let lastInsightsKey="";
+function renderInsights(){
+  const host=$("insights");if(!host)return;
+  const hist=attendance.history||{};
+  const count=ds=>Object.keys(hist[ds]||{}).length;
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    days.push({ds:dateStr(d),label:DN()[d.getDay()],n:count(dateStr(d))});
+  }
+  const per={};PRAYER_DEFS.forEach(p=>per[p.key]=0);
+  let active=0,best={ds:"",n:0};
+  for(let i=29;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=dateStr(d),n=count(ds);
+    if(n>0)active++;
+    if(n>best.n)best={ds:ds,n:n};
+    for(const p of PRAYER_DEFS)if(hist[ds]&&hist[ds][p.key])per[p.key]++;
+  }
+  const key=[days.map(x=>x.n).join(""),active,best.ds,Object.keys(per).map(k=>per[k]).join(""),lang].join("|");
+  if(key===lastInsightsKey)return;
+  lastInsightsKey=key;
+
+  const trend=$("insTrendBars");
+  if(trend){
+    const peak=Math.max(5,...days.map(x=>x.n));
+    trend.innerHTML=days.map(x=>
+      '<div class="ins-bar"><i style="height:'+Math.max(3,Math.round(x.n/peak*46))+'px"></i><small>'+x.label+'</small></div>'
+    ).join("");
+    trend.setAttribute("aria-label",T("insTrend")+": "+days.map(x=>x.ds+" "+x.n).join("، "));
+    const earlier=days.slice(0,3).reduce((a,b)=>a+b.n,0);
+    const recent=days.slice(-3).reduce((a,b)=>a+b.n,0);
+    const diff=recent-earlier;
+    const val=$("insTrendVal");
+    if(val)val.textContent=(diff>0?T("insUp"):diff<0?T("insDown"):T("insSame"))+" ("+recent+"/"+earlier+")";
+  }
+  const bars=$("insPrayerBars");
+  if(bars){
+    bars.innerHTML=PRAYER_DEFS.map(p=>
+      '<div class="ins-bar"><span>'+PN(p.key)+'</span><i style="--w:'+Math.round(per[p.key]/30*100)+'%"></i><small>'+per[p.key]+'</small></div>'
+    ).join("");
+    bars.setAttribute("aria-label",T("insByPrayer")+": "+PRAYER_DEFS.map(p=>PN(p.key)+" "+per[p.key]).join("، "));
+  }
+  const bd=$("insBestDay");
+  if(bd)bd.textContent=best.ds?best.ds.slice(5)+" · "+best.n+"/5":"—";
+  const cv=$("insConsistencyVal");
+  if(cv)cv.textContent=Math.round(active/30*100)+"% ("+active+"/30 "+T("insDays")+")";
+}
+
 function renderStats(){
   const box=$("heatmap");if(!box)return;
+  renderInsights();
   const now=new Date(),today=todayStr();
   const hist=attendance.history||{};
   let total=0;
@@ -4028,6 +4088,153 @@ const _occBtn=$("occFriday");
 if(_occBtn)_occBtn.addEventListener("click",()=>{toast(T("occFridayToast"));switchTab("wird")});
 const _qbDoneBtn=$("qbDone");
 if(_qbDoneBtn)_qbDoneBtn.addEventListener("click",()=>haptic([30,30]));
+
+/* ============================= الأوامر الصوتية والإتاحة (طبقة ويب فقط) ============================= */
+/* لا يُطلب إذن الميكروفون تلقائياً أبداً؛ زر «ابدأ التحدث» هو الذي يبدأ التعرّف. */
+const VoiceSR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+let voiceRec=null,voiceListening=false;
+const VOICE_CMDS=[
+  {id:"now",         label:"voiceCmdNow",         kw:"الآن الرئيسية اليوم now home current"},
+  {id:"prayer",      label:"voiceCmdPrayer",      kw:"الصلاة الصلوات القادمة الوقت prayer salat next"},
+  {id:"table",       label:"voiceCmdTable",       kw:"الجدول الشهر table schedule"},
+  {id:"qibla",       label:"voiceCmdQibla",       kw:"القبلة الاتجاه qibla"},
+  {id:"wird",        label:"voiceCmdWird",        kw:"الورد القرآن الختمة quran wird"},
+  {id:"dhikr",       label:"voiceCmdDhikr",       kw:"المسبحة الذكر الاذكار tasbih dhikr azkar"},
+  {id:"settings",    label:"voiceCmdSettings",    kw:"الاعدادات الإعدادات الضبط settings"},
+  {id:"reminderOn",  label:"voiceCmdReminderOn",  kw:"تفعيل التذكير تشغيل التذكير الإشعارات enable reminder notifications"},
+  {id:"reminderOff", label:"voiceCmdReminderOff", kw:"ايقاف التذكير إيقاف التذكير stop reminder off disable"},
+  {id:"listen",      label:"voiceCmdListen",      kw:"استمع اسمع الاستماع listen read"},
+  {id:"stop",        label:"voiceCmdStop",        kw:"توقف ايقاف stop"},
+  {id:"english",     label:"voiceCmdEnglish",     kw:"اللغة الإنجليزية الإنجليزية english"},
+  {id:"arabic",      label:"voiceCmdArabic",      kw:"اللغة العربية العربية arabic"},
+  {id:"help",        label:"voiceCmdHelp",        kw:"مساعدة help"}
+];
+function normVoice(s){
+  return String(s||"").toLowerCase()
+    .replace(/[\u064b-\u0652]/g,"")
+    .replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")
+    .replace(/[^a-z0-9\u0600-\u06ff\s]/g," ")
+    .replace(/\s+/g," ").trim();
+}
+function voiceSupported(){return !!VoiceSR}
+function setVoiceStatus(msg,announce){
+  const st=$("voiceState"),s=$("voiceStatus");
+  if(st)st.textContent=msg;
+  if(announce&&s)s.textContent=msg;
+}
+function renderVoiceCommands(){
+  const host=$("voiceCommands");if(!host)return;
+  host.innerHTML=VOICE_CMDS.map(c=>
+    '<button type="button" class="voice-cmd" data-voice="'+c.id+'">'+T(c.label)+'</button>'
+  ).join("");
+  host.querySelectorAll("[data-voice]").forEach(b=>{
+    b.onclick=()=>runVoiceCommand(b.getAttribute("data-voice"),true);
+  });
+}
+function openVoice(){
+  const m=$("voiceModal");if(!m)return;
+  renderVoiceCommands();
+  setVoiceStatus(voiceSupported()?T("voiceReady"):T("voiceFallback"),true);
+  m.classList.add("open");
+  const b=$("voiceStart");if(b)b.textContent=T("voiceStartBtn");
+  try{setTimeout(()=>{const f=b||m.querySelector("button");if(f)f.focus()},30)}catch(e){}
+}
+function closeVoice(){
+  const m=$("voiceModal");if(!m)return;
+  if(voiceListening)stopVoiceListen();
+  m.classList.remove("open");
+}
+function stopVoiceListen(){
+  if(voiceRec){try{voiceRec.stop()}catch(e){}}
+  voiceListening=false;
+  const b=$("voiceStart");if(b)b.textContent=T("voiceStartBtn");
+}
+function startVoiceListen(){
+  if(!VoiceSR){toast(T("voiceFallback"));setVoiceStatus(T("voiceFallback"),true);return}
+  if(voiceListening){stopVoiceListen();return}
+  try{
+    voiceRec=new VoiceSR();
+    voiceRec.lang=(lang||"ar").startsWith("ar")?"ar-SA":"en-US";
+    voiceRec.interimResults=false;
+    voiceRec.maxAlternatives=1;
+    voiceRec.onstart=()=>{
+      voiceListening=true;
+      const b=$("voiceStart");if(b)b.textContent=T("voiceStopBtn");
+      setVoiceStatus(T("voiceListening"),true);
+    };
+    voiceRec.onresult=e=>{
+      const r=e&&e.results&&e.results[0]&&e.results[0][0];
+      if(r&&r.transcript)handleVoiceText(r.transcript);
+    };
+    voiceRec.onerror=e=>{
+      setVoiceStatus(T("voiceError")+(e&&e.error?": "+e.error:""),true);
+      voiceListening=false;
+      const b=$("voiceStart");if(b)b.textContent=T("voiceStartBtn");
+    };
+    voiceRec.onend=()=>{
+      voiceListening=false;
+      const b=$("voiceStart");if(b)b.textContent=T("voiceStartBtn");
+    };
+    voiceRec.start();
+  }catch(e){toast(T("voiceError"),true);setVoiceStatus(T("voiceError"),true)}
+}
+function handleVoiceText(text){
+  const n=normVoice(text);
+  let found=null;
+  for(const c of VOICE_CMDS){
+    const kws=c.kw.split(/\s+/).map(normVoice).filter(Boolean);
+    if(kws.some(k=>n.indexOf(k)>=0)){found=c;break}
+  }
+  if(found)runVoiceCommand(found.id,false);
+  else{setVoiceStatus(T("voiceUnknown"),true);speakText(T("voiceUnknown"))}
+}
+function voiceSummary(){
+  const d=getDayData(todayStr());
+  if(!d)return T("voiceNext")+" — —";
+  return T("voiceNext")+": "+PRAYER_DEFS.map(p=>PN(p.key)+" "+(d[p.key]||"—")).join("، ");
+}
+function runVoiceCommand(id,tapped){
+  const entry=VOICE_CMDS.find(c=>c.id===id);
+  const name=T(entry?entry.label:id);
+  switch(id){
+    case "now":case "prayer":case "table":case "qibla":case "wird":case "dhikr":
+      closeVoice();
+      switchTab(id==="prayer"?"pray":id);
+      if(id==="dhikr"){try{renderDhikr()}catch(e){}}
+      break;
+    case "settings":closeVoice();openSettings();break;
+    case "reminderOn":if(!NOTIF_SETTINGS.master)toggleNotifications();break;
+    case "reminderOff":if(NOTIF_SETTINGS.master)toggleNotifications();break;
+    case "listen":speakText(voiceSummary());break;
+    case "stop":stopSpeak();stopVoiceListen();break;
+    case "english":setLang("en");break;
+    case "arabic":setLang("ar");break;
+  }
+  const msg=id==="listen"?voiceSummary():(id==="help"?T("voiceHint"):T("voiceDone",name));
+  setVoiceStatus(msg,true);
+  if(id!=="stop"&&id!=="listen")speakText(msg);
+}
+(function(){
+  const b=$("voiceBtn");if(b)b.onclick=openVoice;
+  const x=$("voiceClose");if(x)x.onclick=closeVoice;
+  const m=$("voiceModal");
+  if(m)m.addEventListener("click",e=>{if(e.target===m)closeVoice()});
+  const s=$("voiceStart");if(s)s.onclick=startVoiceListen;
+})();
+/* اختصارات لوحة المفاتيح — تتجاهل حقول الإدخال حتى لا تُعطّل الكتابة. */
+document.addEventListener("keydown",function(e){
+  if(e.ctrlKey||e.altKey||e.metaKey)return;
+  const t=e.target;
+  if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName||"")))return;
+  if(e.key==="Escape"){
+    const m=$("voiceModal");if(m&&m.classList.contains("open"))closeVoice();
+    return;
+  }
+  if(e.key==="?"){toast(T("shortcutTitle")+" — "+T("shortcutHint"));return}
+  const map={v:openVoice,n:()=>switchTab("now"),p:()=>switchTab("pray"),d:()=>switchTab("dhikr"),s:openSettings};
+  const fn=map[String(e.key||"").toLowerCase()];
+  if(fn){e.preventDefault();fn()}
+});
 
 /* ============================= البداية ============================= */
 try{

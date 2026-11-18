@@ -677,6 +677,36 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .hm-legend i{width:12px;height:12px;border-radius:3px;display:inline-block;background:#EADCC5}
 .hm-legend i.l1{background:#E9CE9E}.hm-legend i.l2{background:#DDB77C}.hm-legend i.l3{background:#CB9C5C}.hm-legend i.l4{background:#B97F3F}
 
+/* تحليلات هادئة — أشرطة رفيعة بلا حركة أو ألوان صاخبة */
+.insights{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.ins-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;color:var(--text);font-weight:800;font-size:.9rem;flex-wrap:wrap}
+.ins-head small{color:var(--muted);font-weight:600;font-size:.72rem}
+.ins-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px}
+.ins-card{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-height:104px}
+.ins-card>span{color:var(--muted);font-size:.76rem;font-weight:700}
+.ins-card>b{color:var(--gold);font-size:.9rem}
+.ins-bars{display:flex;gap:5px;align-items:flex-end;height:52px;direction:ltr}
+.ins-bars.vertical{height:auto;flex-direction:column;gap:6px;direction:rtl}
+.ins-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.ins-bar i{display:block;width:100%;max-width:18px;background:linear-gradient(180deg,#DDB77C,#A17952);border-radius:5px 5px 2px 2px;min-height:3px}
+.ins-bar small{font-size:.62rem;color:var(--muted);white-space:nowrap}
+.ins-bars.vertical .ins-bar{flex-direction:row;justify-content:flex-start;gap:6px}
+.ins-bars.vertical .ins-bar>span{font-size:.68rem;color:var(--muted);min-width:44px}
+.ins-bars.vertical .ins-bar i{height:7px;width:var(--w);max-width:none;border-radius:4px;background:linear-gradient(90deg,#E9CE9E,#A17952)}
+.ins-facts{gap:6px}
+.ins-facts>div{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.ins-facts span{color:var(--muted);font-size:.75rem}
+.ins-facts b{color:var(--gold);font-size:.9rem}
+
+/* الأوامر الصوتية — أهداف لمس كبيرة وواضحة لقارئ الشاشة */
+.voice-box{max-width:420px}
+.voice-state{text-align:center;font-weight:800;color:var(--gold);margin-bottom:6px}
+.voice-hint{text-align:center;color:var(--muted);font-size:.8rem;line-height:1.6;margin-bottom:10px}
+.voice-start{width:100%;font-size:1.05rem;padding:12px}
+.voice-commands{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.voice-cmd{background:rgba(161,121,82,.1);border:1px solid var(--line);color:var(--text);border-radius:20px;padding:7px 12px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;min-height:36px}
+.voice-cmd:hover,.voice-cmd:focus-visible{border-color:var(--gold);color:var(--gold)}
+
 .hd-head .hd-tools,.ay-head .ay-tools{display:flex;align-items:center;gap:6px}
 .icon-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:4px 9px;font-family:inherit;font-size:.9rem;cursor:pointer;line-height:1.2}
 .icon-btn:hover{color:var(--gold);border-color:var(--gold)}

@@ -1,0 +1,12 @@
+{
+  "name": "pray-pwa-smoke-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "اختبارات الدخان لتطبيق أوقات الصلاة (PWA)",
+  "scripts": {
+    "test": "node tools/sw_test.js && node tools/smoke_test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^31.0.1"
+  }
+}

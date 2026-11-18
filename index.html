@@ -94,6 +94,18 @@
     </div>
   </div>
 
+  <div class="modal-backdrop" id="voiceModal" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
+    <div class="modal-box voice-box">
+      <h3 id="voiceModalTitle" data-i18n="voiceTitle">🎙️ الأوامر الصوتية</h3>
+      <div class="voice-state" id="voiceState" role="status" aria-live="polite" data-i18n="voiceReady">جاهز للأمر</div>
+      <p class="voice-hint" id="voiceStatus" data-i18n="voiceHint"></p>
+      <button class="btn voice-start" id="voiceStart" type="button">🎙️ ابدأ التحدث</button>
+      <div class="voice-hint" data-i18n="voiceTapHint">أوامر جاهزة — اضغط أياً منها</div>
+      <div class="voice-commands" id="voiceCommands"></div>
+      <div class="modal-btns"><button class="btn sm ghost" id="voiceClose" type="button">إغلاق ✕</button></div>
+    </div>
+  </div>
+
   <header>
     <h1><picture><source srcset="logo.webp" type="image/webp"><img src="logo.png" alt="" class="brand-logo"></picture> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
@@ -101,6 +113,7 @@
       <button class="settings-btn icon-only" id="settingsBtn" type="button" title="الإعدادات" aria-label="الإعدادات">⚙️</button>
       <button class="btn sm ghost icon-only" id="moreBtn" type="button" aria-expanded="false" aria-label="المزيد">⋯</button>
       <div class="more-menu hidden" id="moreMenu">
+        <button type="button" id="voiceBtn" data-i18n="voiceTitle" aria-label="الأوامر الصوتية">🎙️ الأوامر الصوتية</button>
         <button type="button" id="displayBtn">🖥️ شاشة العرض</button>
         <button type="button" id="installAppBtn" class="hidden">⬇️ تثبيت التطبيق</button>
         <button type="button" id="langBtn" title="Change language">English</button>
@@ -243,6 +256,14 @@
         </div>
         <div class="heatmap" id="heatmap" role="img" aria-label="خريطة حرارية لصلوات آخر ٣٠ يوماً"></div>
         <div class="hm-legend"><i></i> 0 <i class="l1"></i> 1 <i class="l2"></i> 2 <i class="l3"></i> 3 <i class="l4"></i> 4–5</div>
+        <div class="insights" id="insights">
+          <div class="ins-head"><span data-i18n="insightsTitle">📈 تحليلات الأداء</span><small data-i18n="insightsSub">آخر ٧ و٣٠ يوماً</small></div>
+          <div class="ins-grid">
+            <div class="ins-card"><span data-i18n="insTrend">الاتجاه الأسبوعي</span><div class="ins-bars" id="insTrendBars" role="img"></div><b id="insTrendVal">—</b></div>
+            <div class="ins-card"><span data-i18n="insByPrayer">الصلوات الأكثر التزاماً</span><div class="ins-bars vertical" id="insPrayerBars" role="img"></div></div>
+            <div class="ins-card ins-facts"><div><span data-i18n="insBestDay">أفضل يوم</span><b id="insBestDay">—</b></div><div><span data-i18n="insConsistency">الانتظام</span><b id="insConsistencyVal">—</b></div></div>
+          </div>
+        </div>
       </section>
 
       <section class="section week" id="weekSec">
@@ -645,7 +666,7 @@
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 28 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 29 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 

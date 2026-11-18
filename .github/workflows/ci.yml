@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: فحص البناء والاختبارات
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: سحب المستودع
+        uses: actions/checkout@v4
+
+      - name: إعداد Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: إعداد Node 20 مع تخزين npm مؤقتاً
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: تثبيت حزم Node
+        run: npm ci
+
+      # --no-bump يبني مجلد dist محلياً ويحدّث البصمات دون تغيير رقم الإصدار،
+      # أي أنه لا يزيد رقم الإصدار ولا يدفع أي تعديل إلى المستودع داخل CI.
+      - name: بناء dist دون رفع رقم الإصدار
+        run: python3 tools/release.py --no-bump
+
+      - name: فحص اتساق الإصدار والبصمات
+        run: python3 tools/release.py --check
+
+      - name: اختبارات الدخان
+        run: npm test
