@@ -45,12 +45,8 @@ public final class MainActivity extends Activity {
         updater.installBundledIfNeeded();
         knownVersion = updater.currentVersion();
 
-        try {
-            server = new LocalWebServer(updater.webRoot());
-            port = server.start();
-        } catch (IOException e) {
-            Toast.makeText(this, "تعذر تشغيل الخادم المحلي", Toast.LENGTH_LONG).show();
-        }
+        port = startLocalServer();
+        if (port <= 0) Toast.makeText(this, "تعذر تشغيل الخادم المحلي", Toast.LENGTH_LONG).show();
 
         webView = new WebView(this);
         webView.setBackgroundColor(0xFF121815);
@@ -100,6 +96,26 @@ public final class MainActivity extends Activity {
         NotificationScheduler.reschedule(this);
         // لا طلب إذن تلقائي عند الإقلاع — المستخدم يطلبه بنفسه من الإعدادات عند الحاجة.
         maybeAutoCheck();
+    }
+
+    /** يثبّت منفذ الخادم عبر إعادة التشغيل حتى يبقى أصل WebView ثابتاً فتُحفظ اللغة والإعدادات. */
+    private int startLocalServer() {
+        int saved = prefs.getInt("web_port", 0);
+        int[] candidates = saved > 0
+                ? new int[]{saved, 8765, 8766, 8767, 0}
+                : new int[]{8765, 8766, 8767, 0};
+        for (int candidate : candidates) {
+            LocalWebServer candidateServer = new LocalWebServer(updater.webRoot(), candidate);
+            try {
+                int actual = candidateServer.start();
+                server = candidateServer;
+                prefs.edit().putInt("web_port", actual).apply();
+                return actual;
+            } catch (IOException ignored) {
+                candidateServer.stop();
+            }
+        }
+        return -1;
     }
 
     private void maybeAutoCheck() {
@@ -159,6 +175,7 @@ public final class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (bridge != null) bridge.release();
         if (server != null) server.stop();
         super.onDestroy();
     }

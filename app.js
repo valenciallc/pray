@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=24;
+const APP_VERSION=26;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -873,12 +873,9 @@ const DUAS=[
 const LANGS=["ar","en","fr","ur","tr","id"];
 let lang=(function(){
   try{const s=localStorage.getItem(LANG_KEY);if(LANGS.indexOf(s)>-1)return s}catch(e){}
-  const n=(navigator.language||"ar").toLowerCase();
-  if(n.indexOf("ar")===0)return "ar";
-  if(n.indexOf("ur")===0)return "ur";
-  if(n.indexOf("fr")===0)return "fr";
-  if(n.indexOf("tr")===0)return "tr";
-  if(n.indexOf("id")===0)return "id";
+  // أول تشغيل بعد التثبيت: الإنجليزية هي الافتراض، وتُحفظ فوراً لتصبح اختياراً ثابتاً
+  // لا يتغير مع تحديث المحتوى ولا مع إعادة فتح التطبيق. أي تغيير لاحق يحفظه setLang.
+  try{localStorage.setItem(LANG_KEY,"en")}catch(e){}
   return "en";
 })();
 const T=(k,...a)=>{
@@ -3222,6 +3219,11 @@ function _bindQuranPlan(){
 /* ---------- الأذكار: النطق والعدّ التلقائي ---------- */
 let dhTimer=null,dhSpeakMode=false;
 function speakText(text){
+  // غلاف أندرويد يوفّر نطقاً حقيقياً عبر TextToSpeech حتى إن كان WebView بلا speechSynthesis.
+  const br=window.AndroidUpdater;
+  if(br&&typeof br.speak==="function"){
+    try{ if(br.speak(String(text||"")))return true }catch(e){}
+  }
   if(!("speechSynthesis" in window)){toast(T("dhTtsNo"),true);return false}
   try{
     speechSynthesis.cancel();
@@ -3234,7 +3236,11 @@ function speakText(text){
     return true;
   }catch(e){return false}
 }
-function stopSpeak(){try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}}
+function stopSpeak(){
+  const br=window.AndroidUpdater;
+  if(br&&typeof br.stopSpeak==="function"){try{br.stopSpeak()}catch(e){}}
+  try{if("speechSynthesis" in window)speechSynthesis.cancel()}catch(e){}
+}
 function dhStopAuto(msg){
   if(dhTimer){clearInterval(dhTimer);dhTimer=null}
   const b=$("dhAuto");if(b){b.textContent="▶ "+T("dhAuto");b.classList.remove("gold")}

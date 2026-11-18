@@ -13,10 +13,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 /** الجسر الذي يستدعيه app.js من داخل WebView. كل دالة آمنة ولا ترمي استثناءً للـ JS. */
 public final class UpdaterBridge {
@@ -24,6 +27,9 @@ public final class UpdaterBridge {
     private final ContentUpdater updater;
     private final WebView webView;
     private final SharedPreferences prefs;
+    private TextToSpeech tts;
+    private boolean ttsReady;
+    private String pendingSpeech;
 
     UpdaterBridge(Activity activity, ContentUpdater updater, WebView webView) {
         this.activity = activity;
@@ -101,6 +107,84 @@ public final class UpdaterBridge {
         } catch (Exception ignored) {
         }
         return o.toString();
+    }
+
+    /** نطق عربي حقيقي عبر محرك أندرويد TTS — يعمل حتى لو لم يدعم WebView النطق. */
+    @JavascriptInterface
+    public boolean speak(final String text) {
+        if (text == null || text.trim().isEmpty()) return false;
+        activity.runOnUiThread(() -> {
+            ensureTts();
+            if (tts == null) return;
+            if (ttsReady) {
+                try {
+                    tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "pray-dhikr");
+                } catch (Exception ignored) {
+                }
+            } else {
+                pendingSpeech = text;
+            }
+        });
+        return true;
+    }
+
+    @JavascriptInterface
+    public void stopSpeak() {
+        activity.runOnUiThread(() -> {
+            pendingSpeech = null;
+            if (tts != null) {
+                try {
+                    tts.stop();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+    }
+
+    private void ensureTts() {
+        if (tts != null) return;
+        try {
+            tts = new TextToSpeech(activity, status -> {
+                ttsReady = status == TextToSpeech.SUCCESS;
+                if (!ttsReady) {
+                    pendingSpeech = null;
+                    return;
+                }
+                try {
+                    int available = tts.setLanguage(new Locale("ar"));
+                    tts.setSpeechRate(0.82f);
+                    tts.setPitch(1.0f);
+                    if (available == TextToSpeech.LANG_MISSING_DATA
+                            || available == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        tts.setLanguage(new Locale("en")); // صوت بديل إن تعذّر العربية
+                    }
+                } catch (Exception ignored) {
+                }
+                if (pendingSpeech != null) {
+                    String text = pendingSpeech;
+                    pendingSpeech = null;
+                    try {
+                        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "pray-dhikr");
+                    } catch (Exception ignored) {
+                    }
+                }
+            });
+        } catch (Exception e) {
+            tts = null;
+            ttsReady = false;
+        }
+    }
+
+    /** يُنادى عند إغلاق النشاط لتحرير محرك النطق. */
+    void release() {
+        if (tts == null) return;
+        try {
+            tts.stop();
+            tts.shutdown();
+        } catch (Exception ignored) {
+        }
+        tts = null;
+        ttsReady = false;
     }
 
     @JavascriptInterface

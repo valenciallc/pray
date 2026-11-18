@@ -16,18 +16,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Locale;
 
-/** خادم HTTP داخلي يقدّم ملفات التطبيق من filesDir/www على 127.0.0.1 فقط. */
+/** خادم HTTP داخلي يقدّم ملفات التطبيق من filesDir/www على 127.0.0.1 فقط.
+ *  المنفذ ثابت/mحفوظ حتى يبقى أصل WebView (origin) واحداً فتُحفظ إعدادات المستخدم. */
 final class LocalWebServer {
     private final File root;
+    private final int port;
     private ServerSocket server;
     private volatile boolean running;
 
-    LocalWebServer(File root) {
+    LocalWebServer(File root, int port) {
         this.root = root;
+        this.port = port;
     }
 
     int start() throws IOException {
-        server = new ServerSocket(0, 16, InetAddress.getByName("127.0.0.1"));
+        server = new ServerSocket(port, 16, InetAddress.getByName("127.0.0.1"));
         running = true;
         Thread t = new Thread(this::loop, "pray-http");
         t.setDaemon(true);
