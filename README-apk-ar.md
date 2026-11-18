@@ -18,7 +18,7 @@
 | `tools/smoke_test.js` | اختبار دخان محلي يتحقق من ظهور البيانات بعد كل تعديل |
 | `tools/sw_test.js` | اختبار محلي لعامل الخدمة: يرفض الملفات المتلاعب بها ويقبل النسخ الموثّقة |
 | `السريحي.mp3` · `اقامة.mp3` | نغمتا الأذان والإقامة |
-| `icon*.png` · `icon.svg` · `logo.png` | الأيقونات والشعار |
+| `icon*.png` · `icon.svg` · `logo.webp` · `logo.png` | الأيقونات والشعار (WebP مع fallback PNG) |
 
 > **مهم:** لا يوجد حالياً مجلد `android/` ولا ملف APK داخل هذا المجلد.
 > إشعارات الأذان الحقيقية (التي تعمل والتطبيق مغلق) تعتمد على جسر
@@ -28,7 +28,8 @@
 
 ## 2) الإصدار الحالي
 
-- **النسخة الحالية: 20**
+- **النسخة الحالية: 21**
+- من v21: تحسينات الجوال والأداء — `format-detection`، `touch-action:manipulation`، شعار WebP محمّل مسبقاً مع PNG fallback، `spellcheck=false` لحقول الوقت، `will-change` أثناء التحريك فقط، حواف آمنة كاملة، وثيم يبدأ من إعداد النظام قبل ظهور الصفحة.
 - من v20: التطبيق مقسّم إلى `index.html` + `styles.css` + `app.js` في الجذر، مع بصمة `SHA-256` مستقلة لكل ملف في حقل `files` داخل `prayer_update.json`.
 - الرقم نفسه موجود في `prayer_update.json` و`sw.js` (`SW_VERSION`) و`app.js` (`APP_VERSION`) وهذا الدليل.
 - التحديث الذاتي يتحقق من **SHA-256** لكل ملف قبل تخزينه؛ لذلك لا تُعدّل `prayer_update.json` يدوياً أبداً.
@@ -43,7 +44,7 @@
 2. ادفع ملفات الجذر المحدّثة إلى `main`:
    ```bash
    git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-   git commit -m "Prayer app v20 - modular root structure"
+   git commit -m "Prayer app v21 - mobile and performance polish"
    git push
    ```
 3. من المستودع: **Settings ← Pages ← Source: Deploy from a branch ← main ← /(root) ← Save**.
@@ -110,6 +111,6 @@ pray-main/
 ├── tools/                ← أدوات محلية للإصدار والاختبار (لا تُرفع إلى الصفحة)
 ├── README-GITHUB-PAGES.md ← دليل النشر المفصّل
 ├── android/              ← غلاف أندرويد (غير موجود حالياً — أضفه عند توفره)
-├── السريحي.mp3 · اقامة.mp3 · logo.png · icon*.png
+├── السريحي.mp3 · اقامة.mp3 · logo.webp · logo.png · icon*.png
 └── README-apk-ar.md      ← هذا الدليل
 ```

@@ -6,6 +6,12 @@
 <script>
 (function(){
   "use strict";
+  // تطبيق تفضيل النظام مبكراً قبل وصول styles.css لتجنب وميض الوضع الفاتح.
+  try{
+    var th=localStorage.getItem("prayerApp_v3_theme")||"auto";
+    var systemDark=!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme",(th==="dark"||(th==="auto"&&systemDark))?"dark":"");
+  }catch(e){}
   var shown=false;
   function showFatal(msg){
     if(shown)return;
@@ -50,6 +56,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta name="referrer" content="no-referrer">
+<meta name="format-detection" content="telephone=no">
 <title>شاشة أوقات الصلاة والإقامة</title>
 <meta name="description" content="شاشة عرض لأوقات الصلاة والإقامة لسنوات كاملة مع الأذكار والأحاديث والورد القرآني والدعاء — الشارقة">
 <meta name="theme-color" content="#EFE3CF">
@@ -61,6 +68,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preload" as="image" href="logo.webp" type="image/webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700&family=Amiri+Quran&family=Noto+Kufi+Arabic:wght@400;500;700;800&display=swap" rel="stylesheet">
 <!-- ===== الأنماط في ملف مستقل ===== -->
@@ -87,7 +95,7 @@
   </div>
 
   <header>
-    <h1><img src="logo.png" alt="" class="brand-logo"> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
+    <h1><picture><source srcset="logo.webp" type="image/webp"><img src="logo.png" alt="" class="brand-logo"></picture> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
       <button class="btn sm ghost hidden" id="installAppBtn" type="button">⬇️ تثبيت التطبيق</button>
       <button class="btn sm ghost notif-quick" id="notifQuickBtn" type="button" title="إشعارات الصلاة" aria-label="تفعيل إشعارات الصلاة">🔕<span class="nq-dot"></span></button>
@@ -649,7 +657,7 @@
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 20 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 21 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -851,11 +859,11 @@
     <div class="s-group">
       <h3>📅 تعديل أوقات الصلاة بشكل دائم <small>عدّل يدوياً أو ارجع للحساب الذاتي</small></h3>
       <div class="pray-times-row" id="manualTimes">
-        <div class="pt"><div class="ptk">🌅 الفجر</div><input type="time" id="mFajr"></div>
-        <div class="pt"><div class="ptk">☀️ الظهر</div><input type="time" id="mDhuhr"></div>
-        <div class="pt"><div class="ptk">🌤️ العصر</div><input type="time" id="mAsr"></div>
-        <div class="pt"><div class="ptk">🌇 المغرب</div><input type="time" id="mMaghrib"></div>
-        <div class="pt"><div class="ptk">🌙 العشاء</div><input type="time" id="mIsha"></div>
+        <div class="pt"><div class="ptk">🌅 الفجر</div><input spellcheck="false" autocomplete="off" type="time" id="mFajr"></div>
+        <div class="pt"><div class="ptk">☀️ الظهر</div><input spellcheck="false" autocomplete="off" type="time" id="mDhuhr"></div>
+        <div class="pt"><div class="ptk">🌤️ العصر</div><input spellcheck="false" autocomplete="off" type="time" id="mAsr"></div>
+        <div class="pt"><div class="ptk">🌇 المغرب</div><input spellcheck="false" autocomplete="off" type="time" id="mMaghrib"></div>
+        <div class="pt"><div class="ptk">🌙 العشاء</div><input spellcheck="false" autocomplete="off" type="time" id="mIsha"></div>
       </div>
       <div class="s-actions" style="justify-content:flex-start">
         <button class="btn sm" id="applyTimes">✔ تطبيق الأوقات اليدوية</button>

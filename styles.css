@@ -6,7 +6,7 @@
   --fs:1;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{font-size:calc(16px * var(--fs))}
+html{font-size:calc(16px * var(--fs));scroll-behavior:smooth}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
 .skip-link{position:absolute;top:-60px;right:12px;z-index:500;background:var(--gold);color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.18);transition:top .2s ease}
 .skip-link:focus{top:12px}
@@ -18,7 +18,8 @@ body{
     radial-gradient(1000px 500px at 80% -10%,rgba(216,160,105,.16),transparent),
     linear-gradient(160deg,var(--bg1),var(--bg2) 55%,#F3E6D0);
   background-attachment:fixed;
-  color:var(--text); min-height:100vh; padding:18px 14px 104px;
+  color:var(--text); min-height:100vh;
+  padding:18px calc(14px + env(safe-area-inset-right,0px)) calc(104px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px));
   text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
 }
 h1,h2,h3,.section h2,.cd-title,.nb-title,.qb-title,.dh-title{text-wrap:balance}
@@ -136,23 +137,25 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 .tbl-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
 
 .btn{background:linear-gradient(135deg,#D8A069,#B97F3F);color:#2A1C0E;border:none;border-radius:10px;padding:9px 16px;font-weight:800;cursor:pointer;font-size:.9rem;transition:.15s}
+/* يمنع تأخير النقر 300ms على الجوال دون تعطيل التمرير أو التكبير. */
+button,.btn,input[type="button"],input[type="submit"],[role="button"],.tp-pill,.tabsbar .tb,.stab,.qa-btn,.azk-card,.dh-picker button{touch-action:manipulation}
 .btn:hover{filter:brightness(1.08)}
 .btn.gold{background:linear-gradient(135deg,var(--gold),#8A5F37);color:#FDF8EE}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.sm{padding:5px 12px;font-size:.78rem}
 
-.alertbar{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-160%);width:min(560px,94vw);background:linear-gradient(135deg,#FFFDF8,#F3E7D3);border:1px solid var(--gold);border-radius:14px;box-shadow:0 16px 50px rgba(120,90,50,.45);z-index:140;transition:.4s;padding:14px 18px}
+.alertbar{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-160%);width:min(560px,94vw);background:linear-gradient(135deg,#FFFDF8,#F3E7D3);border:1px solid var(--gold);border-radius:14px;box-shadow:0 16px 50px rgba(120,90,50,.45);z-index:140;transition:.4s;padding:14px 18px}
 .alertbar.show{transform:translateX(-50%) translateY(0)}
 .alertbar .ab-title{font-weight:800;font-size:1.05rem;color:var(--gold)}
 .alertbar .ab-dua{color:var(--text);font-size:.88rem;line-height:1.7;margin-top:6px;border-top:1px dashed rgba(120,90,50,.2);padding-top:8px}
 .alertbar .ab-note{color:var(--muted);font-size:.78rem;margin-top:6px}
 .ab-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:flex-end}
 
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);background:#FFFDF8;border:1px solid var(--green);color:var(--text);padding:12px 22px;border-radius:12px;z-index:99;transition:.35s;box-shadow:0 8px 24px rgba(120,90,50,.35);font-size:.9rem;max-width:90vw;text-align:center}
+.toast{position:fixed;bottom:calc(22px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(120%);background:#FFFDF8;border:1px solid var(--green);color:var(--text);padding:12px 22px;border-radius:12px;z-index:99;transition:.35s;box-shadow:0 8px 24px rgba(120,90,50,.35);font-size:.9rem;max-width:90vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.err{border-color:var(--red)}
-.ios-hint{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#D8A069,#C89255);color:#2A1C0E;font-weight:800;font-size:.85rem;padding:10px 18px;border-radius:20px;z-index:120;box-shadow:0 8px 24px rgba(120,90,50,.4);animation:pulseHint 2s infinite}
+.ios-hint{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#D8A069,#C89255);color:#2A1C0E;font-weight:800;font-size:.85rem;padding:10px 18px;border-radius:20px;z-index:120;box-shadow:0 8px 24px rgba(120,90,50,.4);animation:pulseHint 2s infinite}
 @keyframes pulseHint{0%,100%{box-shadow:0 0 0 0 rgba(216,160,105,.5)}50%{box-shadow:0 0 0 10px rgba(216,160,105,0)}}
 .foot{text-align:center;color:var(--muted);font-size:.75rem;margin-top:10px}
 .status{font-size:.8rem;color:var(--muted);margin-top:6px}
@@ -205,13 +208,15 @@ tbody tr:hover{background:rgba(160,120,70,.06)}
 /* ===== لوحة الإعدادات ===== */
 .settings-overlay{
   position:fixed;inset:0;background:rgba(60,45,25,.55);backdrop-filter:blur(3px);
-  z-index:200;display:none;align-items:center;justify-content:center;padding:16px;
+  z-index:200;display:none;align-items:center;justify-content:center;
+  padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));
 }
 .settings-overlay.open{display:flex}
 /* ===== معالج تفعيل الصلاحيات ===== */
 .setup-overlay{
   position:fixed;inset:0;background:rgba(60,45,25,.6);backdrop-filter:blur(3px);
-  z-index:300;display:none;align-items:center;justify-content:center;padding:16px;
+  z-index:300;display:none;align-items:center;justify-content:center;
+  padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));
 }
 .setup-overlay.open{display:flex}
 .setup-panel{
@@ -305,6 +310,8 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .qb-rem{position:relative;margin-top:10px;font-size:.85rem;color:#CFE8D8}
 .qb-progress{height:8px;background:rgba(255,255,255,.15);border-radius:10px;margin-top:8px;overflow:hidden;position:relative}
 .qb-progress div{height:100%;background:linear-gradient(90deg,#FFD9A0,#FFC877);width:0;border-radius:10px;transition:width .5s}
+/* تُضاف أثناء التحريك فقط ثم تُزال في app.js حتى لا تستهلك ذاكرة بلا داعٍ. */
+.nb-fill.animating,.qb-progress div.animating{will-change:transform}
 
 /* ===== المسبحة والذكر ===== */
 .dhikr-band{
@@ -335,7 +342,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   position:fixed;left:0;right:0;bottom:0;z-index:130;
   display:flex;flex-wrap:nowrap;justify-content:flex-start;
   gap:5px;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
-  padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));
+  padding:8px calc(8px + env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) calc(8px + env(safe-area-inset-left,0px));
   background:rgba(253,248,238,.96);backdrop-filter:blur(8px);
   border-top:1px solid var(--line);
   box-shadow:0 -6px 24px rgba(120,90,50,.18);
@@ -378,7 +385,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   to{opacity:1;transform:none}
 }
 @media(min-width:701px){
-  .tabsbar{gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+  .tabsbar{gap:8px;padding:10px calc(14px + env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px))}
   .tabsbar .tb{font-size:.78rem;max-width:190px;margin:0 auto;width:100%}
   .ay-text,.hd-text{max-width:46rem;margin-left:auto;margin-right:auto}
 }
@@ -521,7 +528,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   .wrap{max-width:1900px}
   .hd-text,.ay-text{font-size:1.5rem;line-height:2.2}
 }
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;display:none;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px))}
 .modal-backdrop.open{display:flex}
 .modal-box{background:linear-gradient(150deg,#FFFDF8,#F3E8D5);border-radius:16px;max-width:480px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);border:1px solid var(--gold)}
 .modal-box h3{color:var(--gold);margin-bottom:12px;font-size:1.05rem}
@@ -819,7 +826,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 /* ===== وضع العرض ملء الشاشة ===== */
 .display-overlay{
   position:fixed;inset:0;z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;
-  gap:14px;padding:26px 18px calc(26px + env(safe-area-inset-bottom,0px));text-align:center;
+  gap:14px;padding:calc(26px + env(safe-area-inset-top,0px)) calc(18px + env(safe-area-inset-right,0px)) calc(26px + env(safe-area-inset-bottom,0px)) calc(18px + env(safe-area-inset-left,0px));text-align:center;
   background:radial-gradient(900px 480px at 50% -10%,rgba(216,160,105,.18),transparent),linear-gradient(160deg,#131A2B,#0B1020 60%,#070A14);
   color:#F6EAD5;overscroll-behavior:contain;
 }

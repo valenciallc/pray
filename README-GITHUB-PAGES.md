@@ -11,7 +11,7 @@ python3 tools/release.py --check
 npm test        # يشغّل sw_test.js ثم smoke_test.js
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 20` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 21` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -20,7 +20,7 @@ npm test        # يشغّل sw_test.js ثم smoke_test.js
 
 ```bash
 git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v20 - modular root structure"
+git commit -m "Prayer app v21 - mobile and performance polish"
 git push
 ```
 
@@ -55,6 +55,7 @@ python3 tools/release.py --check
 
 - كل المسارات في التطبيق **نسبية**، لذا يعمل تحت المسار الفرعي `/pray/` دون تعديل.
 - من v20: `index.html` يشير إلى `styles.css` و`app.js` في الجذر، و`prayer_update.json` يحمل بصمتهما؛ انسخ الملفات الثلاثة معاً عند كل تحديث.
+- من v21: أضف `logo.webp` مع `logo.png` في الجذر؛ كلاهما مخزّن في عامل الخدمة، والصفحة تختار WebP تلقائياً مع fallback.
 - عامل الخدمة يسجّل من الجذر، ونطاقه يصبح `/pray/` تلقائياً.
 - ملفات الأذان (`السريحي.mp3`, `اقامة.mp3`) في الجذر، لذلك يعمل الأذان دون إنترنت.
 - إن ظهرت شاشة «تعذّر تشغيل التطبيق»، استخدم زر **إعادة المحاولة** أو **مسح الذاكرة وإعادة التحميل**؛ بياناتك لا تُحذف إلا بالزر الأخير.

@@ -5,6 +5,22 @@
    مميزات جديدة: أوقات لسنوات · تعديل الأوقات · نغمات مخصصة · ورد قرآني · مسبحة إلكترونية
    ============================================================ */
 
+/* يضيف will-change أثناء تحديث أشرطة التقدّم فقط، ثم يزيله بعد انتهاء الحركة. */
+function setBarWidth(el,pct,sticky){
+  if(!el)return;
+  const value=Math.max(0,Math.min(100,Number(pct)||0));
+  const width=value.toFixed(1)+"%";
+  if(el.style.width!==width)el.style.width=width;
+  if(value<=0){
+    el.classList.remove("animating");
+    if(el._wcTimer){clearTimeout(el._wcTimer);el._wcTimer=null}
+    return;
+  }
+  if(el.classList.contains("animating"))return;
+  el.classList.add("animating");
+  if(!sticky)el._wcTimer=setTimeout(()=>{el.classList.remove("animating");el._wcTimer=null},650);
+}
+
 /* ======================== إعدادات التذكير بذكر الله ======================== */
 const REMINDER_KEY="prayerApp_v3_reminder";
 const REMINDER_DEFAULTS={
@@ -260,7 +276,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=20;
+const APP_VERSION=21;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -1586,7 +1602,7 @@ function renderCountdown(next,now){
 function renderNowBox(now,ds){
   const d=getDayData(ds);
   const $t=$("nbTitle"),$s=$("nbSub"),$f=$("nbFill"),$l=$("nbRemLabel"),$r=$("nbRem");
-  if(!d){$t.textContent=T("noTimes");$s.textContent="";$f.style.width="0";$l.textContent="";$r.textContent="";return}
+  if(!d){$t.textContent=T("noTimes");$s.textContent="";setBarWidth($f,0,true);$l.textContent="";$r.textContent="";return}
   const nm=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
   const t=hhmm=>{const[h,m]=hhmm.split(":").map(Number);return h*60+m};
   const fmt=m=>pad(Math.floor(m/60))+":"+pad(m%60);
@@ -1610,21 +1626,21 @@ function renderNowBox(now,ds){
     const pct=Math.max(0,Math.min(100,(now-start)/(end-start)*100));
     $t.textContent=T("nowPrayer",PN(cur.k));
     $s.textContent=T("fromTo",fmt(cur.s),(cur.k==="Isha"?(nextDay&&nextDay.Fajr?fmt(t(nextDay.Fajr))+" "+T("fajrRef"):T("plus9h")):fmt(cur.e)));
-    $f.style.width=pct.toFixed(1)+"%";
+    setBarWidth($f,pct,true);
     $l.textContent=T("remEndOfPrayer");
     $r.textContent=toHMS(end-now);
   }else if(nm>=fajrEnd&&nm<dhuhr){
     const tgt=hmToDate(ds,d.Dhuhr);
     $t.textContent=T("outsidePrayer");
     $s.textContent=T("sunriseLabel")+" "+d.Sunrise+" · "+PN("Dhuhr")+" "+d.Dhuhr;
-    $f.style.width="0";
+    setBarWidth($f,0,true);
     $l.textContent=T("remUntilDhuhr");
     $r.textContent=toHMS(tgt-now);
   }else{
     const tgt=nm<fajr?hmToDate(ds,d.Fajr):(nextDay&&nextDay.Fajr?hmToDate(tmrr,nextDay.Fajr):null);
     $t.textContent=T("nightOutside");
     $s.textContent=PN("Isha")+" "+d.Isha;
-    $f.style.width="0";
+    setBarWidth($f,0,true);
     $l.textContent=T("remUntilFajr");
     $r.textContent=tgt?toHMS(tgt-now):"--:--:--";
   }
@@ -2186,7 +2202,7 @@ function renderQuran(){
   $("qbHizb").textContent=hizbOfPage(quran.page);
   $("qbPageInput").value=quran.page;
   const pct=(quran.page/604)*100;
-  $("qbProgressFill").style.width=pct.toFixed(1)+"%";
+  setBarWidth($("qbProgressFill"),pct,false);
   $("qbKhatmaPct").textContent=Math.round(pct)+"%";
   $("qbTodayTarget").textContent=r.daily;
   $("qbTargetPage").textContent=r.end;
