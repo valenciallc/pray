@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=27;
+const APP_VERSION=28;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -3520,8 +3520,21 @@ function ensureWebNotify(){
 async function testWebNotify(){
   if(hasNativeNotify()){
     if(nativeNotifyPerm()!=="granted"){await enableWebNotify();return}
-    try{window.AndroidUpdater.showTestNotification();toast("🧪 أُرسل إشعار تجريبي")}
-    catch(e){toast("✖ تعذّر إرسال الإشعار التجريبي",true)}
+    const br=window.AndroidUpdater;
+    if(typeof br.showTestNotification==="function"){
+      try{br.showTestNotification();toast("🧪 أُرسل إشعار تجريبي")}
+      catch(e){toast("✖ تعذّر إرسال الإشعار التجريبي",true)}
+      return;
+    }
+    // توافق مع غلاف 1.3 المثبّت قبل v27: نجدول إشعاراً تجريبياً بالجسر الموجود ثم نعيد الجدول الحقيقي.
+    try{
+      const at=Date.now()+8000;
+      const evs=collectSchedule();
+      evs.push({id:"test-"+at,epoch:at,kind:"test",title:"🔔 إشعار تجريبي",text:"إشعارات الصلاة تعمل بنجاح"});
+      br.setSchedule(JSON.stringify({settings:NOTIF_SETTINGS,events:evs,version:APP_VERSION}));
+      toast("🧪 سيصلك إشعار تجريبي خلال ثوانٍ");
+      setTimeout(()=>{try{pushSchedule()}catch(e){}},15000);
+    }catch(e){toast("✖ تعذّر إرسال الإشعار التجريبي",true)}
     return;
   }
   if(!("Notification" in window)){toast(T("webNotifyUnsupported"),true);return}
