@@ -23,10 +23,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: إعداد Node 20 مع تخزين npm مؤقتاً
+      # jsdom 31 يحتاج Node 22.22+ (عبر undici 8)؛ Node 20 يفشل عند تحميل undici.
+      - name: إعداد Node 22 مع تخزين npm مؤقتاً
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: npm
 
       - name: تثبيت حزم Node
