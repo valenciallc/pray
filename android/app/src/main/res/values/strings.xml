@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">أوقات الصلاة</string>
+    <string name="channel_prayer">أوقات الصلاة</string>
+    <string name="channel_prayer_desc">تنبيهات الأذان والإقامة في وقتها</string>
+    <string name="channel_adhan">الأذان</string>
+    <string name="channel_adhan_desc">تشغيل نغمة الأذان الكاملة</string>
+    <string name="stop_adhan">إيقاف الأذان</string>
+    <string name="widget_desc">أوقات الصلاة والصلاة القادمة</string>
+    <string name="widget_empty">افتح التطبيق لعرض الأوقات</string>
+</resources>

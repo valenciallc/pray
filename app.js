@@ -276,7 +276,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=21;
+const APP_VERSION=22;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -2914,6 +2914,29 @@ $("tasbihModal").addEventListener("click",e=>{if(e.target===$("tasbihModal"))$("
 $("settingsBtn").onclick=openSettings;
 $("settingsClose").onclick=closeSettings;
 $("settingsOverlay").addEventListener("click",e=>{if(e.target===$("settingsOverlay"))closeSettings()});
+
+/* v22 — قائمة «المزيد» والإعدادات المتقدمة: الوظائف الثانوية مخفية حتى تُطلب. */
+(function(){
+  const btn=$("moreBtn"),menu=$("moreMenu");
+  if(btn&&menu){
+    const close=()=>{menu.classList.add("hidden");btn.setAttribute("aria-expanded","false")};
+    btn.onclick=e=>{
+      e.stopPropagation();
+      const opening=menu.classList.contains("hidden");
+      menu.classList.toggle("hidden",!opening);
+      btn.setAttribute("aria-expanded",opening?"true":"false");
+    };
+    document.addEventListener("click",e=>{if(!menu.contains(e.target)&&e.target!==btn)close()});
+    menu.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{switchTab(b.getAttribute("data-go"));close()});
+    menu.querySelectorAll("button").forEach(b=>b.addEventListener("click",close));
+  }
+  const adv=$("advToggle"),panel=document.querySelector(".settings-panel");
+  if(adv&&panel)adv.onclick=()=>{
+    const on=panel.classList.toggle("show-advanced");
+    adv.setAttribute("aria-expanded",on?"true":"false");
+    adv.textContent=on?"إعدادات أقل −":"إعدادات متقدمة (الصوت، الصحة، الأدوات)＋";
+  };
+})();
 
 /* تطبيق الأوقات اليدوية (لكل الأيام)
    نطبقها كإزاحة دائمة على كل الأوقات المخزنة المستقبلية والحالية */

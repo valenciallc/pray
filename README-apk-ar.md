@@ -28,7 +28,8 @@
 
 ## 2) الإصدار الحالي
 
-- **النسخة الحالية: 21**
+- **النسخة الحالية: 22**
+- من v22: واجهة هادئة فاخرة — ٤ تبويبات فقط، قائمة «المزيد» للوظائف الثانوية، إعدادات متقدمة مخفية، ولوحة عاجية/ذهبية بخط أميري. وغلاف أندرويد يحدّث محتواه تلقائياً من GitHub.
 - من v21: تحسينات الجوال والأداء — `format-detection`، `touch-action:manipulation`، شعار WebP محمّل مسبقاً مع PNG fallback، `spellcheck=false` لحقول الوقت، `will-change` أثناء التحريك فقط، حواف آمنة كاملة، وثيم يبدأ من إعداد النظام قبل ظهور الصفحة.
 - من v20: التطبيق مقسّم إلى `index.html` + `styles.css` + `app.js` في الجذر، مع بصمة `SHA-256` مستقلة لكل ملف في حقل `files` داخل `prayer_update.json`.
 - الرقم نفسه موجود في `prayer_update.json` و`sw.js` (`SW_VERSION`) و`app.js` (`APP_VERSION`) وهذا الدليل.
@@ -44,13 +45,13 @@
 2. ادفع ملفات الجذر المحدّثة إلى `main`:
    ```bash
    git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-   git commit -m "Prayer app v21 - mobile and performance polish"
+   git commit -m "Prayer app v22 - calm elegant UI and self-updating Android shell"
    git push
    ```
 3. من المستودع: **Settings ← Pages ← Source: Deploy from a branch ← main ← /(root) ← Save**.
 4. افتح `https://valenciallc.github.io/pray/` مرة واحدة على الإنترنت ليخزّن عامل الخدمة الملفات؛ بعدها يعمل دون إنترنت.
-5. اضغط زر 🔕 في الشريط لتفعيل إشعارات المتصفح، وجرّبها من الإعدادات ← «⚡ متقدم».
-6. داخل التطبيق: الإعدادات ← «تحديث التطبيق من الداخل» ← ضع الرابط ← «حفظ رابط التحديثات».
+5. اضغط زر 🔔 في الشريط لتفعيل إشعارات المتصفح. الإعدادات أصبحت مختصرة: الحساب والإشعارات والمظهر فقط، والباقي تحت «إعدادات متقدمة».
+6. داخل التطبيق: الإعدادات ← إعدادات متقدمة ← «تحديث التطبيق من الداخل» ← ضع الرابط ← «حفظ رابط التحديثات».
 
 ## 4) إصدار تحديث جديد (الطريقة الصحيحة)
 
@@ -73,22 +74,45 @@ python3 tools/release.py --no-bump    # إصلاح البصمة فقط دون ت
 python3 tools/release.py --check      # فحص الاتساق بدون أي تعديل
 ```
 
-## 5) غلاف أندرويد وAPK (عند توفر مصدره)
+## 5) غلاف أندرويد وAPK (جاهز في `android/`)
 
-إذا كان لديك مشروع `android/` (MainActivity.java وNotificationPlanner.java
-وAlarmReceiver.java وAdhanService.java وBootReceiver.java):
+المشروع موجود الآن داخل المستودع، وهو غلاف WebView يفتح المحتوى المحلي عبر خادم HTTP داخلي على `127.0.0.1` (منفذ عشوائي) حتى تعمل `fetch` و service worker و localStorage بأصل حقيقي. المحتوى **يتحدّث تلقائياً** من GitHub دون تثبيت APK جديد.
 
-1. ضع مجلد `android/` في جذر هذا المشروع، وتأكد أن `app/src/main/assets/`
-   يحتوي على نسخة مطابقة من `index.html` وملفات الصوت.
-2. افتح **Android Studio ← Open ← مجلد android** وانتظر تحميل المكوّنات أول مرة.
-3. **Build ← Build App Bundle / APK ← Build APK**.
-4. الناتج: `android/app/build/outputs/apk/release/app-release.apk`.
-5. انسخ الـ APK إلى الهاتف واسمح بالتثبيت من مصادر خارجية. ثم:
-   **الإعدادات ← البطارية ← التطبيق ← غير مقيّد (Unrestricted)** حتى لا تُقتل التنبيهات.
-6. عند أول فتح تظهر معالج الصلاحيات: إذن الإشعارات ← تشغيل الخلفية ← التنبيهات الدقيقة ← إنهاء.
+### كيف يعمل التحديث الذاتي
+1. عند أول تشغيل تُن نسخ أصول الويب من `assets/www/` إلى `filesDir/www/`. مهمة Gradle `copyWebAssets` تنسخ ملفات الجذر تلقائياً عند كل بناء.
+2. عند الفتح (مرة كل ٦ ساعات كحد أقصى) يفحص `prayer_update.json` من `https://raw.githubusercontent.com/valenciallc/pray/main`.
+3. إن كان رقم الإصدار أعلى، ينزّل كل الملفات إلى مجلد مؤقت، ويتحقق من `SHA-256` لـ `index.html` و`styles.css` و`app.js` والحجم، ثم يستبدل المجلد ذرياً ويُعيد تحميل الصفحة بعد إلغاء عامل الخدمة القديم.
+4. عند الفشل يُبقى المحتوى القديم كما هو، وتظهر رسالة خطأ فقط. التحديثات عبر HTTPS فقط.
 
-> ملف `keystore.jks` وكلمة المرور الموجودة في `app/build.gradle` هي هوية التطبيق؛
-> احتفظ بها واستخدمها دائماً عند بناء إصدار جديد، وإلا اعتبره متجرُ الهاتف تطبيقاً مختلفاً.
+### البناء محلياً
+```bash
+cd android
+export ANDROID_HOME=$HOME/Android/Sdk
+./gradlew assembleRelease
+```
+الناتج: `android/app/build/outputs/apk/release/app-release.apk` (موقّع عند وجود keystore محلي).
+
+لإنشاء هوية توقيع محلية مرة واحدة (لا تُرفع إلى Git):
+```bash
+keytool -genkeypair -keystore android/app/pray-release.keystore -alias pray \
+  -keyalg RSA -keysize 2048 -validity 10000
+```
+ثم أضف في `android/local.properties` (مستبعد من Git):
+```
+sdk.dir=/path/to/Android/Sdk
+keystore.file=pray-release.keystore
+keystore.password=...
+keystore.alias=pray
+keystore.keyPassword=...
+```
+> احتفظ بالـ keystore وكلمة المرور؛ فقدانها يعني أن التحديث التالي سيُعتبر تطبيقاً مختلفاً.
+
+### على الهاتف
+انسخ الـ APK واسمح بالتثبيت من مصادر خارجية، ثم:
+**الإعدادات ← البطارية ← التطبيق ← غير مقيّد (Unrestricted)** حتى لا تُقتل التنبيهات.
+عند أول فتح امنح إذن الإشعارات، ثم فعّل «التنبيهات الدقيقة» و«تجاهل لا تُزعج» من معالج الإعدادات داخل التطبيق.
+
+> ملاحظة مهمة: هذا الغلاف يحدّث **المحتوى** فقط. تحديث ملف APK نفسه يحتاج موافقة المستخدم على التثبيت في أندرويد الحديث، ولا يمكن تنفيذه صامتاً دون صلاحيات نظام/root.
 
 ## 6) استكشاف أخطاء التحديث
 
@@ -110,7 +134,7 @@ pray-main/
 ├── prayer_update.json    ← بيانات الإصدار وبصمات الملفات (مولّدة تلقائياً)
 ├── tools/                ← أدوات محلية للإصدار والاختبار (لا تُرفع إلى الصفحة)
 ├── README-GITHUB-PAGES.md ← دليل النشر المفصّل
-├── android/              ← غلاف أندرويد (غير موجود حالياً — أضفه عند توفره)
+├── android/              ← غلاف أندرويد جاهز (WebView + تحديث ذاتي من GitHub)
 ├── السريحي.mp3 · اقامة.mp3 · logo.webp · logo.png · icon*.png
 └── README-apk-ar.md      ← هذا الدليل
 ```

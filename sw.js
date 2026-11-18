@@ -1,9 +1,9 @@
-/* أوقات الصلاة — عامل الخدمة v21
+/* أوقات الصلاة — عامل الخدمة v22
    - تحديث آمن: يُتحقق من index.html و app.js و styles.css عبر SHA-256 قبل تخزينها.
    - أوقات الصلاة تعمل دون إنترنت، وprayer_update.json يُجلب من الشبكة أولاً.
 */
 "use strict";
-const SW_VERSION = 21;
+const SW_VERSION = 22;
 const CACHE = "prayer-v" + SW_VERSION;
 const CONTENT_TYPES = {
   "index.html": "text/html; charset=utf-8",

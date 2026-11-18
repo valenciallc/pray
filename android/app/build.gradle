@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+}
+
+def repoRoot = file("../..").canonicalFile
+def ksProps = new Properties()
+def localProps = rootProject.file('local.properties')
+if (localProps.exists()) ksProps.load(new FileInputStream(localProps))
+def ksFile = ksProps.getProperty('keystore.file')
+    ? file(ksProps.getProperty('keystore.file'))
+    : file('pray-release.keystore')
+def hasKeystore = ksFile.exists()
+def bundled = 22
+try {
+    bundled = new groovy.json.JsonSlurper().parse(new File(repoRoot, "prayer_update.json")).version as int
+} catch (ignored) {
+}
+def wwwDir = file("src/main/assets/www")
+
+tasks.register('copyWebAssets', Copy) {
+    outputs.upToDateWhen { false }
+    from(repoRoot) {
+        include 'index.html', 'styles.css', 'app.js', 'sw.js', 'logo.webp', 'logo.png',
+                'manifest.json', 'icon.svg', 'icon-192.png', 'icon-512.png',
+                'prayer_update.json', 'السريحي.mp3', 'اقامة.mp3'
+    }
+    into wwwDir
+    doFirst { delete wwwDir }
+}
+preBuild.dependsOn copyWebAssets
+
+android {
+    namespace 'com.valenciallc.pray'
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    signingConfigs {
+        release {
+            if (hasKeystore) {
+                storeFile ksFile
+                storePassword ksProps.getProperty('keystore.password', '')
+                keyAlias ksProps.getProperty('keystore.alias', 'pray')
+                keyPassword ksProps.getProperty('keystore.keyPassword', '')
+            }
+        }
+    }
+
+    defaultConfig {
+        applicationId 'com.valenciallc.pray'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+        buildConfigField 'int', 'BUNDLED_VERSION', bundled.toString()
+        buildConfigField 'String', 'UPDATE_URL', '"https://raw.githubusercontent.com/valenciallc/pray/main"'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (hasKeystore) signingConfig signingConfigs.release
+        }
+    }
+}

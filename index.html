@@ -97,12 +97,21 @@
   <header>
     <h1><picture><source srcset="logo.webp" type="image/webp"><img src="logo.png" alt="" class="brand-logo"></picture> <span data-i18n="header">شاشة أوقات الصلاة والإقامة</span></h1>
     <div class="toolbar">
-      <button class="btn sm ghost hidden" id="installAppBtn" type="button">⬇️ تثبيت التطبيق</button>
-      <button class="btn sm ghost notif-quick" id="notifQuickBtn" type="button" title="إشعارات الصلاة" aria-label="تفعيل إشعارات الصلاة">🔕<span class="nq-dot"></span></button>
-      <button class="btn sm" id="displayBtn" type="button" title="شاشة عرض بأرقام كبيرة" aria-label="فتح شاشة العرض الكبيرة">🖥️ شاشة العرض</button>
-      <button class="reminder-btn" id="reminderBtn">🔔 تفعيل التذكير</button>
-      <button class="settings-btn" id="settingsBtn">⚙️ الإعدادات</button>
-      <button class="lang-btn" id="langBtn" title="Change language">English</button>
+      <button class="btn sm ghost icon-only notif-quick" id="notifQuickBtn" type="button" title="إشعارات الصلاة" aria-label="تفعيل إشعارات الصلاة">🔔<span class="nq-dot"></span></button>
+      <button class="settings-btn icon-only" id="settingsBtn" type="button" title="الإعدادات" aria-label="الإعدادات">⚙️</button>
+      <button class="btn sm ghost icon-only" id="moreBtn" type="button" aria-expanded="false" aria-label="المزيد">⋯</button>
+      <div class="more-menu hidden" id="moreMenu">
+        <button type="button" id="reminderBtn">🔔 تفعيل التذكير</button>
+        <button type="button" id="displayBtn">🖥️ شاشة العرض</button>
+        <button type="button" id="installAppBtn" class="hidden">⬇️ تثبيت التطبيق</button>
+        <button type="button" id="langBtn" title="Change language">English</button>
+        <span class="mm-sep" aria-hidden="true"></span>
+        <button type="button" data-go="table" data-i18n="tabTable">الجدول</button>
+        <button type="button" data-go="qibla" data-i18n="tabQibla">القبلة</button>
+        <button type="button" data-go="ramadan" data-i18n="tabRamadan">رمضان</button>
+        <button type="button" data-go="wird" data-i18n="tabWird">الورد</button>
+        <button type="button" id="tabReminder">🔔 التذكير</button>
+      </div>
     </div>
     <div class="clockbox">
       <div class="now" id="clockNow">--:--:--</div>
@@ -438,37 +447,17 @@
     <span class="tb-ic">🏠</span>
     <span data-i18n="tabNow">الآن</span>
   </button>
-  <button class="tb" data-go="pray">
-    <span class="tb-ic">🕌</span>
-    <span data-i18n="tabPray">الصلاة</span>
-  </button>
-  <button class="tb" data-go="table">
-    <span class="tb-ic">📅</span>
-    <span data-i18n="tabTable">الجدول</span>
-  </button>
-  <button class="tb" data-go="qibla">
-    <span class="tb-ic">🧭</span>
-    <span data-i18n="tabQibla">القبلة</span>
-  </button>
-  <button class="tb" data-go="ramadan">
-    <span class="tb-ic">🌙</span>
-    <span data-i18n="tabRamadan">رمضان</span>
-  </button>
-  <button class="tb" data-go="wird">
-    <span class="tb-ic">📖</span>
-    <span data-i18n="tabWird">الورد</span>
-  </button>
   <button class="tb" data-go="dhikr">
     <span class="tb-ic">📿</span>
     <span data-i18n="tabDhikr">الذكر</span>
   </button>
+  <button class="tb" data-go="pray">
+    <span class="tb-ic">🕌</span>
+    <span data-i18n="tabPray">الصلاة</span>
+  </button>
   <button class="tb" id="tabSettings">
     <span class="tb-ic">⚙️</span>
     <span data-i18n="tabSettings">الإعدادات</span>
-  </button>
-  <button class="tb rem active-stop" id="tabReminder">
-    <span class="tb-ic">🔔</span>
-    <span data-i18n="tabRem">التذكير</span>
   </button>
 </nav>
 
@@ -533,6 +522,7 @@
       <button class="stab" data-stab="health" role="tab"><span class="stab-ic">🩺</span><span class="stab-lb" data-i18n="stabHealth">الصحة</span></button>
       <button class="stab" data-stab="pro" role="tab"><span class="stab-ic">⚡</span><span class="stab-lb">متقدم</span></button>
     </div>
+    <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false">إعدادات متقدمة (الصوت، الصحة، الأدوات)＋</button>
     <div class="stab-body" id="stabBody">
 
     <div class="stab-panel" data-stab-panel="look">
@@ -657,7 +647,7 @@
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 21 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 22 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
