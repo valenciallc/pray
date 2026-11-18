@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -137,6 +138,14 @@ final class ContentUpdater {
 
             Set<String> names = new LinkedHashSet<>(CORE);
             collectLocal(www, "", names);
+            // القائمة القادمة من الخادم هي المصدر الأهم: تضمن تنزيل ملفات جديدة أُضيفت في إصدار لاحق.
+            JSONArray assets = meta.optJSONArray("assets");
+            if (assets != null) {
+                for (int i = 0; i < assets.length(); i++) {
+                    String name = assets.optString(i, "");
+                    if (name != null && !name.isEmpty()) names.add(name);
+                }
+            }
             for (String name : names) {
                 byte[] body = fetchBytes(base + "/" + encodePath(name));
                 if (body.length == 0) throw new IOException("ملف فارغ: " + name);

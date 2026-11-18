@@ -1,17 +1,33 @@
 {
-  "version": 23,
+  "version": 24,
   "index": "index.html",
-  "sha256": "26c5f36b236219d1c1c9c4ff17c1260684eb9097a26579f3a9215902ed575422",
+  "sha256": "14eb26a70c466e41b6eb5dae9f1b5bd1f57fb007e7765b95ef07c0318115b395",
   "size": 61484,
-  "releasedAt": "2026-11-18T10:59:46.106Z",
+  "releasedAt": "2026-11-18T11:14:46.657Z",
   "files": {
     "styles.css": {
       "sha256": "a031b385f0fa8dc0eda92795cf2cf0a5d364bed1fadc81f795fe680634b79788",
       "size": 70824
     },
     "app.js": {
-      "sha256": "3ce117a5345f7f6e96702f9da9612dcba23e34e5e03b95946d0c3ba7cc200b0e",
+      "sha256": "0e51cf85f01e26b3fcc9d8d211d9250ba7ac6099c95ea613ea89473e7efb6bc0",
       "size": 266228
     }
-  }
+  },
+  "assets": [
+    "app.js",
+    "icon-192.png",
+    "icon-512.png",
+    "icon.svg",
+    "icons/icon-512.png",
+    "index.html",
+    "logo.png",
+    "logo.webp",
+    "manifest.json",
+    "prayer_update.json",
+    "styles.css",
+    "sw.js",
+    "اقامة.mp3",
+    "السريحي.mp3"
+  ]
 }
