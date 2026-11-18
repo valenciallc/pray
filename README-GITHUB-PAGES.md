@@ -8,10 +8,10 @@
 ```bash
 cd /home/co/Desktop/pray-main
 python3 tools/release.py --check
-npm test
+npm test        # يشغّل sw_test.js ثم smoke_test.js
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 19` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 20` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -19,8 +19,8 @@ npm test
 ادفع **ملفات الجذر المحدّثة فقط** حتى لا تعيد إضافة المجلدات التي حُذفت من المستودع:
 
 ```bash
-git add index.html sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v19 - smarter daily experience"
+git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
+git commit -m "Prayer app v20 - modular root structure"
 git push
 ```
 
@@ -44,8 +44,8 @@ git push
 ## 5) نشر تحديث لاحق
 
 ```bash
-# 1) عدّل index.html
-python3 tools/release.py        # يرفع الإصدار ويحسب البصمة
+# 1) عدّل index.html و/أو styles.css و/أو app.js
+python3 tools/release.py        # يرفع الإصدار ويحسب بصمات الملفات الثلاثة
 npm test
 python3 tools/release.py --check
 # 2) أدفع ملفات الجذر كما في القسم 2
@@ -54,6 +54,7 @@ python3 tools/release.py --check
 ## ملاحظات تقنية
 
 - كل المسارات في التطبيق **نسبية**، لذا يعمل تحت المسار الفرعي `/pray/` دون تعديل.
+- من v20: `index.html` يشير إلى `styles.css` و`app.js` في الجذر، و`prayer_update.json` يحمل بصمتهما؛ انسخ الملفات الثلاثة معاً عند كل تحديث.
 - عامل الخدمة يسجّل من الجذر، ونطاقه يصبح `/pray/` تلقائياً.
 - ملفات الأذان (`السريحي.mp3`, `اقامة.mp3`) في الجذر، لذلك يعمل الأذان دون إنترنت.
 - إن ظهرت شاشة «تعذّر تشغيل التطبيق»، استخدم زر **إعادة المحاولة** أو **مسح الذاكرة وإعادة التحميل**؛ بياناتك لا تُحذف إلا بالزر الأخير.

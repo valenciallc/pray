@@ -1,10 +1,15 @@
-/* أوقات الصلاة — عامل الخدمة v19
-   - تحديث آمن: يُتحقق من index.html عبر SHA-256 قبل تخزينه.
+/* أوقات الصلاة — عامل الخدمة v20
+   - تحديث آمن: يُتحقق من index.html و app.js و styles.css عبر SHA-256 قبل تخزينها.
    - أوقات الصلاة تعمل دون إنترنت، وprayer_update.json يُجلب من الشبكة أولاً.
 */
 "use strict";
-const SW_VERSION = 19;
+const SW_VERSION = 20;
 const CACHE = "prayer-v" + SW_VERSION;
+const CONTENT_TYPES = {
+  "index.html": "text/html; charset=utf-8",
+  "styles.css": "text/css; charset=utf-8",
+  "app.js": "application/javascript; charset=utf-8"
+};
 const CORE = [
   "manifest.json",
   "icon.svg",
@@ -23,16 +28,54 @@ async function sha256Hex(buf) {
   return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
 }
 
+const isValidAssetName = (name) => /^[A-Za-z0-9._-]+\.(css|js)$/.test(String(name || ""));
+
+function validMeta(j) {
+  if (!j || typeof j !== "object") return false;
+  if (j.index && !/^[A-Za-z0-9._-]+\.html?$/.test(String(j.index))) return false;
+  if (typeof j.sha256 === "string") {
+    if (!/^[a-f0-9]{64}$/i.test(j.sha256)) return false;
+  }
+  if (j.files !== undefined) {
+    if (!j.files || typeof j.files !== "object" || Array.isArray(j.files)) return false;
+    for (const [name, entry] of Object.entries(j.files)) {
+      if (!isValidAssetName(name) || !entry || typeof entry !== "object") return false;
+      if (typeof entry.sha256 !== "string" || !/^[a-f0-9]{64}$/i.test(entry.sha256)) return false;
+      if (!Number.isFinite(entry.size)) return false;
+    }
+  }
+  return true;
+}
+
+// يجلب ملفاً ويتحقق من بصمته وحجمه قبل إعادته؛ يُعيد null عند أي عدم تطابق.
+async function fetchVerifiedAsset(name, expected) {
+  const r = await fetch(urlOf(name) + "?v=" + Date.now(), { cache: "reload" });
+  if (!r || !r.ok) return null;
+  const buf = await r.arrayBuffer();
+  if (expected && Number.isFinite(expected.size) && buf.byteLength !== expected.size) return null;
+  if (expected && expected.sha256 && crypto.subtle) {
+    const hex = await sha256Hex(buf);
+    if (hex !== String(expected.sha256).toLowerCase()) return null;
+  }
+  return buf;
+}
+
+async function putVerified(name, buf) {
+  const cache = await caches.open(CACHE);
+  await cache.put(urlOf(name), new Response(buf, {
+    headers: { "Content-Type": CONTENT_TYPES[name] || "application/octet-stream" }
+  }));
+}
+
 async function fetchMeta() {
   try {
     const r = await fetch(urlOf("prayer_update.json") + "?ts=" + Date.now(), { cache: "no-store" });
     if (!r.ok) return null;
     const j = await r.json();
-    if (!j || typeof j !== "object") return null;
-    if (j.index && !/^[A-Za-z0-9._-]+\.html?$/.test(String(j.index))) return null;
-    if (typeof j.sha256 === "string") {
-      j.sha256 = j.sha256.toLowerCase();
-      if (!/^[a-f0-9]{64}$/.test(j.sha256)) return null;
+    if (!validMeta(j)) return null;
+    if (typeof j.sha256 === "string") j.sha256 = j.sha256.toLowerCase();
+    if (j.files) {
+      for (const entry of Object.values(j.files)) entry.sha256 = entry.sha256.toLowerCase();
     }
     return j;
   } catch (e) { return null; }
@@ -62,6 +105,17 @@ async function precache() {
       }
     }
   } catch (e) {}
+  // ملفات التطبيق الإضافية لا تُخزّن إلا بعد التحقق من بصمتها.
+  if (updateMeta && updateMeta.files) {
+    for (const [name, expected] of Object.entries(updateMeta.files)) {
+      if (!isValidAssetName(name)) continue;
+      try {
+        const buf = await fetchVerifiedAsset(name, expected);
+        if (buf) await putVerified(name, buf);
+        else broadcast({ type: "UPDATE_TAMPERED", version: updateMeta.version || 0, reason: "precache:" + name });
+      } catch (e) {}
+    }
+  }
   if (updateMeta) {
     try { await cache.put(urlOf("prayer_update.json"), new Response(JSON.stringify(updateMeta), { headers: { "Content-Type": "application/json" } })); } catch (e) {}
   }
@@ -150,6 +204,45 @@ async function verifiedIndexResponse(request) {
   return network;
 }
 
+// يُطبّق على app.js و styles.css: لا تُقبل نسخة شبكية لا تطابق البصمة المسجلة.
+async function verifiedAssetResponse(request, name) {
+  const cache = await caches.open(CACHE);
+  if (!updateMeta) updateMeta = await fetchMeta();
+  const expected = updateMeta && updateMeta.files && updateMeta.files[name];
+  let network = null;
+  try {
+    network = await Promise.race([
+      fetch(request, { cache: "no-store" }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 5000))
+    ]);
+  } catch (e) { network = null; }
+
+  const fallback = async () => (await cache.match(urlOf(name))) ||
+    new Response("", { status: 504, headers: { "Content-Type": CONTENT_TYPES[name] || "text/plain" } });
+
+  if (!network || !network.ok) return fallback();
+  if (!expected || !expected.sha256 || !crypto.subtle) {
+    try { await cache.put(urlOf(name), network.clone()); } catch (e) {}
+    return network;
+  }
+  try {
+    const buf = await network.clone().arrayBuffer();
+    const hex = await sha256Hex(buf);
+    const sizeOk = !Number.isFinite(expected.size) || buf.byteLength === expected.size;
+    if (hex !== String(expected.sha256).toLowerCase() || !sizeOk) {
+      broadcast({ type: "UPDATE_TAMPERED", version: updateMeta.version || 0, reason: "asset:" + name });
+      return fallback();
+    }
+    const response = new Response(buf, {
+      headers: { "Content-Type": CONTENT_TYPES[name] || "application/octet-stream" }
+    });
+    await putVerified(name, buf);
+    return response;
+  } catch (e) {
+    return fallback();
+  }
+}
+
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE);
   const cached = await cache.match(request, { ignoreSearch: true });
@@ -166,10 +259,10 @@ async function networkFirstMeta(request) {
     const res = await fetch(request, { cache: "no-store" });
     if (res && res.ok) {
       const j = await res.clone().json();
-      const validIndex = !j.index || /^[A-Za-z0-9._-]+\.html?$/.test(String(j.index));
-      const validHash = typeof j.sha256 !== "string" || /^[a-f0-9]{64}$/i.test(j.sha256);
-      if (j && validIndex && validHash) {
-        if (typeof j.sha256 === "string") { j.sha256 = j.sha256.toLowerCase(); updateMeta = j; }
+      if (validMeta(j)) {
+        if (typeof j.sha256 === "string") j.sha256 = j.sha256.toLowerCase();
+        if (j.files) for (const entry of Object.values(j.files)) entry.sha256 = entry.sha256.toLowerCase();
+        updateMeta = j;
         try { await cache.put(urlOf("prayer_update.json"), res.clone()); } catch (e) {}
         return res;
       }
@@ -192,6 +285,11 @@ self.addEventListener("fetch", (event) => {
   }
   if (url.pathname.endsWith("prayer_update.json")) {
     event.respondWith(networkFirstMeta(req));
+    return;
+  }
+  if (url.pathname.endsWith("/styles.css") || url.pathname.endsWith("/app.js")) {
+    const name = url.pathname.split("/").pop();
+    event.respondWith(verifiedAssetResponse(req, name));
     return;
   }
   if (/\.(?:mp3|png|svg|jpg|jpeg|webp|woff2?)$/i.test(url.pathname)) {
@@ -250,18 +348,24 @@ self.addEventListener("message", (event) => {
       if (!meta) { broadcast({ type: "UPDATE_TAMPERED", version: 0, reason: "meta" }); return; }
       updateMeta = meta;
       try {
+        let ok = true;
         const r = await fetch(urlOf(meta.index || "index.html") + "?verify=" + Date.now(), { cache: "no-store" });
         if (!r.ok) throw new Error("fetch");
         const buf = await r.arrayBuffer();
-        const hex = await sha256Hex(buf);
-        const ok = !meta.sha256 || hex === meta.sha256;
-        if (ok) {
-          const cache = await caches.open(CACHE);
-          try { await cache.put(urlOf("index.html"), new Response(buf, { headers: { "Content-Type": "text/html; charset=utf-8" } })); } catch (e) {}
-          broadcast({ type: "UPDATE_VERIFIED", version: meta.version || SW_VERSION });
-        } else {
-          broadcast({ type: "UPDATE_TAMPERED", version: meta.version || 0, reason: "hash" });
+        if (meta.sha256) {
+          const hex = await sha256Hex(buf);
+          if (hex !== meta.sha256 || (Number.isFinite(meta.size) && buf.byteLength !== meta.size)) ok = false;
         }
+        if (ok) await putVerified("index.html", buf);
+        for (const [name, expected] of Object.entries(meta.files || {})) {
+          if (!isValidAssetName(name)) { ok = false; continue; }
+          let asset = null;
+          try { asset = await fetchVerifiedAsset(name, expected); } catch (e) {}
+          if (!asset) { ok = false; continue; }
+          await putVerified(name, asset);
+        }
+        if (ok) broadcast({ type: "UPDATE_VERIFIED", version: meta.version || SW_VERSION });
+        else broadcast({ type: "UPDATE_TAMPERED", version: meta.version || 0, reason: "hash" });
         if (port) port.postMessage({ ok: ok, version: meta.version || SW_VERSION });
       } catch (e) {
         if (port) port.postMessage({ ok: false, error: "network" });
@@ -269,16 +373,34 @@ self.addEventListener("message", (event) => {
     })());
     return;
   }
-  if (data.type === "CACHE_VERIFIED" && data.buffer) {
+  if (data.type === "CACHE_VERIFIED" && (data.buffer || data.files)) {
     event.waitUntil((async () => {
       try {
-        const expected = updateMeta && updateMeta.sha256;
-        if (expected) {
-          const hex = await sha256Hex(data.buffer);
-          if (hex !== expected) { broadcast({ type: "UPDATE_TAMPERED", reason: "client-hash" }); return; }
+        const meta = updateMeta || await fetchMeta();
+        if (!meta) return;
+        if (data.buffer) {
+          if (meta.sha256) {
+            const hex = await sha256Hex(data.buffer);
+            if (hex !== meta.sha256) { broadcast({ type: "UPDATE_TAMPERED", reason: "client-hash" }); return; }
+          }
+          await putVerified("index.html", data.buffer);
         }
-        const cache = await caches.open(CACHE);
-        await cache.put(urlOf("index.html"), new Response(data.buffer, { headers: { "Content-Type": "text/html; charset=utf-8" } }));
+        const received = Array.isArray(data.files) ? data.files : [];
+        const expectedFiles = meta.files || {};
+        for (const item of received) {
+          const name = String((item && item.path) || "");
+          if (!Object.prototype.hasOwnProperty.call(expectedFiles, name) || !isValidAssetName(name)) continue;
+          if (!(item.buffer instanceof ArrayBuffer)) continue;
+          const expected = expectedFiles[name];
+          const hex = await sha256Hex(item.buffer);
+          if (hex !== String(expected.sha256).toLowerCase() ||
+              (Number.isFinite(expected.size) && item.buffer.byteLength !== expected.size)) {
+            broadcast({ type: "UPDATE_TAMPERED", reason: "client-hash:" + name });
+            return;
+          }
+          await putVerified(name, item.buffer);
+        }
+        broadcast({ type: "UPDATE_VERIFIED", version: meta.version || SW_VERSION });
       } catch (e) {}
     })());
     return;
