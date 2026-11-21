@@ -11,7 +11,7 @@ python3 tools/release.py --check
 npm test        # يشغّل sw_test.js ثم smoke_test.js
 ```
 
-يجب أن يظهر `✔ كل شيء متسق — الإصدار 29` و`✔ جميع اختبارات الدخان نجحت`.
+يجب أن يظهر `✔ كل شيء متسق — الإصدار 30` و`✔ جميع اختبارات الدخان نجحت`.
 إن ظهر أي خطأ، شغّل `python3 tools/release.py` ثم أعد الفحص والاختبار.
 
 ## 2) انشر التغييرات
@@ -20,7 +20,7 @@ npm test        # يشغّل sw_test.js ثم smoke_test.js
 
 ```bash
 git add index.html styles.css app.js sw.js prayer_update.json README-apk-ar.md README-GITHUB-PAGES.md CHANGELOG.md
-git commit -m "Prayer app v29 - CI/CD, insights, voice commands and accessibility"
+git commit -m "Prayer app v30 - unified reminder settings and basics-first layout"
 git push
 ```
 
@@ -64,6 +64,7 @@ python3 tools/release.py --check
 - من v27: أزرار الإشعارات تفضّل الجسر الأصلي في غلاف أندرويد، فلا تظهر رسالة «متصفحك لا يدعم الإشعارات»؛ زر التجربة يرسل إشعاراً نظامياً.
 - من v28: إشعار التجربة يعمل حتى على الغلاف المثبّت قبل v27 عبر `setSchedule`، فيكفي دفع المحتوى بلا APK جديد.
 - من v29: لوحة تحليلات محلية وأوامر صوتية/اختصارات لوحة مفاتيح في طبقة الويب. انسخ `index.html` و`styles.css` و`app.js` معاً. يعمل CI تلقائياً عند الدفع، ويمكن إصدار APK موقّع من سير العمل `Release APK` (راجع `ARCHITECTURE.md` للأسرار).
+- من v30: نظام تذكير واحد بدل نظامين، وإعدادات أساسية فقط مع زر «المزيد من الإعدادات». انسخ الملفات الثلاثة معاً دائماً.
 - عامل الخدمة يسجّل من الجذر، ونطاقه يصبح `/pray/` تلقائياً.
 - ملفات الأذان (`السريحي.mp3`, `اقامة.mp3`) في الجذر، لذلك يعمل الأذان دون إنترنت.
 - إن ظهرت شاشة «تعذّر تشغيل التطبيق»، استخدم زر **إعادة المحاولة** أو **مسح الذاكرة وإعادة التحميل**؛ بياناتك لا تُحذف إلا بالزر الأخير.

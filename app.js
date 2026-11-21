@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=29;
+const APP_VERSION=30;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -2835,6 +2835,10 @@ function openSettings(){
   loadSettings();
   fillLocCountry();
   let st="calc";try{st=localStorage.getItem("prayerApp_v3_stab")||"calc"}catch(e){}
+  // إن كان آخر تبويب محفوظاً من الإعدادات المتقدمة ولم يُفتح «المزيد»، نعود للأساسيات.
+  const panel=document.querySelector(".settings-panel");
+  const advanced=!!panel&&panel.classList.contains("show-advanced");
+  if(!advanced&&["audio","health","pro"].indexOf(st)>=0)st="calc";
   switchStab(st);
 }
 function closeSettings(){
@@ -2855,14 +2859,11 @@ function loadSettings(){
   $("iIsha").value=IQAMA_OFFSET.Isha;
   $("volControl").value=Math.round(VOL*100);
   $("leadMin").value=cfg.iqamaLead;
-  $("remindInterval").value=(REMINDER_INTERVAL_MS/60000).toString();
   $("adhanSoundSel").value=cfg.soundType;
   $("adhanFileBox").style.display=cfg.soundType==="file"?"block":"none";
   $("iqamaSoundSel").value=cfg.iqamaSound||"file";
   $("toggleLead").classList.toggle("on",cfg.lead);
-  const t=$("toggleSRemind");
-  t.classList.toggle("on",reminderActive);
-  $("toggleSRemind").dataset.active=reminderActive?"1":"0";
+  try{syncReminderUI()}catch(e){}
   refreshAudioStatus();
 }
 function canUseLocalFile(url){return /^data:|^blob:/.test(url)}

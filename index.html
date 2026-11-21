@@ -541,7 +541,7 @@
       <button class="stab" data-stab="health" role="tab"><span class="stab-ic">🩺</span><span class="stab-lb" data-i18n="stabHealth">الصحة</span></button>
       <button class="stab" data-stab="pro" role="tab"><span class="stab-ic">⚡</span><span class="stab-lb">متقدم</span></button>
     </div>
-    <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false">إعدادات متقدمة (الصوت، الصحة، الأدوات)＋</button>
+    <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false">المزيد من الإعدادات (الصوت، الصحة، الأدوات) ＋</button>
     <div class="stab-body" id="stabBody">
 
     <div class="stab-panel" data-stab-panel="look">
@@ -666,7 +666,7 @@
         <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
         <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
       </div>
-      <span class="hint" id="updateStatus">الإصدار 29 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+      <span class="hint" id="updateStatus">الإصدار 30 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
       <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
     </div>
 
@@ -736,7 +736,7 @@
     </div>
 
     <div class="s-group" id="reminderSystemGroup">
-      <h3>🔔 نظام التذكير بالأذكار <small>يعمل تلقائياً — الإيقاف من هنا فقط</small></h3>
+      <h3>🔔 تذكير ذكر الله <small>نظام واحد — يعمل تلقائياً، والإيقاف من هنا فقط</small></h3>
       <div class="s-row">
         <label for="reminderToggleBtn">تفعيل التذكير:</label>
         <div class="toggle on reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="true" tabindex="0"></div>
@@ -764,38 +764,41 @@
           <option value="custom">نص مخصص</option>
         </select>
       </div>
-      <div class="s-row">
-        <label for="reminderSource">مصدر الأذكار:</label>
-        <select id="reminderSource">
-          <option value="auto">تلقائي (حسب الوقت)</option>
-          <option value="morning">أذكار الصباح</option>
-          <option value="evening">أذكار المساء</option>
-          <option value="afterPrayer">بعد الصلاة</option>
-          <option value="sleep">النوم</option>
-          <option value="wake">الاستيقاظ</option>
-          <option value="mosque">المسجد</option>
-          <option value="food">الطعام</option>
-          <option value="travel">السفر</option>
-          <option value="rain">المطر</option>
-          <option value="distress">الهم/الكرب</option>
-          <option value="home">المنزل</option>
-          <option value="sick">المرض</option>
-          <option value="anger">الغضب</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label for="reminderCustomText">النص المخصص:</label>
-        <input type="text" id="reminderCustomText" placeholder="اكتب نص التذكير..." style="flex:1;min-width:180px">
-      </div>
-      <div class="s-row">
-        <label><input type="checkbox" id="reminderSound" checked> صوت التنبيه</label>
-        <label><input type="checkbox" id="reminderNotify"> إشعار المتصفح (إن توفر الإذن)</label>
-      </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="reminderTestBtn" type="button">🔔 تجربة تذكير الآن</button>
-        <button class="btn sm ghost" id="reminderWebPermBtn" type="button">إذن إشعارات المتصفح</button>
-      </div>
-      <span class="setting-note">يعمل هذا النظام داخل التطبيق/المتصفح أثناء فتحه، مع إمكانية إظهار إشعار متصفح عند تفعيل الإذن. تنبيهات الأذان والإقامة المجدولة بالنظام تُدار من إعدادات الإشعارات أعلاه (وخاصة في تطبيق Android).</span>
+      <details class="adv-details" id="reminderMore">
+        <summary>⚙️ خيارات التذكير المتقدمة (المصدر، النص، الإشعار)</summary>
+        <div class="s-row">
+          <label for="reminderSource">مصدر الأذكار:</label>
+          <select id="reminderSource">
+            <option value="auto">تلقائي (حسب الوقت)</option>
+            <option value="morning">أذكار الصباح</option>
+            <option value="evening">أذكار المساء</option>
+            <option value="afterPrayer">بعد الصلاة</option>
+            <option value="sleep">النوم</option>
+            <option value="wake">الاستيقاظ</option>
+            <option value="mosque">المسجد</option>
+            <option value="food">الطعام</option>
+            <option value="travel">السفر</option>
+            <option value="rain">المطر</option>
+            <option value="distress">الهم/الكرب</option>
+            <option value="home">المنزل</option>
+            <option value="sick">المرض</option>
+            <option value="anger">الغضب</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <label for="reminderCustomText">النص المخصص:</label>
+          <input type="text" id="reminderCustomText" placeholder="اكتب نص التذكير..." style="flex:1;min-width:180px">
+        </div>
+        <div class="s-row">
+          <label><input type="checkbox" id="reminderSound" checked> صوت التنبيه</label>
+          <label><input type="checkbox" id="reminderNotify"> إشعار المتصفح (إن توفر الإذن)</label>
+        </div>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="reminderTestBtn" type="button">🔔 تجربة تذكير الآن</button>
+          <button class="btn sm ghost" id="reminderWebPermBtn" type="button">إذن إشعارات المتصفح</button>
+        </div>
+        <span class="setting-note">تنبيهات الأذان والإقامة المجدولة تُدار من قسم «الإشعارات والأذان» أعلاه. هذا التذكير يعمل داخل التطبيق أثناء فتحه.</span>
+      </details>
     </div>
 
     <div class="s-group">
@@ -864,7 +867,7 @@
 
     </div><!-- /audio -->
 
-    <div class="stab-panel" data-stab-panel="calc">
+    <div class="stab-panel adv-panel" data-stab-panel="calc">
     <div class="s-group">
       <h3>📅 تعديل أوقات الصلاة بشكل دائم <small>عدّل يدوياً أو ارجع للحساب الذاتي</small></h3>
       <div class="pray-times-row" id="manualTimes">
@@ -890,28 +893,6 @@
     </div>
 
     </div><!-- /calc -->
-
-    <div class="stab-panel" data-stab-panel="notif">
-    <div class="s-group">
-      <h3>🔔 التذكير بذكر الله <small>يعمل تلقائياً — للإيقاف استخدم المفتاح أدناه</small></h3>
-      <div class="s-row">
-        <label>تفعيل التذكير:</label>
-        <div class="toggle on" id="toggleSRemind"></div>
-      </div>
-      <div class="s-row">
-        <label>الفاصل (دقيقة):</label>
-        <select id="remindInterval">
-          <option value="5">5 دقائق</option>
-          <option value="10" selected>10 دقائق</option>
-          <option value="15">15 دقيقة</option>
-          <option value="30">30 دقيقة</option>
-          <option value="60">ساعة</option>
-        </select>
-      </div>
-      <span class="hint">يظهر تذكير صوتي بسيط: «أذكر الله» مع نغمة خفيفة — يعمل حتى مع قفل الشاشة</span>
-    </div>
-
-    </div><!-- /notif -->
 
     <div class="stab-panel" data-stab-panel="audio">
     <div class="s-group">
@@ -969,7 +950,7 @@
 
     </div><!-- /audio -->
 
-    <div class="stab-panel" data-stab-panel="calc">
+    <div class="stab-panel adv-panel" data-stab-panel="calc">
     <div class="s-group">
       <h3>⟳ إدارة البيانات والنسخ الاحتياطي</h3>
       <div class="s-actions" style="justify-content:flex-start">

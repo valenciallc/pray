@@ -85,8 +85,18 @@ async function boot(html, seed) {
      "مُحدِّث أندرويد يقرأ قائمة الأصول من الخادم");
   ok(!RAW_HTML.includes('id="reminderBtn"') && !RAW_HTML.includes('id="tabReminder"'),
      "أزرار التذكير أُزيلت من القائمة والشريط");
-  ok(RAW_HTML.includes('id="reminderToggleBtn"') && RAW_HTML.includes('id="toggleSRemind"'),
-     "مفتاح إيقاف التذكير موجود في الإعدادات فقط");
+  ok(RAW_HTML.includes('id="reminderToggleBtn"') && !RAW_HTML.includes('id="toggleSRemind"') &&
+     !RAW_HTML.includes('id="remindInterval"'), "نظام التذكير موحّد — مفتاح واحد وفاصل واحد بلا تكرار");
+  ok((RAW_HTML.match(/data-stab-panel="notif"/g) || []).length === 1,
+     "لوحة الإشعارات غير مكررة داخل الإعدادات");
+  ok(RAW_HTML.includes('<details class="adv-details" id="reminderMore">') &&
+     !RAW_HTML.includes('<details class="adv-details" id="reminderMore" open'),
+     "خيارات التذكير المتقدمة مخفية افتراضياً");
+  ok((RAW_HTML.match(/class="stab-panel adv-panel"/g) || []).length >= 2 &&
+     CSS.includes(".settings-panel .stab-panel.adv-panel{display:none}"),
+     "المجموعات التفصيلية مخفية حتى ضغط «المزيد»");
+  ok(RAW_HTML.includes("advToggle") && RAW_HTML.includes("المزيد من الإعدادات"),
+     "الإعدادات الإضافية خلف زر «المزيد»");
   ok(/enabled\s*:\s*true/.test(APP_JS) && APP_JS.includes("prayerApp_v3_reminderAuto"),
      "التذكير مفعّل تلقائياً مع ترقية لمرة واحدة");
   ok(RAW_HTML.includes('id="setupOpenBtn"') && APP_JS.includes('$("setupOpenBtn")'),
@@ -196,8 +206,12 @@ async function boot(html, seed) {
   ok(proIds.every(id => !!d.getElementById(id)), "أزرار وحالات اللوحة المتقدمة موجودة (" + proIds.length + " عنصراً)");
   ok(typeof w.eval("pushWebSchedule") === "function" && typeof w.eval("clearWebSchedule") === "function" && typeof w.eval("renderProStatus") === "function", "دوال الجدولة والإلغاء والحالة محمّلة");
 
+  w.localStorage.setItem("prayerApp_v3_stab", "pro");
   const settings = d.getElementById("settingsBtn");
   if (settings) settings.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(d.querySelector('[data-stab-panel="calc"]').classList.contains("active"),
+     "تبويب متقدم محفوظ قديماً يعود للأساسيات عند فتح الإعدادات");
+  w.localStorage.setItem("prayerApp_v3_stab", "calc");
   ok(count("locCountry") > 0, "قائمة البلاد تُعبأ عند فتح الإعدادات (" + count("locCountry") + ")");
   ok(count("locCity") > 0, "قائمة المدن تُعبأ (" + count("locCity") + ")");
 

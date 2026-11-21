@@ -1001,6 +1001,9 @@ h1,h2,h3,.section h2,.cd-title,.nb-title,.qb-title,.dh-title{
 .settings-panel.show-advanced .stab[data-stab="audio"],
 .settings-panel.show-advanced .stab[data-stab="health"],
 .settings-panel.show-advanced .stab[data-stab="pro"]{display:flex}
+/* المجموعات التفصيلية داخل التبويبات تظهر فقط بعد ضغط «المزيد من الإعدادات». */
+.settings-panel .stab-panel.adv-panel{display:none}
+.settings-panel.show-advanced .stab-panel.adv-panel.active{display:block;animation:stabFade .3s ease}
 .adv-toggle{
   display:block;width:100%;margin:0 0 14px;padding:9px 12px;
   background:transparent;border:1px dashed var(--line);border-radius:11px;
@@ -1008,6 +1011,14 @@ h1,h2,h3,.section h2,.cd-title,.nb-title,.qb-title,.dh-title{
 }
 .adv-toggle:hover{color:var(--gold);border-color:var(--gold)}
 .settings-panel.show-advanced .adv-toggle{color:var(--gold);border-style:solid}
+/* تفاصيل التذكير مخفية افتراضياً — الأساسيات تظهر أولاً. */
+.adv-details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.adv-details>summary{cursor:pointer;list-style:none;color:var(--muted);font-size:.76rem;font-weight:700;padding:6px 2px;min-height:36px;display:flex;align-items:center;gap:6px}
+.adv-details>summary::-webkit-details-marker{display:none}
+.adv-details>summary::before{content:"＋";color:var(--gold);font-size:.9rem}
+.adv-details[open]>summary::before{content:"−"}
+.adv-details>summary:hover,.adv-details>summary:focus-visible{color:var(--gold)}
+.adv-details>*:not(summary){margin-top:8px}
 
 @media(max-width:480px){
   .tabsbar .tb{font-size:.64rem;min-height:52px;padding:4px 2px}
