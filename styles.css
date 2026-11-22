@@ -83,6 +83,9 @@ h1{font-size:1.35rem;display:flex;align-items:center;gap:10px}
 .azk-card .ak-n{display:inline-block;background:linear-gradient(135deg,#C89255,#B97F3F);color:#FFF8EC;border-radius:20px;padding:2px 10px;font-size:.72rem;margin-top:6px;font-weight:700}
 .azk-card.on{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,150,88,.35)}
 .azk-card.now{background:linear-gradient(135deg,#F6E7CC,#EED5AC)}
+.azk-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.azk-help{margin:2px 0 0;color:var(--muted);font-size:.76rem;line-height:1.6}
+.azk-group-title{grid-column:1/-1;margin:10px 2px 0;padding-bottom:5px;border-bottom:1px solid var(--line);color:var(--gold);font-size:.82rem;font-weight:800}
 .azk-item{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:0 3px 10px rgba(120,90,50,.08)}
 .azk-item .azk-text{font-family:"Amiri",serif;font-size:1.1rem;line-height:2;color:var(--text);letter-spacing:.2px}
 .azk-item .azk-count{display:inline-block;background:linear-gradient(135deg,#C89255,#B97F3F);color:#FFF8EC;border-radius:20px;padding:3px 12px;font-size:.78rem;margin-top:8px;font-weight:700}
@@ -994,16 +997,7 @@ h1,h2,h3,.section h2,.cd-title,.nb-title,.qb-title,.dh-title{
 .tabsbar .tb{flex:1 1 0;min-width:0;max-width:130px}
 .tabsbar .tb .tb-ic{font-size:1.08rem;opacity:.85}
 
-/* الإعدادات المتقدمة مخفية حتى تُطلب. */
-.settings-panel .stab[data-stab="audio"],
-.settings-panel .stab[data-stab="health"],
-.settings-panel .stab[data-stab="pro"]{display:none}
-.settings-panel.show-advanced .stab[data-stab="audio"],
-.settings-panel.show-advanced .stab[data-stab="health"],
-.settings-panel.show-advanced .stab[data-stab="pro"]{display:flex}
-/* المجموعات التفصيلية داخل التبويبات تظهر فقط بعد ضغط «المزيد من الإعدادات». */
-.settings-panel .stab-panel.adv-panel{display:none}
-.settings-panel.show-advanced .stab-panel.adv-panel.active{display:block;animation:stabFade .3s ease}
+/* خمسة تبويبات مرتّبة بلا تكرار؛ التفاصيل مطوية داخل كل تبويب وتُفتح من زر واحد. */
 .adv-toggle{
   display:block;width:100%;margin:0 0 14px;padding:9px 12px;
   background:transparent;border:1px dashed var(--line);border-radius:11px;

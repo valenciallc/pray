@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=30;
+const APP_VERSION=31;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -497,7 +497,7 @@ ar:{
   tableLoading:"⏳ جارٍ جلب أوقات الشهر من الإنترنت...",tableFail:"تعذّر جلب الأوقات من الإنترنت — سيُعاد جلبها تلقائياً كل 30 ثانية",
   tableEmpty:"لا توجد أوقات لهذا الشهر — تأكد من الاتصال بالإنترنت أو انتظر الجلب التلقائي",
   tableDays:"{0} يوم — أوقات محسوبة تلقائياً لمدينة {1}، {2}",
-  duaTitle:"📿 دعاء ما بعد الأذان",duaDayTitle:"🤲 دعاء اليوم",azkAuto:"تلقائي (صباح/مساء)",azkItemWord:"ذِكر",azkMorning:"🌅 أذكار الصباح",azkEvening:"🌇 أذكار المساء",
+  duaTitle:"📿 دعاء ما بعد الأذان",duaDayTitle:"🤲 دعاء اليوم",azkAuto:"تلقائي (صباح/مساء)",azkBrowseHint:"اختر «تلقائي» حسب الوقت، أو افتح أي تصنيف مباشرة",azkItemWord:"ذِكر",azkMorning:"🌅 أذكار الصباح",azkEvening:"🌇 أذكار المساء",
   foot:"أوقات محسوبة تلقائياً لمدينة الشارقة · الإمارات · مع إمكانية التعديل اليدوي لجميع السنوات",
   btnPlayAdhan:"▶ تشغيل الأذان",btnClose:"إغلاق ✕",
   alertAdhan:"🕌 حان وقت الأذان: {0}",alertIqama:"⏰ حان وقت الإقامة: {0}",alertLead:"⏳ الإقامة {0} بعد {1} دقيقة ({2})",
@@ -507,7 +507,7 @@ ar:{
   tabNow:"الآن",tabPray:"الصلاة",tabWird:"الورد",tabDhikr:"الذكر",tabSettings:"الإعدادات",tabRem:"التذكير",
   todayProgress:"🎯 إنجاز صلوات اليوم",ramadanBanner:"رمضان مبارك — سحور وإفطار هذا اليوم",
   suhoorLabel:"🥟 السحور (الإمساك):",iftarLabel:"🍽️ الإفطار (المغرب):",
-  qiblaTitle:"🕋 اتجاه القبلة",stabCalc:"الحساب",stabNotif:"الإشعارات",stabAudio:"الصوت",stabLook:"المظهر",
+  qiblaTitle:"🕋 اتجاه القبلة",stabCalc:"الموقع",stabNotif:"التنبيهات",stabAudio:"الأذان",stabLook:"المظهر",
   themeGroup:"🎨 المظهر",themeGroupSub:"ليلي مريح للعين",
   themeLight:"فاتح",themeDark:"داكن",themeAuto:"تلقائي",themeHint:"النمط التلقائي يتبع مظهر هاتفك، ويتحوّل ليلياً من تلقاء نفسه",
   markDone:"ليميز الصلاة بعد أدائها",
@@ -545,7 +545,7 @@ en:{
   tableLoading:"⏳ Fetching month times from the internet...",tableFail:"Couldn't fetch times — will retry automatically every 30 seconds",
   tableEmpty:"No times for this month — check internet or wait for auto-refresh",
   tableDays:"{0} days — automatic times for {1}, {2}",
-  duaTitle:"📿 Dua after adhan",duaDayTitle:"🤲 Dua of the day",azkAuto:"Auto (morning/evening)",azkItemWord:"item",azkMorning:"🌅 Morning adhkar",azkEvening:"🌇 Evening adhkar",
+  duaTitle:"📿 Dua after adhan",duaDayTitle:"🤲 Dua of the day",azkAuto:"Auto (morning/evening)",azkBrowseHint:"Choose Auto for the time of day, or open any category directly",azkItemWord:"item",azkMorning:"🌅 Morning adhkar",azkEvening:"🌇 Evening adhkar",
   foot:"Automatic prayer times for Sharjah · UAE · with manual editing for all years",
   btnPlayAdhan:"▶ Play adhan",btnClose:"Close ✕",
   alertAdhan:"🕌 Adhan time: {0}",alertIqama:"⏰ Iqama time: {0}",alertLead:"⏳ {0} iqama in {1} minutes ({2})",
@@ -555,7 +555,7 @@ en:{
   tabNow:"Now",tabPray:"Prayer",tabWird:"Wird",tabDhikr:"Dhikr",tabSettings:"Settings",tabRem:"Alert",
   todayProgress:"🎯 Today's prayer progress",ramadanBanner:"Ramadan Mubarak — suhoor & iftar for today",
   suhoorLabel:"🥟 Suhoor (stop eating):",iftarLabel:"🍽️ Iftar (Maghrib):",
-  qiblaTitle:"🕋 Qibla direction",stabCalc:"Calculation",stabNotif:"Notifications",stabAudio:"Sound",stabLook:"Appearance",
+  qiblaTitle:"🕋 Qibla direction",stabCalc:"Location",stabNotif:"Alerts",stabAudio:"Adhan",stabLook:"Appearance",
   themeGroup:"🎨 Appearance",themeGroupSub:"easy-on-the-eye night mode",
   themeLight:"Light",themeDark:"Dark",themeAuto:"Auto",themeHint:"Auto follows your phone's appearance and turns dark on its own",
   markDone:"Tap to mark the prayer as done",
@@ -593,7 +593,7 @@ ur:{
   tableLoading:"⏳ مہینے کے اوقات انٹرنیٹ سے لائے جا رہے ہیں...",tableFail:"اوقات حاصل نہیں ہوئے — ہر 30 سیکنڈ میں خودکار طور پر دوبارہ کوشش",
   tableEmpty:"اس مہینے کے کوئی اوقات نہیں — انٹرنیٹ چیک کریں یا خودکار تازہ کاری کا انتظار کریں",
   tableDays:"{0} دن — {1}، {2} کے خودکار اوقات",
-  duaTitle:"📿 اذان کے بعد کی دعا",duaDayTitle:"🤲 آج کی دعا",azkAuto:"خودکار (صبح/شام)",azkItemWord:"ذکر",azkMorning:"🌅 صبح کے اذکار",azkEvening:"🌇 شام کے اذکار",
+  duaTitle:"📿 اذان کے بعد کی دعا",duaDayTitle:"🤲 آج کی دعا",azkAuto:"خودکار (صبح/شام)",azkBrowseHint:"وقت کے مطابق «خودکار» منتخب کریں یا کوئی قسم براہِ راست کھولیں",azkItemWord:"ذکر",azkMorning:"🌅 صبح کے اذکار",azkEvening:"🌇 شام کے اذکار",
   foot:"شارجہ کے خودکار نماز کے اوقات · متحدہ عرب امارات · تمام سالوں کے لیے دستی ترمیم",
   btnPlayAdhan:"▶ اذان چلائیں",btnClose:"بند کریں ✕",
   alertAdhan:"🕌 اذان کا وقت: {0}",alertIqama:"⏰ اقامت کا وقت: {0}",alertLead:"⏳ {0} کی اقامت {1} منٹ بعد ({2})",
@@ -603,7 +603,7 @@ ur:{
   tabNow:"ابھی",tabPray:"نماز",tabWird:"ورد",tabDhikr:"ذکر",tabSettings:"ترتیبات",tabRem:"یاد دہانی",
   todayProgress:"🎯 آج کی نمازوں کی تکمیل",ramadanBanner:"رمضان مبارک — آج کے لیے سحری و افطار",
   suhoorLabel:"🥟 سحری (پرہیز کا وقت):",iftarLabel:"🍽️ افطار (مغرب):",
-  qiblaTitle:"🕋 سمت قبلہ",stabCalc:"حساب",stabNotif:"اطلاعات",stabAudio:"آواز",stabLook:"ظاہری شکل",
+  qiblaTitle:"🕋 سمت قبلہ",stabCalc:"حساب",stabNotif:"اطلاعات",stabAudio:"آواز",stabLook:"ظاہری شکل",stabSystem:"system",
   themeGroup:"🎨 شکل و صورت",themeGroupSub:"آنکھوں کو راحت دینے والا رات کا موڈ",
   themeLight:"روشن",themeDark:"اندھیرا",themeAuto:"خودکار",themeHint:"خودکار موڈ آپ کے فون کی شکل کی پیروی کرتا ہے",
   markDone:"نماز ادا کرنے کے بعد نشان لگائیں",
@@ -635,7 +635,7 @@ const I18N_MORE={
   voiceCmdNow:"الآن",voiceCmdPrayer:"الصلاة",voiceCmdTable:"الجدول",voiceCmdQibla:"القبلة",voiceCmdWird:"الورد",voiceCmdDhikr:"المسبحة",voiceCmdSettings:"الإعدادات",voiceCmdReminderOn:"تفعيل التذكير",voiceCmdReminderOff:"إيقاف التذكير",voiceCmdListen:"استمع",voiceCmdStop:"توقف",voiceCmdEnglish:"اللغة الإنجليزية",voiceCmdArabic:"اللغة العربية",voiceCmdHelp:"مساعدة",
   shortcutTitle:"اختصارات لوحة المفاتيح",shortcutHint:"اضغط ? للاختصارات، v للأوامر الصوتية، n للآن، p للصلاة، d للذكر، s للإعدادات.",
   qbKhatma:"تقدّم الختمة",qbTodayTarget:"ورد اليوم:",qbPages:"صفحة",qbTargetPage:"إلى الصفحة:",qbPlan:"الخطة",qbDaily:"صفحات يومياً",qbRestart:"↺ بدء خطة جديدة",
-  dhSpeed:"السرعة",stabHealth:"الصحة",a11yGroup:"حجم الخط وسهولة القراءة",a11ySub:"مناسب لكبار السن وقارئات الشاشة",
+  dhSpeed:"السرعة",stabHealth:"الصحة",stabSystem:"النظام",a11yGroup:"حجم الخط وسهولة القراءة",a11ySub:"مناسب لكبار السن وقارئات الشاشة",
   a11yNote:"يُحفظ حجم الخط على جهازك، وتعمل جميع الأزرار مع TalkBack وقارئ الشاشة.",
   wakeGroup:"إبقاء الشاشة مضاءة",wakeSub:"مناسب لوضع شاشة العرض",wakeNote:"يمنع إطفاء الشاشة أثناء عرض أوقات الصلاة، ويُعاد تلقائياً عند العودة للتطبيق. يعمل على أندرويد وكروم.",
   langGroup:"اللغة",langSub:"واجهة التطبيق — النصوص الشرعية تبقى بالعربية",langLabel:"لغة الواجهة:",
@@ -680,7 +680,7 @@ const I18N_MORE={
   voiceCmdNow:"Now",voiceCmdPrayer:"Prayer",voiceCmdTable:"Table",voiceCmdQibla:"Qibla",voiceCmdWird:"Wird",voiceCmdDhikr:"Tasbih",voiceCmdSettings:"Settings",voiceCmdReminderOn:"Enable reminder",voiceCmdReminderOff:"Stop reminder",voiceCmdListen:"Listen",voiceCmdStop:"Stop",voiceCmdEnglish:"English language",voiceCmdArabic:"Arabic language",voiceCmdHelp:"Help",
   shortcutTitle:"Keyboard shortcuts",shortcutHint:"Press ? for shortcuts, v for voice, n for Now, p for Prayer, d for Dhikr, s for Settings.",
   qbKhatma:"Khatma progress",qbTodayTarget:"Today's share:",qbPages:"pages",qbTargetPage:"Up to page:",qbPlan:"Plan",qbDaily:"Pages per day",qbRestart:"↺ Start new plan",
-  dhSpeed:"Speed",stabHealth:"Health",a11yGroup:"Font size & accessibility",a11ySub:"Friendly for elders and screen readers",
+  dhSpeed:"Speed",stabHealth:"Health",stabSystem:"System",a11yGroup:"Font size & accessibility",a11ySub:"Friendly for elders and screen readers",
   a11yNote:"Font size is saved on your device. All controls work with TalkBack and screen readers.",
   wakeGroup:"Keep screen awake",wakeSub:"Great for display mode",wakeNote:"Prevents the screen from sleeping while showing prayer times, and re-acquires when you return. Works on Android and Chrome.",
   langGroup:"Language",langSub:"App interface — religious texts remain in Arabic",langLabel:"Interface language:",
@@ -724,7 +724,7 @@ const I18N_MORE={
   todayProgress:"🎯 Prières du jour",occTitle:"🌙 Jours et saisons bénis",occFriday:"📖 Al-Kahf aujourd'hui",statsTitle:"📊 Statistiques et série",
   statStreak:"🔥 Série actuelle (jours)",statBest:"🏆 Meilleure série",statMonth:"📅 Progression du mois",statTotal:"✅ Prières accomplies",
   qbKhatma:"Progression de la khatma",qbTodayTarget:"Part du jour :",qbPages:"pages",qbTargetPage:"Jusqu'à la page :",qbPlan:"Plan",qbDaily:"Pages par jour",qbRestart:"↺ Nouveau plan",
-  dhSpeed:"Vitesse",stabHealth:"Santé",a11yGroup:"Taille du texte et accessibilité",a11ySub:"Adapté aux aînés et lecteurs d'écran",
+  dhSpeed:"Vitesse",stabHealth:"Santé",stabSystem:"Système",a11yGroup:"Taille du texte et accessibilité",a11ySub:"Adapté aux aînés et lecteurs d'écran",
   a11yNote:"La taille du texte est enregistrée. Tous les boutons fonctionnent avec TalkBack.",
   wakeGroup:"Garder l'écran allumé",wakeSub:"Idéal pour le mode affichage",wakeNote:"Empêche la mise en veille pendant l'affichage des horaires.",
   langGroup:"Langue",langSub:"Interface — les textes religieux restent en arabe",langLabel:"Langue de l'interface :",
@@ -755,7 +755,7 @@ const I18N_MORE={
   todayProgress:"🎯 Bugünkü namazlar",occTitle:"🌙 Özel günler ve mevsimler",occFriday:"📖 Bugün Kehf",statsTitle:"📊 Namaz istatistikleri",
   statStreak:"🔥 Güncel seri (gün)",statBest:"🏆 En iyi seri",statMonth:"📅 Ay ilerlemesi",statTotal:"✅ Kılınan namazlar",
   qbKhatma:"Hatim ilerlemesi",qbTodayTarget:"Bugünkü pay:",qbPages:"sayfa",qbTargetPage:"Hedef sayfa:",qbPlan:"Plan",qbDaily:"Günlük sayfa",qbRestart:"↺ Yeni plan",
-  dhSpeed:"Hız",stabHealth:"Sağlık",a11yGroup:"Yazı boyutu ve erişilebilirlik",a11ySub:"Yaşlılar ve ekran okuyucular için",
+  dhSpeed:"Hız",stabHealth:"Sağlık",stabSystem:"Sistem",a11yGroup:"Yazı boyutu ve erişilebilirlik",a11ySub:"Yaşlılar ve ekran okuyucular için",
   a11yNote:"Yazı boyutu cihazınızda saklanır. Tüm düğmeler TalkBack ile çalışır.",
   wakeGroup:"Ekranı açık tut",wakeSub:"Ekran modu için ideal",wakeNote:"Namaz vakitleri gösterilirken ekranın kapanmasını önler.",
   langGroup:"Dil",langSub:"Arayüz — dini metinler Arapça kalır",langLabel:"Arayüz dili:",
@@ -786,7 +786,7 @@ const I18N_MORE={
   todayProgress:"🎯 Shalat hari ini",occTitle:"🌙 Hari & musim istimewa",occFriday:"📖 Al-Kahfi hari ini",statsTitle:"📊 Statistik shalat",
   statStreak:"🔥 Rangkaian saat ini (hari)",statBest:"🏆 Rangkaian terbaik",statMonth:"📅 Kemajuan bulan",statTotal:"✅ Shalat tercatat",
   qbKhatma:"Kemajuan khatam",qbTodayTarget:"Bagian hari ini:",qbPages:"halaman",qbTargetPage:"Sampai halaman:",qbPlan:"Rencana",qbDaily:"Halaman per hari",qbRestart:"↺ Rencana baru",
-  dhSpeed:"Kecepatan",stabHealth:"Kesehatan",a11yGroup:"Ukuran huruf & aksesibilitas",a11ySub:"Ramah lansia dan pembaca layar",
+  dhSpeed:"Kecepatan",stabHealth:"Kesehatan",stabSystem:"Sistem",a11yGroup:"Ukuran huruf & aksesibilitas",a11ySub:"Ramah lansia dan pembaca layar",
   a11yNote:"Ukuran huruf disimpan di perangkat. Semua tombol berfungsi dengan TalkBack.",
   wakeGroup:"Layar tetap menyala",wakeSub:"Cocok untuk mode tampilan",wakeNote:"Mencegah layar tidur saat menampilkan waktu shalat.",
   langGroup:"Bahasa",langSub:"Antarmuka — teks keagamaan tetap bahasa Arab",langLabel:"Bahasa antarmuka:",
@@ -842,6 +842,14 @@ const AZKAR_COUNT={
   ur:{"مرة واحدة":"ایک بار","3 مرات":"3 بار","4 مرات":"4 بار","7 مرات":"7 بار","33 مرة":"33 بار","100 مرة":"100 بار"}
 };
 const AZK_ORDER=["morning","evening","afterPrayer","sleep","wake","mosque","food","travel","rain","distress","home","sick","anger"];
+/* الأذكار مرتّبة حسب المناسبة بدل قائمة واحدة طويلة — جميع التصنيفات تظل متاحة. */
+const AZK_GROUPS=[
+  {ar:"🌅 أذكار اليوم",en:"🌅 Daily adhkar",ur:"🌅 روزانہ اذکار",fr:"🌅 Adhkar du jour",tr:"🌅 Günlük zikirler",id:"🌅 Dzikir harian",keys:["morning","evening","afterPrayer"]},
+  {ar:"🌙 النوم واليقظة",en:"🌙 Sleep & waking",ur:"🌙 سونا اور بیداری",fr:"🌙 Sommeil et réveil",tr:"🌙 Uyku ve uyanma",id:"🌙 Tidur & bangun",keys:["sleep","wake"]},
+  {ar:"🕌 المسجد والطعام والسفر",en:"🕌 Mosque, food & travel",ur:"🕌 مسجد، کھانا اور سفر",fr:"🕌 Mosquée, repas et voyage",tr:"🕌 Cami, yemek ve yolculuk",id:"🕌 Masjid, makan & perjalanan",keys:["mosque","food","travel","rain"]},
+  {ar:"🙏 عند الحاجة",en:"🙏 When needed",ur:"🙏 ضرورت کے وقت",fr:"🙏 En cas de besoin",tr:"🙏 Gerektiğinde",id:"🙏 Saat dibutuhkan",keys:["distress","home","sick","anger"]}
+];
+function azkGroupTitle(g){return g[lang]||g.en||g.ar}
 const AZK_TITLES={
   morning:{ar:"أذكار الصباح",en:"Morning Adhkar",ur:"صبح کے اذکار"},
   evening:{ar:"أذكار المساء",en:"Evening Adhkar",ur:"شام کے اذکار"},
@@ -1869,11 +1877,16 @@ function renderAzkGrid(){
   let html='<div class="azk-card now'+(azkSelKey==="auto"?" on":"")+'" data-azk="auto">'
     +'<span class="ak-ic">🕐</span><span class="ak-t">'+T("azkAuto")+'</span>'
     +'<br><span class="ak-n">'+(autoK==="morning"?T("azkMorning"):T("azkEvening") )+'</span></div>';
-  for(const k of AZK_ORDER){
-    html+='<div class="azk-card'+(azkSelKey===k?" on":"")+'" data-azk="'+k+'">'
+  const card=k=>'<div class="azk-card'+(azkSelKey===k?" on":"")+'" data-azk="'+k+'">'
       +'<span class="ak-ic">'+(AZK_ICON[k]||"📿")+'</span><span class="ak-t">'+azkTitle(k)+'</span>'
       +'<br><span class="ak-n">'+azkCount(k)+' '+T("azkItemWord")+'</span></div>';
-  }
+  const used={};
+  AZK_GROUPS.forEach(gr=>{
+    html+='<div class="azk-group-title">'+azkGroupTitle(gr)+'</div>';
+    gr.keys.forEach(k=>{if(!(k in AZKAR))return;used[k]=1;html+=card(k)});
+  });
+  const rest=AZK_ORDER.filter(k=>!used[k]&&(k in AZKAR));
+  if(rest.length){html+='<div class="azk-group-title">📿 '+T("azkItemWord")+'</div>';rest.forEach(k=>{html+=card(k)})}
   g.innerHTML=html;
 }
 function renderAzkList(){
@@ -2746,12 +2759,13 @@ function _bindSetup(){
   if(op)op.addEventListener("click",openSetup);
 }
 function switchStab(name){
+  // أسماء التبويبات القديمة تُحوَّل للتبويب الموحّد «النظام والبيانات».
+  if(name==="health"||name==="pro")name="system";
   document.querySelectorAll(".stab").forEach(b=>b.classList.toggle("active",b.getAttribute("data-stab")===name));
   document.querySelectorAll(".stab-panel").forEach(p=>p.classList.toggle("active",p.getAttribute("data-stab-panel")===name));
   try{localStorage.setItem("prayerApp_v3_stab",name)}catch(e){}
-  if(name==="health")renderHealth();
+  if(name==="system"){renderHealth();renderProStatus();}
   if(name==="notif"){fillNotifUI(); try{syncReminderUI()}catch(e){}}
-  if(name==="pro")renderProStatus();
   if(name==="audio")refreshAudioStatus();
   const panel=document.querySelector(".settings-panel");
   if(panel)panel.scrollTop=0;
@@ -2835,10 +2849,8 @@ function openSettings(){
   loadSettings();
   fillLocCountry();
   let st="calc";try{st=localStorage.getItem("prayerApp_v3_stab")||"calc"}catch(e){}
-  // إن كان آخر تبويب محفوظاً من الإعدادات المتقدمة ولم يُفتح «المزيد»، نعود للأساسيات.
-  const panel=document.querySelector(".settings-panel");
-  const advanced=!!panel&&panel.classList.contains("show-advanced");
-  if(!advanced&&["audio","health","pro"].indexOf(st)>=0)st="calc";
+  // التبويبات القديمة «الصحة» و«متقدم» أصبحت داخل «النظام والبيانات».
+  if(st==="health"||st==="pro")st="system";
   switchStab(st);
 }
 function closeSettings(){
@@ -2947,8 +2959,10 @@ $("settingsOverlay").addEventListener("click",e=>{if(e.target===$("settingsOverl
   const adv=$("advToggle"),panel=document.querySelector(".settings-panel");
   if(adv&&panel)adv.onclick=()=>{
     const on=panel.classList.toggle("show-advanced");
+    // كل التفاصيل موجودة في صفحتها — الزر يفتحها دفعة واحدة بدل إخفائها.
+    panel.querySelectorAll("details.adv-details").forEach(d=>{d.open=on});
     adv.setAttribute("aria-expanded",on?"true":"false");
-    adv.textContent=on?"إعدادات أقل −":"إعدادات متقدمة (الصوت، الصحة، الأدوات)＋";
+    adv.textContent=on?"إخفاء التفاصيل −":"المزيد من الإعدادات ＋";
   };
 })();
 
@@ -3697,7 +3711,10 @@ function filterSettings(q){
   const needle=String(q||"").trim().toLowerCase();let hits=0;
   document.querySelectorAll(".stab-panel .s-group").forEach(g=>{
     const ok=!needle||String(g.textContent||"").toLowerCase().indexOf(needle)>-1;
-    g.classList.toggle("hidden",!ok);if(ok)hits++;
+    g.classList.toggle("hidden",!ok);
+    // إن كانت المجموعة داخل تفاصيل مطوية، افتحها ليظهر البحث نتيجته.
+    if(ok&&needle){const box=g.closest("details.adv-details");if(box)box.open=true}
+    if(ok)hits++;
   });
   const nr=$("settingsNoResults");if(nr)nr.classList.toggle("show",!!needle&&hits===0);
 }
@@ -3761,7 +3778,7 @@ function _bindPro(){
     proImport:()=>{const f=$("proImportFile");if(f)f.click()},
     proReset:()=>clearAllData(),
     proCopyReport:()=>copyDiagnostics(),
-    proHealth:()=>switchStab("health")
+    proHealth:()=>switchStab("system")
   };
   Object.keys(map).forEach(id=>{const el=$(id);if(el)el.addEventListener("click",map[id])});
   const pf=$("proImportFile");if(pf)pf.addEventListener("change",()=>{if(pf.files&&pf.files[0])importSettings(pf.files[0])});

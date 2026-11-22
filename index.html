@@ -445,10 +445,15 @@
       </section>
 
       <section class="section">
-        <h2 id="azkTitle">📿 أذكار الصباح</h2>
-        <div class="azk-actions hidden" id="azkActions">
-          <button class="btn sm ghost" id="azkBack">📚 كل التصنيفات</button>
-          <button class="btn sm ghost" id="azkAutoPick" title="العودة للتلقائي">🕐 تلقائي</button>
+        <div class="azk-head">
+          <div>
+            <h2 id="azkTitle">📿 أذكار الصباح</h2>
+            <p class="azk-help" data-i18n="azkBrowseHint">اختر «تلقائي» حسب الوقت، أو افتح أي تصنيف مباشرة</p>
+          </div>
+          <div class="azk-actions hidden" id="azkActions">
+            <button class="btn sm ghost" id="azkBack">📚 كل التصنيفات</button>
+            <button class="btn sm ghost" id="azkAutoPick" title="العودة للتلقائي">🕐 تلقائي</button>
+          </div>
         </div>
         <div class="azk-list hidden" id="azkList"></div>
         <div class="azk-grid" id="azkGrid"></div>
@@ -534,472 +539,440 @@
     </div>
 
     <div class="stabbar" id="stabbar" role="tablist">
-      <button class="stab active" data-stab="calc" role="tab"><span class="stab-ic">📍</span><span class="stab-lb" data-i18n="stabCalc">الحساب</span></button>
-      <button class="stab" data-stab="notif" role="tab"><span class="stab-ic">🔔</span><span class="stab-lb" data-i18n="stabNotif">الإشعارات</span></button>
-      <button class="stab" data-stab="audio" role="tab"><span class="stab-ic">🔊</span><span class="stab-lb" data-i18n="stabAudio">الصوت</span></button>
+      <button class="stab active" data-stab="calc" role="tab"><span class="stab-ic">📍</span><span class="stab-lb" data-i18n="stabCalc">الموقع</span></button>
+      <button class="stab" data-stab="notif" role="tab"><span class="stab-ic">🔔</span><span class="stab-lb" data-i18n="stabNotif">التنبيهات</span></button>
+      <button class="stab" data-stab="audio" role="tab"><span class="stab-ic">🔊</span><span class="stab-lb" data-i18n="stabAudio">الأذان</span></button>
       <button class="stab" data-stab="look" role="tab"><span class="stab-ic">🎨</span><span class="stab-lb" data-i18n="stabLook">المظهر</span></button>
-      <button class="stab" data-stab="health" role="tab"><span class="stab-ic">🩺</span><span class="stab-lb" data-i18n="stabHealth">الصحة</span></button>
-      <button class="stab" data-stab="pro" role="tab"><span class="stab-ic">⚡</span><span class="stab-lb">متقدم</span></button>
+      <button class="stab" data-stab="system" role="tab"><span class="stab-ic">🛠️</span><span class="stab-lb" data-i18n="stabSystem">النظام</span></button>
     </div>
-    <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false">المزيد من الإعدادات (الصوت، الصحة، الأدوات) ＋</button>
+    <button type="button" class="adv-toggle" id="advToggle" aria-expanded="false">المزيد من الإعدادات ＋</button>
     <div class="stab-body" id="stabBody">
 
-    <div class="stab-panel" data-stab-panel="look">
-    <div class="s-group">
-      <h3 data-i18n="themeGroup">🎨 المظهر <small data-i18n="themeGroupSub">ليلي مريح للعين</small></h3>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm ghost mode" data-mode="light">☀️ <span data-i18n="themeLight">فاتح</span></button>
-        <button class="btn sm ghost mode" data-mode="dark">🌙 <span data-i18n="themeDark">داكن</span></button>
-        <button class="btn sm ghost mode" data-mode="auto">🌓 <span data-i18n="themeAuto">تلقائي</span></button>
-      </div>
-      <span class="hint" data-i18n="themeHint">النمط التلقائي يتحوّل ليلياً من المغرب إلى الفجر حسب أوقات الصلاة، ويعود نهارياً بعد الفجر</span>
-    </div>
-
-    <div class="s-group">
-      <h3>🔠 <span data-i18n="a11yGroup">حجم الخط وسهولة القراءة</span> <small data-i18n="a11ySub">مناسب لكبار السن وقارئات الشاشة</small></h3>
-      <div class="fs-btns" role="group" aria-label="حجم الخط">
-        <button class="btn sm ghost" data-fs="0.9" aria-label="تصغير الخط">أ−</button>
-        <button class="btn sm ghost" data-fs="1" aria-label="حجم الخط الافتراضي">أ</button>
-        <button class="btn sm ghost" data-fs="1.15" aria-label="تكبير الخط">أ+</button>
-        <button class="btn sm ghost" data-fs="1.3" aria-label="تكبير الخط كثيراً">أ++</button>
-        <button class="btn sm ghost" data-fs="1.5" aria-label="تكبير الخط كبيراً جداً">أ+++</button>
-        <span class="wake-status" id="fsValue">100%</span>
-      </div>
-      <span class="setting-note" data-i18n="a11yNote">يُحفظ حجم الخط على جهازك، وتعمل جميع الأزرار مع TalkBack وقارئ الشاشة.</span>
-    </div>
-
-    <div class="s-group">
-      <h3>◼️ تباين عالٍ <small>نصوص أوضح وحدود أقوى لضعاف البصر</small></h3>
-      <div class="wake-row">
-        <div class="toggle" id="contrastToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل التباين العالي"></div>
-        <span class="wake-status" id="contrastStatus">غير مفعّل</span>
-      </div>
-      <div class="s-actions" style="justify-content:flex-start;margin-top:10px">
-        <button class="btn sm ghost" id="displayBtn2" type="button">🖥️ فتح شاشة العرض الكبيرة</button>
-      </div>
-      <span class="setting-note">يزيل التمويجات والتدرجات ويقوّي الحدود والنصوص، ويعمل مع الوضع الفاتح والداكن. شاشة العرض تعرض الساعة والصلاة القادمة بأرقام كبيرة لوضعها على التلفاز أو في المسجد.</span>
-    </div>
-
-    <div class="s-group">
-      <h3>💡 <span data-i18n="wakeGroup">إبقاء الشاشة مضاءة</span> <small data-i18n="wakeSub">مناسب لوضع شاشة العرض</small></h3>
-      <div class="wake-row">
-        <div class="toggle" id="wakeToggle" role="switch" aria-checked="false" tabindex="0" aria-label="إبقاء الشاشة مضاءة"></div>
-        <span class="wake-status" id="wakeStatus">غير مفعّل</span>
-      </div>
-      <span class="setting-note" data-i18n="wakeNote">يمنع إطفاء الشاشة أثناء عرض أوقات الصلاة، ويُعاد تلقائياً عند العودة للتطبيق. يعمل على أندرويد وكروم.</span>
-    </div>
-
-    <div class="s-group">
-      <h3>📳 <span data-i18n="hapticGroup">الاهتزاز</span> <small data-i18n="hapticSub">تنبيه لمسي عند القبلة وإتمام الذكر</small></h3>
-      <div class="wake-row">
-        <div class="toggle on" id="hapticToggle" role="switch" aria-checked="true" tabindex="0" aria-label="الاهتزاز"></div>
-        <span class="wake-status" id="hapticStatus" data-i18n="hapticOn">📳 اهتزاز عند الوصول للقبلة</span>
-      </div>
-      <span class="setting-note" data-i18n="hapticNote">يستخدم اهتزاز الجهاز عند محاذاة القبلة، وعند العدّ التلقائي للأذكار. يمكن إيقافه في أي وقت.</span>
-    </div>
-
-    <div class="s-group">
-      <h3>🌐 <span data-i18n="langGroup">اللغة</span> <small data-i18n="langSub">واجهة التطبيق — النصوص الشرعية تبقى بالعربية</small></h3>
-      <div class="s-row">
-        <label for="langSelect" data-i18n="langLabel">لغة الواجهة:</label>
-        <select id="langSelect">
-          <option value="ar">العربية</option>
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-          <option value="ur">اردو</option>
-          <option value="tr">Türkçe</option>
-          <option value="id">Bahasa Indonesia</option>
-        </select>
-      </div>
-    </div>
-
-    </div><!-- /look -->
-
+    <!-- ========== 1) الموقع والوقت ========== -->
     <div class="stab-panel active" data-stab-panel="calc">
-    <div class="s-group">
-      <h3>📍 البلد والمدينة — حساب ذاتي يعمل بجميع الدول دون إنترنت</h3>
-      <div class="s-row">
-        <label>الدولة:</label>
-        <select id="locCountry"></select>
-      </div>
-      <div class="s-row">
-        <label>المدينة:</label>
-        <select id="locCity"></select>
-      </div>
-      <div class="s-row">
-        <label>طريقة الحساب:</label>
-        <select id="locMethod"></select>
-      </div>
-      <div class="s-row">
-        <label>مذهب العصر:</label>
-        <select id="locAsr">
-          <option value="1">الجمهور (الشافعي / المالكي / الحنبلي)</option>
-          <option value="2">الحنفي</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label>الإحداثيات:</label>
-        <span>العرض <input type="number" id="locLat" step="0.001" style="width:84px" title="latitude"></span>
-        <span>الطول <input type="number" id="locLng" step="0.001" style="width:84px" title="longitude"></span>
-        <span>التوقيت <input type="number" id="locTz" step="0.5" style="width:72px" title="GMT offset"></span>
-      </div>
-      <div class="s-row">
-        <label>زاوية الفجر / العشاء:</label>
-        <span>الفجر <input type="number" id="locFajr" step="0.1" style="width:70px"></span>
-        <span>العشاء <input type="number" id="locIsha" step="0.1" style="width:70px"></span>
-        <span>أو دقائق <input type="number" id="locIshaMin" min="0" max="180" style="width:70px"></span>
-      </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="locSave">💾 حفظ وإعادة حساب كل الأوقات</button>
-        <button class="btn sm ghost" id="locReset">↺ استعادة الافتراضي (الشارقة)</button>
-      </div>
-      <span class="hint">يعمل الحساب كلياً داخل التطبيق لكل الدول العربية والإسلامية دون أي اتصال بالإنترنت</span>
-    </div>
+      <div class="s-group">
+        <h3>📍 البلد والمدينة <small>حساب ذاتي لكل الدول بلا إنترنت</small></h3>
+        <div class="s-row">
+          <label for="locCountry">الدولة:</label>
+          <select id="locCountry"></select>
+        </div>
+        <div class="s-row">
+          <label for="locCity">المدينة:</label>
+          <select id="locCity"></select>
+        </div>
+        <div class="s-row">
+          <label for="locMethod">طريقة الحساب:</label>
+          <select id="locMethod"></select>
+        </div>
+        <div class="s-row">
+          <label for="locAsr">مذهب العصر:</label>
+          <select id="locAsr">
+            <option value="1">الجمهور (الشافعي / المالكي / الحنبلي)</option>
+            <option value="2">الحنفي</option>
+          </select>
+        </div>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="locSave">💾 حفظ وإعادة حساب كل الأوقات</button>
+          <button class="btn sm ghost" id="locReset">↺ استعادة الافتراضي (الشارقة)</button>
+        </div>
+        <span class="hint">تُحسب الأوقات داخل التطبيق بالكامل — لا حاجة لأي اتصال بالإنترنت.</span>
 
-    <div class="s-group">
-      <h3>🔄 تحديث التطبيق من الداخل <small>يُفحص تلقائياً عند فتح التطبيق — دون إعادة تثبيت</small></h3>
-      <div class="s-row">
-        <label>رابط صفحة التحديثات:</label>
-        <input type="url" id="updateUrl" placeholder="https://username.github.io/repo" style="flex:1;min-width:150px;direction:ltr">
+        <details class="adv-details">
+          <summary>🧭 إحداثيات وزوايا الحساب (تفاصيل)</summary>
+          <div class="s-row">
+            <label>الإحداثيات:</label>
+            <span>العرض <input type="number" id="locLat" step="0.001" style="width:84px" title="latitude"></span>
+            <span>الطول <input type="number" id="locLng" step="0.001" style="width:84px" title="longitude"></span>
+            <span>التوقيت <input type="number" id="locTz" step="0.5" style="width:72px" title="GMT offset"></span>
+          </div>
+          <div class="s-row">
+            <label>زاوية الفجر / العشاء:</label>
+            <span>الفجر <input type="number" id="locFajr" step="0.1" style="width:70px"></span>
+            <span>العشاء <input type="number" id="locIsha" step="0.1" style="width:70px"></span>
+            <span>أو دقائق <input type="number" id="locIshaMin" min="0" max="180" style="width:70px"></span>
+          </div>
+        </details>
       </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
-        <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
-      </div>
-      <span class="hint" id="updateStatus">الإصدار 30 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
-      <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
-    </div>
 
+      <details class="adv-details">
+        <summary>📅 ضبط أوقات الصلاة يدوياً (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>📅 تعديل دائم للأوقات <small>عدّل يدوياً أو ارجع للحساب الذاتي</small></h3>
+          <div class="pray-times-row" id="manualTimes">
+            <div class="pt"><div class="ptk">🌅 الفجر</div><input spellcheck="false" autocomplete="off" type="time" id="mFajr"></div>
+            <div class="pt"><div class="ptk">☀️ الظهر</div><input spellcheck="false" autocomplete="off" type="time" id="mDhuhr"></div>
+            <div class="pt"><div class="ptk">🌤️ العصر</div><input spellcheck="false" autocomplete="off" type="time" id="mAsr"></div>
+            <div class="pt"><div class="ptk">🌇 المغرب</div><input spellcheck="false" autocomplete="off" type="time" id="mMaghrib"></div>
+            <div class="pt"><div class="ptk">🌙 العشاء</div><input spellcheck="false" autocomplete="off" type="time" id="mIsha"></div>
+          </div>
+          <div class="s-actions" style="justify-content:flex-start">
+            <button class="btn sm" id="applyTimes">✔ تطبيق الأوقات اليدوية</button>
+            <button class="btn sm ghost" id="clearManual">↺ العودة للأوقات التلقائية</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="adv-details">
+        <summary>🕌 مدة الإقامة بعد الأذان (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>⏱️ تعديلات الإقامة <small>بالدقائق لكل صلاة</small></h3>
+          <div class="s-row">
+            <label>الفجر <input type="number" id="iFajr" min="0" max="60" style="width:60px"></label>
+            <label>الظهر <input type="number" id="iDhuhr" min="0" max="60" style="width:60px"></label>
+            <label>العصر <input type="number" id="iAsr" min="0" max="60" style="width:60px"></label>
+            <label>المغرب <input type="number" id="iMaghrib" min="0" max="60" style="width:60px"></label>
+            <label>العشاء <input type="number" id="iIsha" min="0" max="60" style="width:60px"></label>
+            <button class="btn sm" id="applyIqama">✔ تطبيق</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="adv-details">
+        <summary>🌍 السفر والمنطقة الزمنية (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>🌍 السفر والمنطقة الزمنية</h3>
+          <div class="s-row">
+            <label>المنطقة الحالية:</label>
+            <span id="tzCurrent" class="hint" style="direction:ltr">—</span>
+          </div>
+          <div class="s-actions" style="justify-content:flex-start">
+            <button class="btn sm" id="useGeoBtn">📍 استخدام موقعي الحقيقي</button>
+            <button class="btn sm ghost" id="checkTzBtn">🔄 فحص تغيّر التوقيت</button>
+          </div>
+          <span class="setting-note">التوقيت الصيفي والسفر قد يغيّران إزاحة GMT؛ استخدم الزر لتحديث الإحداثيات والمنطقة وإعادة الحساب.</span>
+        </div>
+      </details>
     </div><!-- /calc -->
 
+    <!-- ========== 2) الإشعارات والتذكير ========== -->
     <div class="stab-panel" data-stab-panel="notif">
-    <div class="s-group">
-      <h3>🔔 الإشعارات والأذان <small data-i18n="notifSub">بسيط — يعمل تلقائياً</small></h3>
-      
-      <div class="notif-master" id="notifMasterWrap">
-        <div class="nm-head">
-          <label class="nm-toggle">
-            <input type="checkbox" id="notifMaster">
-            <span class="nm-slider"></span>
-          </label>
-          <div class="nm-status" id="notifMasterStatus">
-            <span class="nm-dot"></span>
-            <span class="nm-text" data-i18n="notifOff">الإشعارات مطفأة</span>
+      <div class="s-group">
+        <h3>🔔 الإشعارات والأذان <small data-i18n="notifSub">بسيط — يعمل تلقائياً</small></h3>
+        <div class="notif-master" id="notifMasterWrap">
+          <div class="nm-head">
+            <label class="nm-toggle">
+              <input type="checkbox" id="notifMaster">
+              <span class="nm-slider"></span>
+            </label>
+            <div class="nm-status" id="notifMasterStatus">
+              <span class="nm-dot"></span>
+              <span class="nm-text" data-i18n="notifOff">الإشعارات مطفأة</span>
+            </div>
+          </div>
+          <div class="nm-details hidden" id="notifDetails">
+            <div class="nm-row"><span data-i18n="notifAdhanLabel">🔊 الأذان الكامل</span><span class="nm-badge" id="badgeAdhan" data-i18n="notifAuto">تلقائي</span></div>
+            <div class="nm-row"><span data-i18n="notifIqamaLabel">🕌 الإقامة</span><span class="nm-badge" id="badgeIqama" data-i18n="notifAuto">تلقائي</span></div>
+            <div class="nm-row"><span data-i18n="notifLeadLabel">⏰ تنبيه مسبق</span><span class="nm-badge" id="badgeLead">7 د</span></div>
+            <div class="nm-row"><span data-i18n="notifSoundLabel">🎵 صوت النظام</span><span class="nm-badge" id="badgeSound" data-i18n="notifSystem">Alarm / Notification</span></div>
           </div>
         </div>
-        
-        <div class="nm-details hidden" id="notifDetails">
-          <div class="nm-row">
-            <span data-i18n="notifAdhanLabel">🔊 الأذان الكامل</span>
-            <span class="nm-badge" id="badgeAdhan" data-i18n="notifAuto">تلقائي</span>
-          </div>
-          <div class="nm-row">
-            <span data-i18n="notifIqamaLabel">🕌 الإقامة</span>
-            <span class="nm-badge" id="badgeIqama" data-i18n="notifAuto">تلقائي</span>
-          </div>
-          <div class="nm-row">
-            <span data-i18n="notifLeadLabel">⏰ تنبيه مسبق</span>
-            <span class="nm-badge" id="badgeLead">7 د</span>
-          </div>
-          <div class="nm-row">
-            <span data-i18n="notifSoundLabel">🎵 صوت النظام</span>
-            <span class="nm-badge" id="badgeSound" data-i18n="notifSystem">Alarm / Notification</span>
-          </div>
+        <div class="s-actions" style="justify-content:center;margin-top:10px">
+          <button class="btn" id="notifAction" style="min-width:220px"><span id="notifActionText" data-i18n="notifEnable">🔔 تفعيل الإشعارات بالكامل</span></button>
         </div>
+        <div class="nm-status-grid" id="notifStatusGrid">
+          <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifPerm">الإذن</span><span class="nm-stat-val" id="statPerm">—</span></div>
+          <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifExact">دقة التنبيه</span><span class="nm-stat-val" id="statExact">—</span></div>
+          <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifBattery">البطارية</span><span class="nm-stat-val" id="statBattery">—</span></div>
+          <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifDnd">تجاوز DND</span><span class="nm-stat-val" id="statDnd">—</span></div>
+          <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifScheduled">مجدولة</span><span class="nm-stat-val" id="statSched">—</span></div>
+        </div>
+        <span class="hint" id="notifHint" data-i18n="notifHint">اضغط الزر أعلاه — سيتولى التطبيق كل شيء: الأذونات، البطارية، التنبيهات الدقيقة، تجاوز «لا تُزعج»</span>
       </div>
 
-      <div class="s-actions" style="justify-content:center;margin-top:10px">
-        <button class="btn" id="notifAction" style="min-width:220px">
-          <span id="notifActionText" data-i18n="notifEnable">🔔 تفعيل الإشعارات بالكامل</span>
-        </button>
-      </div>
-      
-      <div class="nm-status-grid" id="notifStatusGrid">
-        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifPerm">الإذن</span><span class="nm-stat-val" id="statPerm">—</span></div>
-        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifExact">دقة التنبيه</span><span class="nm-stat-val" id="statExact">—</span></div>
-        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifBattery">البطارية</span><span class="nm-stat-val" id="statBattery">—</span></div>
-        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifDnd">تجاوز DND</span><span class="nm-stat-val" id="statDnd">—</span></div>
-        <div class="nm-stat"><span class="nm-stat-label" data-i18n="notifScheduled">مجدولة</span><span class="nm-stat-val" id="statSched">—</span></div>
-      </div>
-
-      <span class="hint" id="notifHint" data-i18n="notifHint">اضغط الزر أعلاه — سيتولى التطبيق كل شيء: الأذونات، البطارية، التنبيهات الدقيقة، تجاوز «لا تُزعج»</span>
-    </div>
-
-    <div class="s-group" id="webScheduleGroup">
-      <h3>🧾 إشعارات عند إغلاق الصفحة <small>حيثما يدعم المتصفح ذلك</small></h3>
-      <div class="s-row">
-        <label for="webScheduleToggle">الجدولة المسبقة:</label>
-        <div class="toggle" id="webScheduleToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الإشعارات المجدولة"></div>
-        <span class="hint" id="webScheduleStatus">غير مفعّلة</span>
-      </div>
-      <span class="setting-note">عند التفعيل يُرسل جدول الصلوات إلى عامل الخدمة لعرض إشعارات حتى مع إغلاق الصفحة في المتصفحات الداعمة. في المتصفحات الأخرى تستمر الإشعارات أثناء فتح التطبيق فقط.</span>
-    </div>
-
-    <div class="s-group" id="reminderSystemGroup">
-      <h3>🔔 تذكير ذكر الله <small>نظام واحد — يعمل تلقائياً، والإيقاف من هنا فقط</small></h3>
-      <div class="s-row">
-        <label for="reminderToggleBtn">تفعيل التذكير:</label>
-        <div class="toggle on reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="true" tabindex="0"></div>
-        <span class="hint" id="reminderStatusText">مفعّل — كل 10 دقيقة</span>
-      </div>
-      <div class="s-row">
-        <label for="reminderIntervalMin">كل (دقيقة):</label>
-        <select id="reminderIntervalMin">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="45">45</option>
-          <option value="60">60</option>
-          <option value="120">120</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label for="reminderMode">نوع التذكير:</label>
-        <select id="reminderMode">
-          <option value="dhikr">أذكار قصيرة (تسبيح/استغفار)</option>
-          <option value="azkar">من مكتبة الأذكار</option>
-          <option value="dua">أدعية</option>
-          <option value="custom">نص مخصص</option>
-        </select>
-      </div>
-      <details class="adv-details" id="reminderMore">
-        <summary>⚙️ خيارات التذكير المتقدمة (المصدر، النص، الإشعار)</summary>
+      <div class="s-group" id="webScheduleGroup">
+        <h3>🧾 إشعارات عند إغلاق الصفحة <small>حيثما يدعم المتصفح ذلك</small></h3>
         <div class="s-row">
-          <label for="reminderSource">مصدر الأذكار:</label>
-          <select id="reminderSource">
-            <option value="auto">تلقائي (حسب الوقت)</option>
-            <option value="morning">أذكار الصباح</option>
-            <option value="evening">أذكار المساء</option>
-            <option value="afterPrayer">بعد الصلاة</option>
-            <option value="sleep">النوم</option>
-            <option value="wake">الاستيقاظ</option>
-            <option value="mosque">المسجد</option>
-            <option value="food">الطعام</option>
-            <option value="travel">السفر</option>
-            <option value="rain">المطر</option>
-            <option value="distress">الهم/الكرب</option>
-            <option value="home">المنزل</option>
-            <option value="sick">المرض</option>
-            <option value="anger">الغضب</option>
+          <label for="webScheduleToggle">الجدولة المسبقة:</label>
+          <div class="toggle" id="webScheduleToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الإشعارات المجدولة"></div>
+          <span class="hint" id="webScheduleStatus">غير مفعّلة</span>
+        </div>
+        <span class="setting-note">عند التفعيل يُرسل جدول الصلوات إلى عامل الخدمة لعرض إشعارات حتى مع إغلاق الصفحة في المتصفحات الداعمة. في المتصفحات الأخرى تستمر الإشعارات أثناء فتح التطبيق فقط.</span>
+      </div>
+
+      <div class="s-group" id="reminderSystemGroup">
+        <h3>🔔 تذكير ذكر الله <small>نظام واحد — يعمل تلقائياً، والإيقاف من هنا فقط</small></h3>
+        <div class="s-row">
+          <label for="reminderToggleBtn">تفعيل التذكير:</label>
+          <div class="toggle on reminder-toggle" id="reminderToggleBtn" role="switch" aria-checked="true" tabindex="0"></div>
+          <span class="hint" id="reminderStatusText">مفعّل — كل 10 دقيقة</span>
+        </div>
+        <div class="s-row">
+          <label for="reminderIntervalMin">كل (دقيقة):</label>
+          <select id="reminderIntervalMin">
+            <option value="5">5</option><option value="10">10</option><option value="15">15</option>
+            <option value="20">20</option><option value="30">30</option><option value="45">45</option>
+            <option value="60">60</option><option value="120">120</option>
           </select>
         </div>
         <div class="s-row">
-          <label for="reminderCustomText">النص المخصص:</label>
-          <input type="text" id="reminderCustomText" placeholder="اكتب نص التذكير..." style="flex:1;min-width:180px">
+          <label for="reminderMode">نوع التذكير:</label>
+          <select id="reminderMode">
+            <option value="dhikr">أذكار قصيرة (تسبيح/استغفار)</option>
+            <option value="azkar">من مكتبة الأذكار</option>
+            <option value="dua">أدعية</option>
+            <option value="custom">نص مخصص</option>
+          </select>
         </div>
-        <div class="s-row">
-          <label><input type="checkbox" id="reminderSound" checked> صوت التنبيه</label>
-          <label><input type="checkbox" id="reminderNotify"> إشعار المتصفح (إن توفر الإذن)</label>
-        </div>
-        <div class="s-actions" style="justify-content:flex-start">
-          <button class="btn sm" id="reminderTestBtn" type="button">🔔 تجربة تذكير الآن</button>
-          <button class="btn sm ghost" id="reminderWebPermBtn" type="button">إذن إشعارات المتصفح</button>
-        </div>
-        <span class="setting-note">تنبيهات الأذان والإقامة المجدولة تُدار من قسم «الإشعارات والأذان» أعلاه. هذا التذكير يعمل داخل التطبيق أثناء فتحه.</span>
-      </details>
-    </div>
-
-    <div class="s-group">
-      <h3>🔇 الصامت عند الصلاة <small>تحويل الهاتف تلقائياً وقت الإقامة</small></h3>
-      <div class="s-row">
-        <label>تفعيل الوضع الصامت:</label>
-        <div class="toggle" id="silentPrayerToggle" role="switch" aria-checked="false" tabindex="0" aria-label="الصامت عند الصلاة"></div>
-        <span class="hint" id="silentPrayerState">غير مفعّل</span>
+        <details class="adv-details" id="reminderMore">
+          <summary>⚙️ خيارات التذكير المتقدمة (المصدر، النص، الإشعار)</summary>
+          <div class="s-row">
+            <label for="reminderSource">مصدر الأذكار:</label>
+            <select id="reminderSource">
+              <option value="auto">تلقائي (حسب الوقت)</option><option value="morning">أذكار الصباح</option>
+              <option value="evening">أذكار المساء</option><option value="afterPrayer">بعد الصلاة</option>
+              <option value="sleep">النوم</option><option value="wake">الاستيقاظ</option>
+              <option value="mosque">المسجد</option><option value="food">الطعام</option>
+              <option value="travel">السفر</option><option value="rain">المطر</option>
+              <option value="distress">الهم/الكرب</option><option value="home">المنزل</option>
+              <option value="sick">المرض</option><option value="anger">الغضب</option>
+            </select>
+          </div>
+          <div class="s-row">
+            <label for="reminderCustomText">النص المخصص:</label>
+            <input type="text" id="reminderCustomText" placeholder="اكتب نص التذكير..." style="flex:1;min-width:180px">
+          </div>
+          <div class="s-row">
+            <label><input type="checkbox" id="reminderSound" checked> صوت التنبيه</label>
+            <label><input type="checkbox" id="reminderNotify"> إشعار المتصفح (إن توفر الإذن)</label>
+          </div>
+          <div class="s-actions" style="justify-content:flex-start">
+            <button class="btn sm" id="reminderTestBtn" type="button">🔔 تجربة تذكير الآن</button>
+            <button class="btn sm ghost" id="reminderWebPermBtn" type="button">إذن إشعارات المتصفح</button>
+          </div>
+          <span class="setting-note">تنبيهات الأذان والإقامة المجدولة تُدار من قسم «الإشعارات والأذان» أعلاه. هذا التذكير يعمل داخل التطبيق أثناء فتحه.</span>
+        </details>
       </div>
-      <div class="s-row">
-        <label>مدة الصمت:</label>
-        <select id="silentDuration">
-          <option value="10">10 دقائق</option>
-          <option value="15" selected>15 دقيقة</option>
-          <option value="20">20 دقيقة</option>
-          <option value="25">25 دقيقة</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label>الوضع:</label>
-        <select id="silentMode">
-          <option value="silent">صامت تماماً</option>
-          <option value="vibrate">اهتزاز فقط</option>
-        </select>
-      </div>
-      <span class="setting-note">يتطلب إذن «الوصول إلى لا تُزعج» على Android. عند عدم توفره يظهر تنبيه داخل التطبيق فقط. تُستعاد حالة الصوت الأصلية تلقائياً بعد المدة.</span>
-    </div>
-
     </div><!-- /notif -->
 
+    <!-- ========== 3) الصوت والأذان ========== -->
     <div class="stab-panel" data-stab-panel="audio">
-    <div class="s-group">
-      <h3>🔊 التحكم الصوتي و«لا تُزعج» <small>أصوات النظام + تجاوز الكتم</small></h3>
-      <div class="s-row">
-        <label>صوت الأذان (Alarm):</label>
-        <input type="range" id="volAlarm" min="0" max="100" value="80">
-        <span id="volAlarmVal" class="vol-val">80</span>
+      <div class="s-group">
+        <h3>🔊 مستويات الصوت <small>قناتا Alarm وNotification منفصلتان</small></h3>
+        <div class="s-row">
+          <label for="volAlarm">صوت الأذان (Alarm):</label>
+          <input type="range" id="volAlarm" min="0" max="100" value="80">
+          <span id="volAlarmVal" class="vol-val">80</span>
+        </div>
+        <div class="s-row">
+          <label for="volNotif">صوت التنبيهات (Notification):</label>
+          <input type="range" id="volNotif" min="0" max="100" value="70">
+          <span id="volNotifVal" class="vol-val">70</span>
+        </div>
+        <div class="s-row">
+          <label for="volMedia">صوت الوسائط (Media):</label>
+          <input type="range" id="volMedia" min="0" max="100" value="60">
+          <span id="volMediaVal" class="vol-val">60</span>
+        </div>
+        <div class="s-row">
+          <label for="volControl">مستوى صوت الأذان داخل الصفحة (%):</label>
+          <input type="number" id="volControl" min="0" max="100" value="70" style="width:70px"> %
+        </div>
+        <div class="s-row">
+          <label for="muteAlarm">كتم صوت الأذان:</label>
+          <div class="toggle" id="muteAlarm"></div>
+          <span class="hint" id="muteStatus">مفعّل</span>
+        </div>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="audioApplyAll">✔ تطبيق الكل</button>
+          <button class="btn sm ghost" id="audioRefresh">🔄 تحديث الحالة</button>
+        </div>
+        <span class="hint">يستخدم التطبيق قناة «Alarm» للأذان و«Notification» للإقامة — اضبط كلاً على حدة.</span>
       </div>
-      <div class="s-row">
-        <label>صوت التنبيهات (Notification):</label>
-        <input type="range" id="volNotif" min="0" max="100" value="70">
-        <span id="volNotifVal" class="vol-val">70</span>
-      </div>
-      <div class="s-row">
-        <label>صوت الوسائط (Media):</label>
-        <input type="range" id="volMedia" min="0" max="100" value="60">
-        <span id="volMediaVal" class="vol-val">60</span>
-      </div>
-      <div class="s-row">
-        <label>كتم صوت الأذان:</label>
-        <div class="toggle" id="muteAlarm"></div>
-        <span class="hint" id="muteStatus">مفعّل</span>
-      </div>
-      <div class="s-row">
-        <label>حالة «لا تُزعج»:</label>
-        <span id="dndStatus" style="flex:1;text-align:left;color:var(--muted)">جاري الفحص...</span>
-        <button class="btn sm ghost" id="dndPermBtn">🛡️ طلب تجاوز</button>
-        <button class="btn sm ghost" id="dndOpenBtn">⚙️ إعدادات</button>
-      </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="audioRefresh">🔄 تحديث الحالة</button>
-        <button class="btn sm ghost" id="audioApplyAll">✔ تطبيق الكل</button>
-      </div>
-      <span class="hint">يستخدم التطبيق قناة «Alarm» للأذان و«Notification» للإقامة — اضبط كلاً على حدة</span>
-    </div>
 
+      <div class="s-group">
+        <h3>🕌 نغمة الأذان والإقامة <small>الشكل، المدة، والتنبيه المسبق</small></h3>
+        <div class="s-row">
+          <label for="adhanSoundSel">نغمة الأذان:</label>
+          <select id="adhanSoundSel">
+            <option value="srihi">السريحي (افتراضي)</option><option value="bell">جرس</option>
+            <option value="gen">نغمة مركبة</option><option value="file">ملف صوتي مخصص</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <label for="iqamaSoundSel">نغمة الإقامة:</label>
+          <select id="iqamaSoundSel">
+            <option value="file">ملف (افتراضي)</option><option value="bell">جرس</option><option value="gen">نغمة مركبة</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <label for="adhanMode">نمط الأذان:</label>
+          <select id="adhanMode">
+            <option value="full">الأذان كامل</option><option value="short60">مختصر (دقيقة)</option>
+            <option value="short90">مختصر (دقيقة ونصف)</option><option value="silent">تنبيه فقط بدون صوت</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <label for="fajrMode">أذان الفجر:</label>
+          <select id="fajrMode">
+            <option value="default">مثل بقية الصلوات</option><option value="short60">مختصر (دقيقة)</option>
+            <option value="short90">مختصر (دقيقة ونصف)</option><option value="silent">تنبيه فقط بدون صوت</option>
+          </select>
+        </div>
+        <div class="s-row">
+          <label for="toggleLead">تنبيه ما قبل الإقامة:</label>
+          <div class="toggle on" id="toggleLead"></div>
+          <span class="hint" id="leadVal">7 دقائق قبل</span>
+          <input type="number" id="leadMin" min="0" max="30" value="7" style="width:60px"> دقيقة
+        </div>
+        <details class="adv-details">
+          <summary>🎵 ملف صوتي مخصص للأذان (تفاصيل)</summary>
+          <div class="sound-file" id="adhanFileBox" style="display:none">
+            <label>🎵 اختيار نغمة الأذان <input type="file" id="adhanFileInput" accept="audio/*"></label>
+            <span class="fname" id="adhanFileName"></span>
+          </div>
+          <span class="setting-note">اختر «ملف صوتي مخصص» من نغمة الأذان أعلاه ليظهر اختيار الملف هنا.</span>
+        </details>
+      </div>
+
+      <details class="adv-details">
+        <summary>🛡️ «لا تُزعج» والصمت عند الصلاة (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>🛡️ حالة «لا تُزعج»</h3>
+          <div class="s-row">
+            <label>الحالة:</label>
+            <span id="dndStatus" style="flex:1;text-align:left;color:var(--muted)">جاري الفحص...</span>
+            <button class="btn sm ghost" id="dndPermBtn">🛡️ طلب تجاوز</button>
+            <button class="btn sm ghost" id="dndOpenBtn">⚙️ إعدادات</button>
+          </div>
+        </div>
+        <div class="s-group">
+          <h3>🔇 الصامت عند الصلاة <small>تحويل الهاتف تلقائياً وقت الإقامة</small></h3>
+          <div class="s-row">
+            <label for="silentPrayerToggle">تفعيل الوضع الصامت:</label>
+            <div class="toggle" id="silentPrayerToggle" role="switch" aria-checked="false" tabindex="0" aria-label="الصامت عند الصلاة"></div>
+            <span class="hint" id="silentPrayerState">غير مفعّل</span>
+          </div>
+          <div class="s-row">
+            <label for="silentDuration">مدة الصمت:</label>
+            <select id="silentDuration">
+              <option value="10">10 دقائق</option><option value="15" selected>15 دقيقة</option>
+              <option value="20">20 دقائق</option><option value="25">25 دقيقة</option>
+            </select>
+          </div>
+          <div class="s-row">
+            <label for="silentMode">الوضع:</label>
+            <select id="silentMode">
+              <option value="silent">صامت تماماً</option><option value="vibrate">اهتزاز فقط</option>
+            </select>
+          </div>
+          <span class="setting-note">يتطلب إذن «الوصول إلى لا تُزعج» على Android. عند عدم توفره يظهر تنبيه داخل التطبيق فقط. تُستعاد حالة الصوت الأصلية تلقائياً بعد المدة.</span>
+        </div>
+      </details>
     </div><!-- /audio -->
 
-    <div class="stab-panel adv-panel" data-stab-panel="calc">
-    <div class="s-group">
-      <h3>📅 تعديل أوقات الصلاة بشكل دائم <small>عدّل يدوياً أو ارجع للحساب الذاتي</small></h3>
-      <div class="pray-times-row" id="manualTimes">
-        <div class="pt"><div class="ptk">🌅 الفجر</div><input spellcheck="false" autocomplete="off" type="time" id="mFajr"></div>
-        <div class="pt"><div class="ptk">☀️ الظهر</div><input spellcheck="false" autocomplete="off" type="time" id="mDhuhr"></div>
-        <div class="pt"><div class="ptk">🌤️ العصر</div><input spellcheck="false" autocomplete="off" type="time" id="mAsr"></div>
-        <div class="pt"><div class="ptk">🌇 المغرب</div><input spellcheck="false" autocomplete="off" type="time" id="mMaghrib"></div>
-        <div class="pt"><div class="ptk">🌙 العشاء</div><input spellcheck="false" autocomplete="off" type="time" id="mIsha"></div>
+    <!-- ========== 4) المظهر والإتاحة ========== -->
+    <div class="stab-panel" data-stab-panel="look">
+      <div class="s-group">
+        <h3 data-i18n="themeGroup">🎨 المظهر <small data-i18n="themeGroupSub">ليلي مريح للعين</small></h3>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm ghost mode" data-mode="light">☀️ <span data-i18n="themeLight">فاتح</span></button>
+          <button class="btn sm ghost mode" data-mode="dark">🌙 <span data-i18n="themeDark">داكن</span></button>
+          <button class="btn sm ghost mode" data-mode="auto">🌓 <span data-i18n="themeAuto">تلقائي</span></button>
+        </div>
+        <span class="hint" data-i18n="themeHint">النمط التلقائي يتحوّل ليلياً من المغرب إلى الفجر حسب أوقات الصلاة، ويعود نهارياً بعد الفجر</span>
       </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="applyTimes">✔ تطبيق الأوقات اليدوية</button>
-        <button class="btn sm ghost" id="clearManual">↺ العودة للأوقات التلقائية</button>
+      <div class="s-group">
+        <h3>🔠 <span data-i18n="a11yGroup">حجم الخط وسهولة القراءة</span> <small data-i18n="a11ySub">مناسب لكبار السن وقارئات الشاشة</small></h3>
+        <div class="fs-btns" role="group" aria-label="حجم الخط">
+          <button class="btn sm ghost" data-fs="0.9" aria-label="تصغير الخط">أ−</button>
+          <button class="btn sm ghost" data-fs="1" aria-label="حجم الخط الافتراضي">أ</button>
+          <button class="btn sm ghost" data-fs="1.15" aria-label="تكبير الخط">أ+</button>
+          <button class="btn sm ghost" data-fs="1.3" aria-label="تكبير الخط كثيراً">أ++</button>
+          <button class="btn sm ghost" data-fs="1.5" aria-label="تكبير الخط كبيراً جداً">أ+++</button>
+          <span class="wake-status" id="fsValue">100%</span>
+        </div>
+        <span class="setting-note" data-i18n="a11yNote">يُحفظ حجم الخط على جهازك، وتعمل جميع الأزرار مع TalkBack وقارئ الشاشة.</span>
       </div>
-      <div class="s-row" style="margin-top:12px">
-        <label>تعديلات الإقامة (بالدقائق):</label>
-        <span>الفجر <input type="number" id="iFajr" min="0" max="60" style="width:60px"></span>
-        <span>الظهر <input type="number" id="iDhuhr" min="0" max="60" style="width:60px"></span>
-        <span>العصر <input type="number" id="iAsr" min="0" max="60" style="width:60px"></span>
-        <span>المغرب <input type="number" id="iMaghrib" min="0" max="60" style="width:60px"></span>
-        <span>العشاء <input type="number" id="iIsha" min="0" max="60" style="width:60px"></span>
-        <button class="btn sm" id="applyIqama">✔ تطبيق</button>
+      <div class="s-group">
+        <h3>◼️ تباين عالٍ <small>نصوص أوضح وحدود أقوى لضعاف البصر</small></h3>
+        <div class="wake-row">
+          <div class="toggle" id="contrastToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل التباين العالي"></div>
+          <span class="wake-status" id="contrastStatus">غير مفعّل</span>
+        </div>
+        <div class="s-actions" style="justify-content:flex-start;margin-top:10px">
+          <button class="btn sm ghost" id="displayBtn2" type="button">🖥️ فتح شاشة العرض الكبيرة</button>
+        </div>
+        <span class="setting-note">يزيل التمويجات والتدرجات ويقوّي الحدود والنصوص، ويعمل مع الوضع الفاتح والداكن. شاشة العرض تعرض الساعة والصلاة القادمة بأرقام كبيرة لوضعها على التلفاز أو في المسجد.</span>
       </div>
-    </div>
+      <details class="adv-details">
+        <summary>♿ إعدادات الإتاحة (الشاشة، الاهتزاز، اللغة)</summary>
+        <div class="s-group">
+          <h3>💡 <span data-i18n="wakeGroup">إبقاء الشاشة مضاءة</span> <small data-i18n="wakeSub">مناسب لوضع شاشة العرض</small></h3>
+          <div class="wake-row">
+            <div class="toggle" id="wakeToggle" role="switch" aria-checked="false" tabindex="0" aria-label="إبقاء الشاشة مضاءة"></div>
+            <span class="wake-status" id="wakeStatus">غير مفعّل</span>
+          </div>
+          <span class="setting-note" data-i18n="wakeNote">يمنع إطفاء الشاشة أثناء عرض أوقات الصلاة، ويُعاد تلقائياً عند العودة للتطبيق. يعمل على أندرويد وكروم.</span>
+        </div>
+        <div class="s-group">
+          <h3>📳 <span data-i18n="hapticGroup">الاهتزاز</span> <small data-i18n="hapticSub">تنبيه لمسي عند القبلة وإتمام الذكر</small></h3>
+          <div class="wake-row">
+            <div class="toggle on" id="hapticToggle" role="switch" aria-checked="true" tabindex="0" aria-label="الاهتزاز"></div>
+            <span class="wake-status" id="hapticStatus" data-i18n="hapticOn">📳 اهتزاز عند الوصول للقبلة</span>
+          </div>
+          <span class="setting-note" data-i18n="hapticNote">يستخدم اهتزاز الجهاز عند محاذاة القبلة، وعند العدّ التلقائي للأذكار. يمكن إيقافه في أي وقت.</span>
+        </div>
+        <div class="s-group">
+          <h3>🌐 <span data-i18n="langGroup">اللغة</span> <small data-i18n="langSub">واجهة التطبيق — النصوص الشرعية تبقى بالعربية</small></h3>
+          <div class="s-row">
+            <label for="langSelect" data-i18n="langLabel">لغة الواجهة:</label>
+            <select id="langSelect">
+              <option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option>
+              <option value="ur">اردو</option><option value="tr">Türkçe</option><option value="id">Bahasa Indonesia</option>
+            </select>
+          </div>
+        </div>
+      </details>
+    </div><!-- /look -->
 
-    </div><!-- /calc -->
+    <!-- ========== 5) النظام والبيانات ========== -->
+    <div class="stab-panel" data-stab-panel="system">
+      <div class="s-group">
+        <h3>🔄 تحديث التطبيق من الداخل <small>يُفحص تلقائياً — دون إعادة تثبيت</small></h3>
+        <div class="s-row">
+          <label for="updateUrl">رابط صفحة التحديثات:</label>
+          <input type="url" id="updateUrl" placeholder="https://username.github.io/repo" style="flex:1;min-width:150px;direction:ltr">
+        </div>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
+          <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
+        </div>
+        <span class="hint" id="updateStatus">الإصدار 31 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+        <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
+      </div>
 
-    <div class="stab-panel" data-stab-panel="audio">
-    <div class="s-group">
-      <h3>🕌 نغمة الأذان والإقامة</h3>
-      <div class="s-row">
-        <label>نغمة الأذان:</label>
-        <select id="adhanSoundSel">
-          <option value="srihi">السريحي (افتراضي)</option>
-          <option value="bell">جرس</option>
-          <option value="gen">نغمة مركبة</option>
-          <option value="file">ملف صوتي مخصص</option>
-        </select>
+      <div class="s-group">
+        <h3>⟳ النسخ الاحتياطي والبيانات <small>كل شيء محلي على جهازك</small></h3>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="reloadTimes">🔁 إعادة حساب جميع الأوقات</button>
+          <button class="btn sm" id="exportSettings">⬇️ تصدير الإعدادات</button>
+          <button class="btn sm ghost" id="importSettingsBtn">⬆️ استيراد الإعدادات</button>
+          <input type="file" id="importSettingsFile" accept="application/json,.json" class="hidden">
+          <button class="btn sm ghost" id="clearAllData">🗑️ مسح جميع البيانات المخزنة</button>
+        </div>
+        <span class="setting-note" data-i18n="backupNote">يصدّر الملف كل إعداداتك (الموقع، التنبيهات، الصلوات، الورد، الأذكار، المظهر) لاستعادتها على هاتف آخر. لا يحتوي على أي كلمات مرور.</span>
       </div>
-      <div class="sound-file" id="adhanFileBox" style="display:none">
-        <label>🎵 اختيار نغمة الأذان <input type="file" id="adhanFileInput" accept="audio/*"></label>
-        <span class="fname" id="adhanFileName"></span>
-      </div>
-      <div class="s-row">
-        <label>نغمة الإقامة:</label>
-        <select id="iqamaSoundSel">
-          <option value="file">ملف (افتراضي)</option>
-          <option value="bell">جرس</option>
-          <option value="gen">نغمة مركبة</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label>نمط الأذان:</label>
-        <select id="adhanMode">
-          <option value="full">الأذان كامل</option>
-          <option value="short60">مختصر (دقيقة)</option>
-          <option value="short90">مختصر (دقيقة ونصف)</option>
-          <option value="silent">تنبيه فقط بدون صوت</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label>أذان الفجر:</label>
-        <select id="fajrMode">
-          <option value="default">مثل بقية الصلوات</option>
-          <option value="short60">مختصر (دقيقة)</option>
-          <option value="short90">مختصر (دقيقة ونصف)</option>
-          <option value="silent">تنبيه فقط بدون صوت</option>
-        </select>
-      </div>
-      <div class="s-row">
-        <label>مستوى الصوت (%):</label>
-        <input type="number" id="volControl" min="0" max="100" value="70" style="width:70px"> %
-      </div>
-      <div class="s-row">
-        <label>تنبيه ما قبل الإقامة:</label>
-        <div class="toggle on" id="toggleLead"></div>
-        <span class="hint" id="leadVal">7 دقائق قبل</span>
-        <input type="number" id="leadMin" min="0" max="30" value="7" style="width:60px"> دقيقة
-      </div>
-    </div>
 
-    </div><!-- /audio -->
-
-    <div class="stab-panel adv-panel" data-stab-panel="calc">
-    <div class="s-group">
-      <h3>⟳ إدارة البيانات والنسخ الاحتياطي</h3>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="reloadTimes">🔁 إعادة حساب جميع الأوقات</button>
-        <button class="btn sm" id="exportSettings">⬇️ تصدير الإعدادات</button>
-        <button class="btn sm ghost" id="importSettingsBtn">⬆️ استيراد الإعدادات</button>
-        <input type="file" id="importSettingsFile" accept="application/json,.json" class="hidden">
-        <button class="btn sm ghost" id="clearAllData">🗑️ مسح جميع البيانات المخزنة</button>
+      <div class="s-group">
+        <h3>🩺 فحص صحة الإشعارات والجهاز <small>✅/❌ مع إصلاح مباشر</small></h3>
+        <div class="health-summary" id="healthSummary">جارٍ الفحص...</div>
+        <div class="health-list" id="healthList"></div>
+        <div class="s-actions" style="justify-content:flex-start;margin-top:12px">
+          <button class="btn sm" id="healthRefresh">🔄 إعادة الفحص</button>
+          <button class="btn sm ghost" id="healthFixAll">🛠️ إصلاح كل ما يمكن</button>
+        </div>
+        <span class="setting-note">في نسخة الويب لا يمكن التحكم بإذن التنبيهات الدقيقة أو البطارية؛ هذه الفحوص تعمل بالكامل داخل تطبيق Android المثبّت. يُفحص التحديث ذاتياً أيضاً عبر SHA-256.</span>
       </div>
-      <span class="setting-note" data-i18n="backupNote">يصدّر الملف كل إعداداتك (الموقع، التنبيهات، الصلوات، الورد، الأذكار، المظهر) لاستعادتها على هاتف آخر. لا يحتوي على أي كلمات مرور.</span>
-    </div>
 
-    <div class="s-group">
-      <h3>🌍 السفر والمنطقة الزمنية</h3>
-      <div class="s-row">
-        <label>المنطقة الحالية:</label>
-        <span id="tzCurrent" class="hint" style="direction:ltr">—</span>
+      <div class="s-group">
+        <h3>🔔 إشعارات المتصفح <small>عند استخدام التطبيق كصفحة ويب</small></h3>
+        <div class="s-actions" style="justify-content:flex-start">
+          <button class="btn sm" id="webNotifyBtn">🔔 تفعيل إشعارات المتصفح</button>
+          <button class="btn sm ghost" id="webNotifyTest">🧪 تجربة إشعار</button>
+        </div>
+        <span class="setting-note">مفيد عند استخدام التطبيق كصفحة ويب مفتوحة. الأذان والتذكير يعملان أيضاً داخل الصفحة دون إذن.</span>
       </div>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="useGeoBtn">📍 استخدام موقعي الحقيقي</button>
-        <button class="btn sm ghost" id="checkTzBtn">🔄 فحص تغيّر التوقيت</button>
-      </div>
-      <span class="setting-note">التوقيت الصيفي والسفر قد يغيّران إزاحة GMT؛ استخدم الزر لتحديث الإحداثيات والمنطقة وإعادة الحساب.</span>
-    </div>
-    </div><!-- /calc -->
 
-    <div class="stab-panel" data-stab-panel="health">
-    <div class="s-group">
-      <h3>🩺 فحص صحة الإشعارات والجهاز <small>✅/❌ مع إصلاح مباشر</small></h3>
-      <div class="health-summary" id="healthSummary">جارٍ الفحص...</div>
-      <div class="health-list" id="healthList"></div>
-      <div class="s-actions" style="justify-content:flex-start;margin-top:12px">
-        <button class="btn sm" id="healthRefresh">🔄 إعادة الفحص</button>
-        <button class="btn sm ghost" id="healthFixAll">🛠️ إصلاح كل ما يمكن</button>
-      </div>
-      <span class="setting-note">في نسخة الويب لا يمكن التحكم بإذن التنبيهات الدقيقة أو البطارية؛ هذه الفحوص تعمل بالكامل داخل تطبيق Android المثبّت. يُفحص التحديث ذاتياً أيضاً عبر SHA-256.</span>
-    </div>
-
-    <div class="s-group">
-      <h3>🔔 طلب إذن إشعارات المتصفح</h3>
-      <div class="s-actions" style="justify-content:flex-start">
-        <button class="btn sm" id="webNotifyBtn">🔔 تفعيل إشعارات المتصفح</button>
-        <button class="btn sm ghost" id="webNotifyTest">🧪 تجربة إشعار</button>
-      </div>
-      <span class="setting-note">مفيد عند استخدام التطبيق كصفحة ويب مفتوحة. الأذان والتذكير يعملان أيضاً داخل الصفحة دون إذن.</span>
-    </div>
-    </div><!-- /health -->
-
-    <div class="stab-panel" data-stab-panel="pro">
       <div class="s-group">
         <h3>⚡ لوحة الإجراءات السريعة</h3>
         <div class="pro-grid">
@@ -1018,21 +991,27 @@
         <span class="pro-note">كل الإجراءات تعمل محلياً على جهازك. النسخة الاحتياطية لا تحتوي كلمات مرور.</span>
       </div>
 
-      <div class="s-group">
-        <h3>🔋 الوضع الاقتصادي <small>توفير البطارية والأداء</small></h3>
-        <div class="s-row">
-          <label for="ecoToggle">تفعيل الوضع الاقتصادي:</label>
-          <div class="toggle" id="ecoToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الوضع الاقتصادي"></div>
-          <span class="hint" id="ecoStatus">متوقف</span>
+      <details class="adv-details">
+        <summary>🔋 الوضع الاقتصادي (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>🔋 الوضع الاقتصادي <small>توفير البطارية والأداء</small></h3>
+          <div class="s-row">
+            <label for="ecoToggle">تفعيل الوضع الاقتصادي:</label>
+            <div class="toggle" id="ecoToggle" role="switch" aria-checked="false" tabindex="0" aria-label="تفعيل الوضع الاقتصادي"></div>
+            <span class="hint" id="ecoStatus">متوقف</span>
+          </div>
+          <span class="setting-note">يقلّل تحديثات الشاشة من كل ثانية إلى كل 5 ثوانٍ ويُوقف الحركات، مع إبقاء الأوقات والعدّاد دقيقين.</span>
         </div>
-        <span class="setting-note">يقلّل تحديثات الشاشة من كل ثانية إلى كل 5 ثوانٍ ويُوقف الحركات، مع إبقاء الأوقات والعدّاد دقيقين.</span>
-      </div>
+      </details>
 
-      <div class="s-group">
-        <h3>ℹ️ معلومات البناء</h3>
-        <div class="pro-status" id="proBuildInfo"></div>
-      </div>
-    </div><!-- /pro -->
+      <details class="adv-details">
+        <summary>ℹ️ معلومات البناء (تفاصيل)</summary>
+        <div class="s-group">
+          <h3>ℹ️ معلومات البناء</h3>
+          <div class="pro-status" id="proBuildInfo"></div>
+        </div>
+      </details>
+    </div><!-- /system -->
 
     </div><!-- /stab-body -->
     <div class="no-results" id="settingsNoResults">لا توجد إعدادات مطابقة للبحث.</div>

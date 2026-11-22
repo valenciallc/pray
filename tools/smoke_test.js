@@ -92,11 +92,23 @@ async function boot(html, seed) {
   ok(RAW_HTML.includes('<details class="adv-details" id="reminderMore">') &&
      !RAW_HTML.includes('<details class="adv-details" id="reminderMore" open'),
      "خيارات التذكير المتقدمة مخفية افتراضياً");
-  ok((RAW_HTML.match(/class="stab-panel adv-panel"/g) || []).length >= 2 &&
-     CSS.includes(".settings-panel .stab-panel.adv-panel{display:none}"),
-     "المجموعات التفصيلية مخفية حتى ضغط «المزيد»");
-  ok(RAW_HTML.includes("advToggle") && RAW_HTML.includes("المزيد من الإعدادات"),
-     "الإعدادات الإضافية خلف زر «المزيد»");
+  const stabNames = Array.from(RAW_HTML.matchAll(/data-stab="([^"]+)"/g)).map(m => m[1]);
+  const panelNames = Array.from(RAW_HTML.matchAll(/data-stab-panel="([^"]+)"/g)).map(m => m[1]);
+  ok(stabNames.length === 5 && panelNames.length === 5 &&
+     stabNames.slice().sort().join(",") === panelNames.slice().sort().join(",") &&
+     panelNames.slice().sort().join(",") === "audio,calc,look,notif,system",
+     "خمسة تبويبات فقط، كل لوحة موجودة مرة واحدة بلا تكرار");
+  ok(!RAW_HTML.includes('data-stab="health"') && !RAW_HTML.includes('data-stab="pro"') &&
+     !CSS.includes(".stab[data-stab=\"health\"]") && !CSS.includes(".stab[data-stab=\"pro\"]"),
+     "تبويبا الصحة والمتقدم القديمان لم يعودا لوحتين منفصلتين");
+  ok((RAW_HTML.match(/class="adv-details/g) || []).length >= 8,
+     "كل التفاصيل الدقيقة موجودة كمقاطع قابلة للفتح داخل تبويباتها");
+  ok(RAW_HTML.includes("advToggle") && RAW_HTML.includes("المزيد من الإعدادات") &&
+     APP_JS.includes('querySelectorAll("details.adv-details")'),
+     "زر «المزيد» يفتح كل التفاصيل دفعة واحدة");
+  ok(RAW_HTML.includes('class="azk-group-title"') === false &&
+     APP_JS.includes("AZK_GROUPS") && RAW_HTML.includes('class="azk-grid"'),
+     "مكتبة الأذكار مرتّبة في مجموعات حسب المناسبة بدل قائمة واحدة");
   ok(/enabled\s*:\s*true/.test(APP_JS) && APP_JS.includes("prayerApp_v3_reminderAuto"),
      "التذكير مفعّل تلقائياً مع ترقية لمرة واحدة");
   ok(RAW_HTML.includes('id="setupOpenBtn"') && APP_JS.includes('$("setupOpenBtn")'),
@@ -165,6 +177,10 @@ async function boot(html, seed) {
   ok(/\d{4}/.test(text("dateNow")), "التاريخ الميلادي ظاهر: " + JSON.stringify(text("dateNow")));
   ok(text("hijriNow").indexOf("هـ") > -1, "التاريخ الهجري ظاهر: " + JSON.stringify(text("hijriNow")));
   ok(count("cards") >= 5, "بطاقات الصلوات الخمس ظاهرة (" + count("cards") + ")");
+  ok(d.querySelectorAll(".azk-group-title").length === 4 &&
+     d.querySelectorAll("#azkGrid .azk-card").length >= 14,
+     "الأذكار: اختيار تلقائي + ٤ مجموعات تضم كل التصنيفات (" +
+     d.querySelectorAll("#azkGrid .azk-card").length + " بطاقة)");
   ok(count("tblBody") >= 28, "جدول الشهر ظاهر (" + count("tblBody") + " صفاً)");
   ok(/^\d{2}:\d{2}:\d{2}$/.test(text("cdNum")), "العدّاد يعمل: " + JSON.stringify(text("cdNum")));
   ok(Number(w.eval("APP_VERSION")) >= 20, "APP_VERSION = " + w.eval("APP_VERSION"));
@@ -201,24 +217,32 @@ async function boot(html, seed) {
   // v18: تحسينات الجوال والإشعارات والإعدادات المتقدمة.
   ok(!!d.getElementById("notifQuickBtn"), "زر الإشعارات السريع موجود في الشريط");
   ok(!!d.getElementById("settingsSearch") && !!d.getElementById("settingsNoResults"), "بحث الإعدادات ورسالة «لا نتائج» موجودان");
-  ok(!!d.querySelector('[data-stab="pro"]') && !!d.querySelector('[data-stab-panel="pro"]'), "تبويب «متقدم» ولوحته موجودان");
+  ok(!!d.querySelector('[data-stab="system"]') && !!d.querySelector('[data-stab-panel="system"]'), "تبويب «النظام» ولوحته موجودان");
   const proIds = ["proTestNotify", "proTestAdhan", "proDisplay", "proExport", "proImport", "proReset", "proCopyReport", "proHealth", "proImportFile", "proStatus", "ecoToggle", "ecoStatus", "webScheduleToggle", "webScheduleStatus", "proBuildInfo"];
-  ok(proIds.every(id => !!d.getElementById(id)), "أزرار وحالات اللوحة المتقدمة موجودة (" + proIds.length + " عنصراً)");
+  ok(proIds.every(id => !!d.getElementById(id)), "أزرار وحالات لوحة النظام موجودة (" + proIds.length + " عنصراً)");
   ok(typeof w.eval("pushWebSchedule") === "function" && typeof w.eval("clearWebSchedule") === "function" && typeof w.eval("renderProStatus") === "function", "دوال الجدولة والإلغاء والحالة محمّلة");
 
   w.localStorage.setItem("prayerApp_v3_stab", "pro");
   const settings = d.getElementById("settingsBtn");
   if (settings) settings.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
-  ok(d.querySelector('[data-stab-panel="calc"]').classList.contains("active"),
-     "تبويب متقدم محفوظ قديماً يعود للأساسيات عند فتح الإعدادات");
+  ok(d.querySelector('[data-stab-panel="system"]').classList.contains("active"),
+     "تبويب «متقدم» المحفوظ قديماً يُفتح في «النظام والبيانات»");
   w.localStorage.setItem("prayerApp_v3_stab", "calc");
   ok(count("locCountry") > 0, "قائمة البلاد تُعبأ عند فتح الإعدادات (" + count("locCountry") + ")");
   ok(count("locCity") > 0, "قائمة المدن تُعبأ (" + count("locCity") + ")");
 
-  const proTab = d.querySelector('[data-stab="pro"]');
+  const allDetails = Array.from(d.querySelectorAll("details.adv-details"));
+  ok(allDetails.length >= 8 && allDetails.every(x => !x.open),
+     "التفاصيل الدقيقة مطوية افتراضياً (" + allDetails.length + " مقطعاً)");
+  const advBtn = d.getElementById("advToggle");
+  if (advBtn) advBtn.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(allDetails.every(x => x.open) && advBtn.getAttribute("aria-expanded") === "true",
+     "زر «المزيد من الإعدادات» يفتح كل التفاصيل دفعة واحدة");
+
+  const proTab = d.querySelector('[data-stab="system"]');
   if (proTab) proTab.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
-  const proPanel = d.querySelector('[data-stab-panel="pro"]');
-  ok(!!proPanel && proPanel.classList.contains("active"), "الضغط على «متقدم» يفتح لوحة الإجراءات");
+  const proPanel = d.querySelector('[data-stab-panel="system"]');
+  ok(!!proPanel && proPanel.classList.contains("active"), "الضغط على «النظام» يفتح لوحة النظام والبيانات");
 
   const search = d.getElementById("settingsSearch");
   const noRes = d.getElementById("settingsNoResults");

@@ -1,17 +1,17 @@
 {
-  "version": 30,
+  "version": 31,
   "index": "index.html",
-  "sha256": "26ba908748fe82d99d82e929b08f8b671a712fd382db50cbfcbae48d1ef87405",
-  "size": 62587,
-  "releasedAt": "2026-11-21T07:08:42.926Z",
+  "sha256": "e30c42b2f61642ccf2445b15b08341c317e9576d72951b62a2d47dca387e9647",
+  "size": 65139,
+  "releasedAt": "2026-11-22T10:23:08.437Z",
   "files": {
     "styles.css": {
-      "sha256": "3be31120febafb1e9f0bb031c9604adc3850a5d5d8f288f88e656b93abdcef97",
-      "size": 74322
+      "sha256": "dfb44c555e66199366215c1a549b16be31506e18e583017f11c8a9ff0f8e49af",
+      "size": 74139
     },
     "app.js": {
-      "sha256": "e729749617629a9ef534654427462d8a4ae1e6e2a2f3e4468b8957de4c9fabe6",
-      "size": 281974
+      "sha256": "58f4a3ad80ecf8cac2199f3e0b71f348b917c330fce1302b0ee6cded38d4ef8d",
+      "size": 284259
     }
   },
   "assets": [
