@@ -109,6 +109,21 @@ async function boot(html, seed) {
   ok(RAW_HTML.includes('class="azk-group-title"') === false &&
      APP_JS.includes("AZK_GROUPS") && RAW_HTML.includes('class="azk-grid"'),
      "مكتبة الأذكار مرتّبة في مجموعات حسب المناسبة بدل قائمة واحدة");
+  // v32 — تحسين الإعدادات والحساب: معاينة مباشرة، تحقق من المدخلات، وتعديل دقيق.
+  ok(["calcPreview", "calcPreviewStatus", "cpFajr", "cpSunrise", "cpDhuhr", "cpAsr",
+      "cpMaghrib", "cpIsha", "adjFajr", "adjIsha", "locMethodDefaults", "tzSuggestBtn"]
+     .every(id => RAW_HTML.includes('id="' + id + '"')),
+      "واجهة المعاينة والتعديل الدقيق واستعادة زوايا الطريقة موجودة");
+  ok(CSS.includes(".calc-preview") && CSS.includes(".cp-grid") && CSS.includes(".cp b"),
+      "أنماط معاينة الأوقات موجودة");
+  ok(APP_JS.includes("function updateCalcPreview") && APP_JS.includes("function sanitizeLocInputs") &&
+     APP_JS.includes("function restoreMethodDefaults") && APP_JS.includes("function suggestTzFromLng") &&
+     APP_JS.includes("adjFajr:ADJ_FAJR,adjIsha:ADJ_ISHA"),
+      "الحساب يقرأ الإزاحات الدقيقة ويحدّث المعاينة آمنياً");
+  ok(RAW_HTML.includes('id="locLat" step="0.001" min="-90" max="90"') &&
+     RAW_HTML.includes('id="locLng" step="0.001" min="-180" max="180"') &&
+     RAW_HTML.includes('id="locTz" step="0.5" min="-12" max="14"'),
+      "حدود صريحة لمدخلات الإحداثيات والتوقيت");
   ok(/enabled\s*:\s*true/.test(APP_JS) && APP_JS.includes("prayerApp_v3_reminderAuto"),
      "التذكير مفعّل تلقائياً مع ترقية لمرة واحدة");
   ok(RAW_HTML.includes('id="setupOpenBtn"') && APP_JS.includes('$("setupOpenBtn")'),
@@ -230,6 +245,42 @@ async function boot(html, seed) {
   w.localStorage.setItem("prayerApp_v3_stab", "calc");
   ok(count("locCountry") > 0, "قائمة البلاد تُعبأ عند فتح الإعدادات (" + count("locCountry") + ")");
   ok(count("locCity") > 0, "قائمة المدن تُعبأ (" + count("locCity") + ")");
+
+  // v32运行时检查：预览随微调更新，方法默认值可恢复，输入会被夹到合法范围。
+  const previewIds = ["cpFajr", "cpSunrise", "cpDhuhr", "cpAsr", "cpMaghrib", "cpIsha"];
+  const toMin = (s) => { const [h, m] = String(s).split(":").map(Number); return h * 60 + m; };
+  ok(previewIds.every(id => /^\d{2}:\d{2}$/.test(text(id))),
+     "معاينة اليوم تعرض الأوقات الستة قبل الحفظ: " + previewIds.map(text).join(" "));
+  const baseFajr = text("cpFajr"), baseIsha = text("cpIsha");
+  const adjF = d.getElementById("adjFajr"), adjI = d.getElementById("adjIsha");
+  adjF.value = "5"; adjF.dispatchEvent(new w.Event("input", { bubbles: true }));
+  ok(toMin(text("cpFajr")) - toMin(baseFajr) === 5,
+     "تعديل الفجر +٥ دقائق ينعكس فوراً في المعاينة: " + baseFajr + " → " + text("cpFajr"));
+  adjF.value = "0"; adjF.dispatchEvent(new w.Event("input", { bubbles: true }));
+  adjI.value = "-5"; adjI.dispatchEvent(new w.Event("input", { bubbles: true }));
+  ok(toMin(text("cpIsha")) - toMin(baseIsha) === -5,
+     "تعديل العشاء -٥ دقائق ينعكس فوراً في المعاينة: " + baseIsha + " → " + text("cpIsha"));
+  adjI.value = "0"; adjI.dispatchEvent(new w.Event("input", { bubbles: true }));
+
+  const methodSel = d.getElementById("locMethod");
+  methodSel.value = "karachi";
+  methodSel.dispatchEvent(new w.Event("change", { bubbles: true }));
+  const fajrInput = d.getElementById("locFajr");
+  fajrInput.value = "99";
+  d.getElementById("locMethodDefaults").click();
+  ok(fajrInput.value === "18", "استعادة زوايا الطريقة تعيد قيمة زاوية الفجر الصحيحة");
+  methodSel.value = "egypt";
+  methodSel.dispatchEvent(new w.Event("change", { bubbles: true }));
+
+  const latInput = d.getElementById("locLat"), tzInput = d.getElementById("locTz");
+  latInput.value = "999"; tzInput.value = "";
+  const sanitized = w.eval("sanitizeLocInputs(false)");
+  ok(sanitized.lat === 90 && latInput.value === "90" && Number.isFinite(sanitized.tz),
+     "المدخلات الخارجة أو الفارغة تُضبط لقيم صالحة قبل الحفظ");
+  d.getElementById("locLng").value = "55.42";
+  d.getElementById("tzSuggestBtn").click();
+  ok(tzInput.value === "3.5", "اقتراح التوقيت من خط الطول يعمل (" + tzInput.value + ")");
+  w.eval("syncLocInputs()");
 
   const allDetails = Array.from(d.querySelectorAll("details.adv-details"));
   ok(allDetails.length >= 8 && allDetails.every(x => !x.open),

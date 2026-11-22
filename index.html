@@ -563,6 +563,7 @@
         <div class="s-row">
           <label for="locMethod">طريقة الحساب:</label>
           <select id="locMethod"></select>
+          <button class="btn sm ghost" id="locMethodDefaults" type="button" title="إرجاع زوايا الطريقة المختارة">↺ زوايا الطريقة</button>
         </div>
         <div class="s-row">
           <label for="locAsr">مذهب العصر:</label>
@@ -577,20 +578,42 @@
         </div>
         <span class="hint">تُحسب الأوقات داخل التطبيق بالكامل — لا حاجة لأي اتصال بالإنترنت.</span>
 
+        <div class="calc-preview" id="calcPreview">
+          <div class="cp-head">
+            <b>🕒 معاينة أوقات اليوم</b>
+            <span class="hint" id="calcPreviewStatus">تتحدّث فور تغيير أي إعداد — قبل الحفظ</span>
+          </div>
+          <div class="cp-grid">
+            <div class="cp"><span>🌅 الفجر</span><b id="cpFajr">--:--</b></div>
+            <div class="cp"><span>☀️ الشروق</span><b id="cpSunrise">--:--</b></div>
+            <div class="cp"><span>☀️ الظهر</span><b id="cpDhuhr">--:--</b></div>
+            <div class="cp"><span>🌤️ العصر</span><b id="cpAsr">--:--</b></div>
+            <div class="cp"><span>🌇 المغرب</span><b id="cpMaghrib">--:--</b></div>
+            <div class="cp"><span>🌙 العشاء</span><b id="cpIsha">--:--</b></div>
+          </div>
+        </div>
+
         <details class="adv-details">
           <summary>🧭 إحداثيات وزوايا الحساب (تفاصيل)</summary>
           <div class="s-row">
             <label>الإحداثيات:</label>
-            <span>العرض <input type="number" id="locLat" step="0.001" style="width:84px" title="latitude"></span>
-            <span>الطول <input type="number" id="locLng" step="0.001" style="width:84px" title="longitude"></span>
-            <span>التوقيت <input type="number" id="locTz" step="0.5" style="width:72px" title="GMT offset"></span>
+            <span>العرض <input type="number" id="locLat" step="0.001" min="-90" max="90" style="width:84px" title="latitude"></span>
+            <span>الطول <input type="number" id="locLng" step="0.001" min="-180" max="180" style="width:84px" title="longitude"></span>
+            <span>التوقيت <input type="number" id="locTz" step="0.5" min="-12" max="14" style="width:72px" title="GMT offset"></span>
+            <button class="btn sm ghost" id="tzSuggestBtn" type="button" title="إزاحة GMT التقريبية من خط الطول">اقتراح من الطول</button>
           </div>
           <div class="s-row">
             <label>زاوية الفجر / العشاء:</label>
-            <span>الفجر <input type="number" id="locFajr" step="0.1" style="width:70px"></span>
-            <span>العشاء <input type="number" id="locIsha" step="0.1" style="width:70px"></span>
+            <span>الفجر <input type="number" id="locFajr" step="0.1" min="5" max="30" style="width:70px"></span>
+            <span>العشاء <input type="number" id="locIsha" step="0.1" min="0" max="30" style="width:70px"></span>
             <span>أو دقائق <input type="number" id="locIshaMin" min="0" max="180" style="width:70px"></span>
           </div>
+          <div class="s-row">
+            <label>تعديل دقيق (دقائق):</label>
+            <span>الفجر <input type="number" id="adjFajr" step="1" min="-15" max="15" style="width:70px" title="تعديل الفجر بالدقائق"></span>
+            <span>العشاء <input type="number" id="adjIsha" step="1" min="-15" max="15" style="width:70px" title="تعديل العشاء بالدقائق"></span>
+          </div>
+          <span class="setting-note">التعديل الدقيق يُضاف بعد زاوية الحساب؛ استخدمه لمطابقة وقت محلي معتمد دون تغيير بقية الصلوات. الإزاحة المقترحة من الطول تقريبية ولا تراعي التوقيت الصيفي.</span>
         </details>
       </div>
 
@@ -937,7 +960,7 @@
           <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
           <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
         </div>
-        <span class="hint" id="updateStatus">الإصدار 31 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+        <span class="hint" id="updateStatus">الإصدار 32 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
         <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
       </div>
 

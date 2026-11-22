@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=31;
+const APP_VERSION=32;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -372,7 +372,11 @@ const METHODS={
 const LOC_KEY="prayerApp_v3_loc",LOC_HASH_KEY="prayerApp_v3_loch";
 let LOC={city:"الشارقة",country:"الإمارات",lat:25.35,lng:55.42,tz:4};
 let CALC={method:"egypt",fajr:19.5,isha:17.5,ishaMin:0,asrF:1};
-function calcHash(){return [Math.round(LOC.lat*1000),Math.round(LOC.lng*1000),LOC.tz,CALC.method,CALC.fajr,CALC.isha,CALC.ishaMin,CALC.asrF].join("|")}
+const clampNum=(v,min,max,fallback)=>{
+  const n=Number(v);
+  return Number.isFinite(n)?Math.max(min,Math.min(max,n)):fallback;
+};
+function calcHash(){return [Math.round(LOC.lat*1000),Math.round(LOC.lng*1000),LOC.tz,CALC.method,CALC.fajr,CALC.isha,CALC.ishaMin,CALC.asrF,ADJ_FAJR,ADJ_ISHA].join("|")}
 function loadLoc(){
   try{
     const j=JSON.parse(localStorage.getItem(LOC_KEY)||"null");
@@ -384,13 +388,16 @@ function loadLoc(){
       if(typeof j.isha==="number")CALC.isha=+j.isha;
       if(typeof j.ishaMin==="number")CALC.ishaMin=+j.ishaMin;
       if(typeof j.asrF==="number")CALC.asrF=+j.asrF;
+      if(typeof j.adjFajr==="number")ADJ_FAJR=clampNum(j.adjFajr,-15,15,0);
+      if(typeof j.adjIsha==="number")ADJ_ISHA=clampNum(j.adjIsha,-15,15,0);
     }
   }catch(e){}
 }
 function saveLoc(){
   try{
     localStorage.setItem(LOC_KEY,JSON.stringify(Object.assign({},LOC,{
-      method:CALC.method,fajr:CALC.fajr,isha:CALC.isha,ishaMin:CALC.ishaMin,asrF:CALC.asrF
+      method:CALC.method,fajr:CALC.fajr,isha:CALC.isha,ishaMin:CALC.ishaMin,asrF:CALC.asrF,
+      adjFajr:ADJ_FAJR,adjIsha:ADJ_ISHA
     })));
     localStorage.setItem(LOC_HASH_KEY,calcHash());
   }catch(e){}
@@ -433,15 +440,17 @@ function _fmt(h){
   hh=_fixh(hh);
   return pad(hh)+":"+pad(mm);
 }
-function calcPrayerTimes(y,m,d,lat,lng,tz,opt){ // opt:{fajr,isha,ishaMin,asrF}
+function calcPrayerTimes(y,m,d,lat,lng,tz,opt){ // opt:{fajr,isha,ishaMin,asrF,adjFajr,adjIsha}
   const adj=tz-lng/15;
-  const fajr=_fmt(_sunAngT(y,m,d,lat,opt.fajr,5,"ccw")+adj+ADJ_FAJR/60);
+  const fd=Number.isFinite(opt.adjFajr)?opt.adjFajr:ADJ_FAJR;
+  const id=Number.isFinite(opt.adjIsha)?opt.adjIsha:ADJ_ISHA;
+  const fajr=_fmt(_sunAngT(y,m,d,lat,opt.fajr,5,"ccw")+adj+fd/60);
   const spr=_fmt(_sunAngT(y,m,d,lat,SUN_ANG,5,"ccw")+adj);
   const dhr=_fmt(_midDay(y,m,d,5)+adj);
   const asr=_fmt(_asrT(y,m,d,lat,opt.asrF,5)+adj);
   const setH=_sunAngT(y,m,d,lat,SUN_ANG,5,"cw");
   const mgb=_fmt(setH+adj);
-  const ish=opt.ishaMin>0?_fmt(setH+opt.ishaMin/60+adj+ADJ_ISHA/60):_fmt(_sunAngT(y,m,d,lat,opt.isha,5,"cw")+adj+ADJ_ISHA/60);
+  const ish=opt.ishaMin>0?_fmt(setH+opt.ishaMin/60+adj+id/60):_fmt(_sunAngT(y,m,d,lat,opt.isha,5,"cw")+adj+id/60);
   return {Fajr:fajr,Sunrise:spr,Dhuhr:dhr,Asr:asr,Maghrib:mgb,Isha:ish};
 }
 
@@ -1193,7 +1202,7 @@ const BASE_DAY={Fajr:"05:00",FajrI:"05:25",Sunrise:"06:00",Dhuhr:"12:00",DhuhrI:
 function getDayData(dstr){return autoCache[dstr]||null}
 function fillDay(ds){
   const[y,m,d]=ds.split("-").map(Number);
-  const t=calcPrayerTimes(y,m,d,LOC.lat,LOC.lng,LOC.tz,{fajr:CALC.fajr,isha:CALC.isha,ishaMin:CALC.ishaMin,asrF:CALC.asrF});
+  const t=calcPrayerTimes(y,m,d,LOC.lat,LOC.lng,LOC.tz,{fajr:CALC.fajr,isha:CALC.isha,ishaMin:CALC.ishaMin,asrF:CALC.asrF,adjFajr:ADJ_FAJR,adjIsha:ADJ_ISHA});
   t.FajrI=addMin(t.Fajr,IQAMA_OFFSET.Fajr);
   t.DhuhrI=addMin(t.Dhuhr,IQAMA_OFFSET.Dhuhr);
   t.AsrI=addMin(t.Asr,IQAMA_OFFSET.Asr);
@@ -2386,6 +2395,10 @@ function syncLocInputs(){
   $("locIsha").value=CALC.isha;
   $("locIshaMin").value=CALC.ishaMin;
   $("locAsr").value=CALC.asrF;
+  const af=$("adjFajr"),ai=$("adjIsha");
+  if(af)af.value=ADJ_FAJR;
+  if(ai)ai.value=ADJ_ISHA;
+  updateCalcPreview();
 }
 function onLocCountryChange(){
   fillLocCity();
@@ -2411,19 +2424,74 @@ function onLocMethodChange(){
   $("locIsha").value=m.isha;
   $("locIshaMin").value=m.ishaMin;
 }
+/* قراءة آمنة لمدخلات الحساب: تمنع الصفر الصامت والقيم الخارجة عن النطاق. */
+function sanitizeLocInputs(silent){
+  const fixed=[];
+  const read=(id,min,max,fallback,label,round)=>{
+    const el=$(id);if(!el)return fallback;
+    const raw=String(el.value).trim();
+    let n=raw===""?NaN:Number(raw);
+    if(!Number.isFinite(n)){n=fallback;if(!silent)fixed.push(label)}
+    n=Math.max(min,Math.min(max,n));
+    if(round)n=Math.round(n);
+    const shown=String(n);
+    // المعاينة لا تكتب فوق ما يكتبه المستخدم حتى يستطيع إدخال رقم سالب أو عشري.
+    if(!silent&&raw!==shown){el.value=shown;if(fixed.indexOf(label)<0)fixed.push(label)}
+    return n;
+  };
+  const v={
+    lat:read("locLat",-90,90,LOC.lat,"العرض"),
+    lng:read("locLng",-180,180,LOC.lng,"الطول"),
+    tz:read("locTz",-12,14,LOC.tz,"التوقيت"),
+    fajr:read("locFajr",5,30,METHODS.egypt.fajr,"زاوية الفجر"),
+    isha:read("locIsha",0,30,METHODS.egypt.isha,"زاوية العشاء"),
+    ishaMin:read("locIshaMin",0,180,0,"دقائق العشاء"),
+    asrF:read("locAsr",1,2,1,"مذهب العصر"),
+    adjFajr:read("adjFajr",-15,15,0,"تعديل الفجر",true),
+    adjIsha:read("adjIsha",-15,15,0,"تعديل العشاء",true)
+  };
+  if(fixed.length&&typeof toast==="function")toast("✖ تم ضبط قيم غير صالحة: "+fixed.join("، "),"err");
+  return v;
+}
 function readLocFromInputs(){
-  LOC.lat=+$("locLat").value||0;
-  LOC.lng=+$("locLng").value||0;
-  LOC.tz=+$("locTz").value||0;
-  CALC.fajr=+$("locFajr").value||18;
-  CALC.isha=+$("locIsha").value||0;
-  CALC.ishaMin=+$("locIshaMin").value||0;
-  CALC.asrF=+$("locAsr").value||1;
+  const v=sanitizeLocInputs(false);
+  LOC.lat=v.lat;LOC.lng=v.lng;LOC.tz=v.tz;
+  CALC.fajr=v.fajr;CALC.isha=v.isha;CALC.ishaMin=v.ishaMin;CALC.asrF=v.asrF;
   CALC.method=$("locMethod").value;
+  ADJ_FAJR=v.adjFajr;ADJ_ISHA=v.adjIsha;
   const city=$("locCity").value;
   const idx=+$("locCountry").value;
   const L=LOCS[idx]||LOCS[0];
   LOC.city=city;LOC.country=L.c;
+}
+function updateCalcPreview(){
+  const box=$("calcPreview");if(!box)return;
+  const v=sanitizeLocInputs(true);
+  const [y,m,d]=todayStr().split("-").map(Number);
+  const t=calcPrayerTimes(y,m,d,v.lat,v.lng,v.tz,{
+    fajr:v.fajr,isha:v.isha,ishaMin:v.ishaMin,asrF:v.asrF,
+    adjFajr:v.adjFajr,adjIsha:v.adjIsha
+  });
+  [["cpFajr","Fajr"],["cpSunrise","Sunrise"],["cpDhuhr","Dhuhr"],
+   ["cpAsr","Asr"],["cpMaghrib","Maghrib"],["cpIsha","Isha"]].forEach(pair=>{
+    const el=$(pair[0]);if(el)el.textContent=t[pair[1]];
+  });
+  const st=$("calcPreviewStatus");
+  if(st)st.textContent=manualOverride?"معاينة الحساب الفلكي — يوجد تعديل يدوي فعّال":"تتحدّث فور تغيير أي إعداد — قبل الحفظ";
+}
+function restoreMethodDefaults(){
+  const m=METHODS[$("locMethod").value]||METHODS.egypt;
+  $("locFajr").value=m.fajr;$("locIsha").value=m.isha;$("locIshaMin").value=m.ishaMin;
+  updateCalcPreview();
+  toast("↺ تمت استعادة زوايا: "+m.n);
+}
+function suggestTzFromLng(){
+  const lng=Number($("locLng").value);
+  if(!Number.isFinite(lng)){toast("✖ أدخل خط الطول أولاً","err");return}
+  const tz=Math.max(-12,Math.min(14,Math.round(lng/15*2)/2));
+  $("locTz").value=tz;
+  updateCalcPreview();
+  toast("⏰ الإزاحة المقترحة: "+fmtOffset(tz)+" — راجع التوقيت الصيفي إن وُجد");
 }
 function updateLocText(){
   const f=document.querySelector(".foot");
@@ -2971,6 +3039,15 @@ $("settingsOverlay").addEventListener("click",e=>{if(e.target===$("settingsOverl
 $("locCountry").addEventListener("change",onLocCountryChange);
 $("locCity").addEventListener("change",onLocCityChange);
 $("locMethod").addEventListener("change",onLocMethodChange);
+/* المعاينة تتبع كل تعديل قبل الحفظ، وتُنقل القيم من الدولة/المدينة/الطريقة أولاً. */
+["locCountry","locCity","locMethod","locAsr","locLat","locLng","locTz",
+ "locFajr","locIsha","locIshaMin","adjFajr","adjIsha"].forEach(id=>{
+  const el=$(id);if(!el)return;
+  el.addEventListener("change",updateCalcPreview);
+  if(el.tagName==="INPUT")el.addEventListener("input",updateCalcPreview);
+});
+const methodDefaults=$("locMethodDefaults");if(methodDefaults)methodDefaults.onclick=restoreMethodDefaults;
+const tzSuggest=$("tzSuggestBtn");if(tzSuggest)tzSuggest.onclick=suggestTzFromLng;
 $("locSave").onclick=()=>{
   readLocFromInputs();
   try{localStorage.removeItem(LS_KEY+"_auto")}catch(e){}
@@ -2980,6 +3057,7 @@ $("locSave").onclick=()=>{
 $("locReset").onclick=()=>{
   LOC={city:"الشارقة",country:"الإمارات",lat:25.35,lng:55.42,tz:4};
   CALC={method:"egypt",fajr:19.5,isha:17.5,ishaMin:0,asrF:1};
+  ADJ_FAJR=0;ADJ_ISHA=0;
   try{localStorage.removeItem(LOC_KEY);localStorage.removeItem(LS_KEY+"_auto")}catch(e){}
   fillLocCountry();
   applyLocAndRecalc();
