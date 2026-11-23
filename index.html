@@ -433,6 +433,19 @@
         </div>
       </section>
 
+      <section class="section mat-tools" id="matTools">
+        <div class="mat-head">
+          <h2 data-i18n="matTitle">📚 مكتبة المواد</h2>
+          <span class="mat-stat" id="matStat">…</span>
+        </div>
+        <div class="mat-controls">
+          <input type="search" id="matSearch" autocomplete="off" spellcheck="false" data-i18n-ph="matSearchPh" placeholder="ابحث في الأذكار والأدعية...">
+          <button type="button" class="btn sm ghost" id="matFavBtn" aria-pressed="false">☆ <span data-i18n="matFav">المفضلة</span></button>
+          <button type="button" class="btn sm ghost hidden" id="matClearBtn" data-i18n="matClear">✕ مسح</button>
+        </div>
+        <div class="mat-hint" id="matHint" data-i18n="matHint">ابحث أو افتح «المفضلة» للوصول السريع — النسخ والمشاركة بضغطة واحدة.</div>
+      </section>
+
       <section class="section">
         <h2 data-i18n="duaTitle">📿 دعاء ما بعد الأذان</h2>
         <div class="dua-card" id="duaText"></div>
@@ -442,6 +455,11 @@
         <h2 data-i18n="duaDayTitle">🤲 دعاء اليوم</h2>
         <div class="dua-card" id="duaDay"></div>
         <div class="dua-share"><button class="btn sm ghost" id="duaShare">📤 مشاركة الدعاء</button></div>
+      </section>
+
+      <section class="section" id="duaLibrarySec">
+        <h2 data-i18n="matDuaLibrary">📜 مكتبة الأدعية</h2>
+        <div class="dua-grid" id="duaList"></div>
       </section>
 
       <section class="section">
@@ -960,7 +978,7 @@
           <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
           <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
         </div>
-        <span class="hint" id="updateStatus">الإصدار 32 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+        <span class="hint" id="updateStatus">الإصدار 33 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
         <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
       </div>
 

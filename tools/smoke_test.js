@@ -124,6 +124,18 @@ async function boot(html, seed) {
      RAW_HTML.includes('id="locLng" step="0.001" min="-180" max="180"') &&
      RAW_HTML.includes('id="locTz" step="0.5" min="-12" max="14"'),
       "حدود صريحة لمدخلات الإحداثيات والتوقيت");
+  // v33 — مكتبة الأذكار والأدعية: بحث، مفضلة، نسخ ومشاركة.
+  ok(["matTools", "matSearch", "matFavBtn", "matClearBtn", "matStat", "matHint", "duaList"]
+     .every(id => RAW_HTML.includes('id="' + id + '"')),
+      "واجهة مكتبة المواد والبحث والمفضلة موجودة");
+  ok(APP_JS.includes("MAT_FAV_KEY") && APP_JS.includes("function matPass") &&
+     APP_JS.includes("function renderDuaLibrary") && APP_JS.includes("data-matfav") &&
+     APP_JS.includes("data-matcopy") && APP_JS.includes("data-matshare"),
+      "منطق البحث والمفضلة والنسخ والمشاركة موجود");
+  ok(CSS.includes(".mat-controls") && CSS.includes(".mat-actions") && CSS.includes(".dua-grid"),
+      "أنماط المكتبة وبطاقات الأدعية موجودة");
+  ok(/matSearchPh:"[^"]+"/.test(APP_JS) && /matFavEmpty:"[^"]+"/.test(APP_JS),
+      "نصوص المكتبة مترجمة ضمن حزمة اللغات");
   ok(/enabled\s*:\s*true/.test(APP_JS) && APP_JS.includes("prayerApp_v3_reminderAuto"),
      "التذكير مفعّل تلقائياً مع ترقية لمرة واحدة");
   ok(RAW_HTML.includes('id="setupOpenBtn"') && APP_JS.includes('$("setupOpenBtn")'),
@@ -197,6 +209,42 @@ async function boot(html, seed) {
      "الأذكار: اختيار تلقائي + ٤ مجموعات تضم كل التصنيفات (" +
      d.querySelectorAll("#azkGrid .azk-card").length + " بطاقة)");
   ok(count("tblBody") >= 28, "جدول الشهر ظاهر (" + count("tblBody") + " صفاً)");
+  // v33运行时: البحث والمفضلة والنسخ تعمل على الأذكار والأدعية فعلياً.
+  ok(count("duaList") >= 18 && d.querySelectorAll("#duaList [data-matfav]").length >= 18,
+      "مكتبة الأدعية تعرض كل الأدعية مع أزرار المفضلة (" + count("duaList") + ")");
+  ok(/\d/.test(text("matStat")) && d.getElementById("matSearch").placeholder.length > 0,
+      "عدّاد المواد وحقل البحث مهيآن: " + JSON.stringify(text("matStat")));
+  const searchMat = d.getElementById("matSearch");
+  searchMat.value = "الكرسي";
+  searchMat.dispatchEvent(new w.Event("input", { bubbles: true }));
+  ok(d.getElementById("azkGrid").classList.contains("hidden") &&
+     Number(d.getElementById("azkList").dataset.shown || 0) >= 1 &&
+     /\d/.test(text("matHint")),
+      "البحث يعرض نتائج الأذكار عبر التصنيفات ويخفي شبكة التصنيفات (" + text("matHint") + ")");
+  ok(!!d.querySelector("#azkList [data-matcopy]") && !!d.querySelector("#azkList [data-matfav]"),
+      "كل نتيجة ذكر تدعم النسخ والإضافة للمفضلة");
+  d.getElementById("matClearBtn").click();
+  ok(!d.getElementById("azkGrid").classList.contains("hidden") && count("duaList") >= 18,
+      "مسح البحث يعيد الشبكة وكامل الأدعية");
+  const firstFav = d.querySelector("#duaList [data-matfav]");
+  if (firstFav) firstFav.click();
+  ok((w.localStorage.getItem("prayerApp_v3_matfav") || "").length > 2,
+      "تفعيل المفضلة يُحفظ في الذاكرة");
+  d.getElementById("matFavBtn").click();
+  ok(count("duaList") === 1 && Number(d.getElementById("azkList").dataset.shown || 0) === 0,
+      "زر المفضلة يعرض المواد المحفوظة فقط");
+  d.getElementById("matFavBtn").click();
+  const firstCopy = d.querySelector("#duaList [data-matcopy]");
+  try {
+    Object.defineProperty(w.navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: (t) => { w.__copied = t; return Promise.resolve(); } },
+    });
+  } catch (e) {}
+  if (firstCopy) firstCopy.click();
+  await new Promise((resolve) => setTimeout(resolve, 60));
+  ok(typeof w.__copied === "string" && w.__copied.length > 10, "نسخ المادة يعمل بضغطة واحدة");
+  d.getElementById("matClearBtn").click();
   ok(/^\d{2}:\d{2}:\d{2}$/.test(text("cdNum")), "العدّاد يعمل: " + JSON.stringify(text("cdNum")));
   ok(Number(w.eval("APP_VERSION")) >= 20, "APP_VERSION = " + w.eval("APP_VERSION"));
 

@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=32;
+const APP_VERSION=33;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -821,6 +821,16 @@ const I18N_MORE={
  }
 };
 Object.keys(I18N_MORE).forEach(k=>{I18N[k]=Object.assign({},I18N[k]||{},I18N_MORE[k])});
+/* مكتبة المواد: أسماء مشتركة لبحث الأذكار والأدعية والمفضلة والنسخ والمشاركة. */
+const MAT_I18N={
+ ar:{matTitle:"📚 مكتبة المواد",matDuaLibrary:"📜 مكتبة الأدعية",matSearchPh:"ابحث في الأذكار والأدعية...",matFav:"المفضلة",matClear:"✕ مسح",matHint:"ابحث أو افتح «المفضلة» للوصول السريع — النسخ والمشاركة بضغطة واحدة.",matCount:"{0} مادة · {1} مفضلة",matResults:"{0} نتيجة",matNoResults:"لا توجد نتائج مطابقة — جرّب كلمة أخرى أو ألغِ «المفضلة».",matFavEmpty:"لا توجد مواد مفضلة بعد — اضغط ☆ على أي مادة لحفظها.",matCopy:"نسخ",matCopied:"✅ تم النسخ",matShare:"مشاركة",matFavAdd:"إضافة للمفضلة",matFavRemove:"إزالة من المفضلة",matSearchResults:"نتائج البحث",matFavOnly:"المفضلة",shareAzk:"مشاركة الذكر"},
+ en:{matTitle:"📚 Content library",matDuaLibrary:"📜 Dua library",matSearchPh:"Search adhkar and duas...",matFav:"Favorites",matClear:"✕ Clear",matHint:"Search or open Favorites for quick access — copy and share with one tap.",matCount:"{0} items · {1} favorites",matResults:"{0} results",matNoResults:"No matching items — try another word or turn off Favorites.",matFavEmpty:"No favorites yet — tap ☆ on any item to save it.",matCopy:"Copy",matCopied:"✅ Copied",matShare:"Share",matFavAdd:"Add to favorites",matFavRemove:"Remove from favorites",matSearchResults:"Search results",matFavOnly:"Favorites",shareAzk:"Share adhkar"},
+ ur:{matTitle:"📚 مواد کی لائبریری",matDuaLibrary:"📜 دعاؤں کی لائبریری",matSearchPh:"اذکار اور دعاؤں میں تلاش کریں...",matFav:"پسندیدہ",matClear:"✕ صاف کریں",matHint:"تلاش کریں یا پسندیدہ کھولیں — کاپی اور شیئر ایک ٹچ میں۔",matCount:"{0} مواد · {1} پسندیدہ",matResults:"{0} نتائج",matNoResults:" کوئی نتیجہ نہیں — دوسرا لفظ آزمائیں یا پسندیدہ بند کریں۔",matFavEmpty:"ابھی کوئی پسندیدہ نہیں — کسی بھی مادے پر ☆ دبائیں۔",matCopy:"کاپی",matCopied:"✅ کاپی ہو گیا",matShare:"شیئر",matFavAdd:"پسندیدہ میں شامل کریں",matFavRemove:"پسندیدہ سے ہٹائیں",matSearchResults:"تلاش کے نتائج",matFavOnly:"پسندیدہ",shareAzk:"ذکر شیئر کریں"},
+ fr:{matTitle:"📚 Bibliothèque de contenus",matDuaLibrary:"📜 Bibliothèque de douas",matSearchPh:"Rechercher adhkar et douas...",matFav:"Favoris",matClear:"✕ Effacer",matHint:"Recherchez ou ouvrez les favoris — copier et partager en un geste.",matCount:"{0} contenus · {1} favoris",matResults:"{0} résultats",matNoResults:"Aucun résultat — essayez un autre mot ou désactivez les favoris.",matFavEmpty:"Aucun favori — touchez ☆ sur un contenu pour l'enregistrer.",matCopy:"Copier",matCopied:"✅ Copié",matShare:"Partager",matFavAdd:"Ajouter aux favoris",matFavRemove:"Retirer des favoris",matSearchResults:"Résultats",matFavOnly:"Favoris",shareAzk:"Partager le dhikr"},
+ tr:{matTitle:"📚 İçerik kütüphanesi",matDuaLibrary:"📜 Dua kütüphanesi",matSearchPh:"Zikir ve dualarda ara...",matFav:"Favoriler",matClear:"✕ Temizle",matHint:"Arama yapın veya Favorileri açın — kopyalama ve paylaşma tek dokunuşla.",matCount:"{0} içerik · {1} favori",matResults:"{0} sonuç",matNoResults:"Eşleşen sonuç yok — başka bir kelime deneyin veya Favorileri kapatın.",matFavEmpty:"Henüz favori yok — kaydetmek için içeriğe ☆ dokunun.",matCopy:"Kopyala",matCopied:"✅ Kopyalandı",matShare:"Paylaş",matFavAdd:"Favorilere ekle",matFavRemove:"Favorilerden çıkar",matSearchResults:"Arama sonuçları",matFavOnly:"Favoriler",shareAzk:"Zikri paylaş"},
+ id:{matTitle:"📚 Pustaka konten",matDuaLibrary:"📜 Pustaka doa",matSearchPh:"Cari dzikir dan doa...",matFav:"Favorit",matClear:"✕ Hapus",matHint:"Cari atau buka Favorit — salin dan bagikan dengan satu ketukan.",matCount:"{0} konten · {1} favorit",matResults:"{0} hasil",matNoResults:"Tidak ada hasil — coba kata lain atau matikan Favorit.",matFavEmpty:"Belum ada favorit — ketuk ☆ pada konten untuk menyimpannya.",matCopy:"Salin",matCopied:"✅ Tersalin",matShare:"Bagikan",matFavAdd:"Tambah ke favorit",matFavRemove:"Hapus dari favorit",matSearchResults:"Hasil pencarian",matFavOnly:"Favorit",shareAzk:"Bagikan dzikir"}
+};
+Object.keys(MAT_I18N).forEach(k=>{I18N[k]=Object.assign({},I18N[k]||{},MAT_I18N[k])});
 const PRAYER_NAMES={
   ar:{Fajr:"الفجر",Dhuhr:"الظهر",Asr:"العصر",Maghrib:"المغرب",Isha:"العشاء"},
   en:{Fajr:"Fajr",Dhuhr:"Dhuhr",Asr:"Asr",Maghrib:"Maghrib",Isha:"Isha"},
@@ -951,6 +961,7 @@ function applyLang(){
   el.lang=lang;el.dir=(lang==="ar"||lang==="ur")?"rtl":"ltr";
   document.title=T("title");
   document.querySelectorAll("[data-i18n]").forEach(n=>{n.textContent=T(n.getAttribute("data-i18n"))});
+  document.querySelectorAll("[data-i18n-ph]").forEach(n=>{n.placeholder=T(n.getAttribute("data-i18n-ph"))});
   document.querySelectorAll("[data-pk]").forEach(n=>{n.textContent=PN(n.getAttribute("data-pk"))});
   applyTheme();
   const lb=$("langBtn");
@@ -1872,6 +1883,110 @@ function pickAyah(){
   },450);
   renderAyTimer();
 }
+/* ============================= مكتبة المواد ============================= */
+/* بحث موحّد + مفضلة محفوظة + نسخ/مشاركة لكل ذكر أو دعاء — بلا أي اتصال بالإنترنت. */
+const MAT_FAV_KEY="prayerApp_v3_matfav";
+const MAT_ITEMS=new Map();
+let matQuery="",matFavOnly=false;
+let MAT_FAVS=(function(){
+  try{
+    const a=JSON.parse(localStorage.getItem(MAT_FAV_KEY)||"[]");
+    return new Set(Array.isArray(a)?a:[]);
+  }catch(e){return new Set()}
+})();
+function saveMatFavs(){try{localStorage.setItem(MAT_FAV_KEY,JSON.stringify(Array.from(MAT_FAVS)))}catch(e){}}
+function matHash(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(36);
+}
+function matId(prefix,text){return prefix+"-"+matHash(String(text))}
+function matNorm(s){
+  return String(s||"").toLowerCase()
+    .replace(/[\u064B-\u065F\u0670]/g,"")
+    .replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")
+    .replace(/[«»،.؛!؟()\-_"'\[\]]/g," ").replace(/\s+/g," ").trim();
+}
+function matPass(id,text,extra){
+  if(matFavOnly&&!MAT_FAVS.has(id))return false;
+  const tokens=matNorm(matQuery).split(" ").filter(Boolean);
+  if(!tokens.length)return true;
+  const hay=matNorm(text+" "+extra);
+  return tokens.every(t=>hay.indexOf(t)>-1);
+}
+function matRegister(prefix,text,ref){
+  const id=matId(prefix,text);
+  MAT_ITEMS.set(id,{prefix:prefix,text:text,ref:ref||""});
+  return id;
+}
+function matActions(id){
+  const on=MAT_FAVS.has(id);
+  return '<div class="mat-actions">'
+    +'<button type="button" class="mat-act'+(on?" on":"")+'" data-matfav="'+id+'" aria-pressed="'+(on?"true":"false")+'" title="'+T(on?"matFavRemove":"matFavAdd")+'">'+(on?"★":"☆")+'</button>'
+    +'<button type="button" class="mat-act" data-matcopy="'+id+'" title="'+T("matCopy")+'">⧉</button>'
+    +'<button type="button" class="mat-act" data-matshare="'+id+'" title="'+T("matShare")+'">📤</button>'
+    +'</div>';
+}
+async function matCopy(id){
+  const item=MAT_ITEMS.get(id);if(!item)return;
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText)await navigator.clipboard.writeText(item.text);
+    else{
+      const ta=document.createElement("textarea");
+      ta.value=item.text;ta.setAttribute("readonly","");ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy")}catch(e){}
+      document.body.removeChild(ta);
+    }
+    toast(T("matCopied"));
+  }catch(e){toast(T("matCopy")+": "+item.text,"err")}
+}
+function updateMatUI(){
+  const q=matQuery.trim();
+  const search=$("matSearch"),favBtn=$("matFavBtn"),clear=$("matClearBtn"),stat=$("matStat"),hint=$("matHint");
+  if(search&&search.value!==q&&document.activeElement!==search)search.value=q;
+  if(favBtn){
+    favBtn.classList.toggle("on",matFavOnly);
+    favBtn.setAttribute("aria-pressed",matFavOnly?"true":"false");
+  }
+  if(clear)clear.classList.toggle("hidden",!(q||matFavOnly));
+  const total=AZK_ORDER.reduce((n,k)=>n+((AZKAR[k]||[]).length),0)+DUAS.length;
+  if(stat)stat.textContent=T("matCount",total,MAT_FAVS.size);
+  if(hint){
+    const shown=Number(((($("azkList")||{}).dataset)||{}).shown||0)
+      +Number(((($("duaList")||{}).dataset)||{}).shown||0);
+    if(q||matFavOnly){
+      hint.textContent=shown?T("matResults",shown):(matFavOnly?T("matFavEmpty"):T("matNoResults"));
+    }else hint.textContent=T("matHint");
+  }
+}
+function renderDuaLibrary(){
+  const box=$("duaList");if(!box)return;
+  let html="";
+  let shown=0;
+  DUAS.forEach(d=>{
+    const id=matRegister("dua",d.t,d.r);
+    if(!matPass(id,d.t,d.r))return;
+    shown++;
+    html+='<div class="dua-card"><div class="dua-text" role="button" tabindex="0" data-speak="1" title="'+T("azkListenHint")+'">'+d.t+'</div>'
+      +'<div class="dua-ref">'+d.r+'</div>'+matActions(id)+'</div>';
+  });
+  box.innerHTML=html||'<div class="mat-empty">'+T(matFavOnly?"matFavEmpty":"matNoResults")+'</div>';
+  box.dataset.shown=String(shown);
+}
+function bindMaterials(){
+  const s=$("matSearch");
+  if(s)s.addEventListener("input",()=>{matQuery=s.value;renderAzkar()});
+  const f=$("matFavBtn");
+  if(f)f.onclick=()=>{matFavOnly=!matFavOnly;renderAzkar()};
+  const c=$("matClearBtn");
+  if(c)c.onclick=()=>{
+    matQuery="";matFavOnly=false;
+    const el=$("matSearch");if(el)el.value="";
+    renderAzkar();
+  };
+}
+
 let azkWhich="";
 let azkLang="";
 let azkSelKey=(function(){try{return localStorage.getItem("prayerApp_v3_azkcat")||"auto";}catch(e){return "auto";}})();
@@ -1901,25 +2016,50 @@ function renderAzkGrid(){
 function renderAzkList(){
   const key=pickAzkKey();
   const list=$("azkList"),grid=$("azkGrid"),actions=$("azkActions"),autoB=$("azkAutoPick"),title=$("azkTitle");
-  if(azkSelKey!=="auto"){
-    list.classList.remove("hidden");grid.classList.add("hidden");if(actions)actions.classList.remove("hidden");if(autoB)autoB.classList.remove("hidden");
+  if(!list)return;
+  const browsing=!!(matQuery.trim()||matFavOnly);
+  if(browsing||azkSelKey!=="auto"){
+    list.classList.remove("hidden");grid.classList.add("hidden");
+    if(actions)actions.classList.remove("hidden");if(autoB)autoB.classList.remove("hidden");
   }else{
     list.classList.remove("hidden");grid.classList.remove("hidden");if(actions)actions.classList.add("hidden");
   }
-  if(key!==azkWhich||lang!==azkLang){
-    azkWhich=key;azkLang=lang;
-  }
-  title.textContent=(key==="morning"||key==="evening")?T(key==="morning"?"azkMorning":"azkEvening"):azkTitle(key);
-  let html="";
+  if(key!==azkWhich||lang!==azkLang){azkWhich=key;azkLang=lang}
   const counts=AZKAR_COUNT[lang]||AZKAR_COUNT.ar;
-  for(const z of AZKAR[key]||[]){
-    html+='<div class="azk-item"><div class="azk-text" role="button" tabindex="0" data-speak="1" title="'+T("azkListenHint")+'">'+z.t+'</div><div class="azk-count">'+(counts[z.n]||z.n)+'</div></div>';
+  let html="",shown=0;
+  const add=(k,z)=>{
+    const id=matRegister("azk",z.t,k);
+    if(!matPass(id,z.t,azkTitle(k)+" "+(counts[z.n]||z.n)))return;
+    shown++;
+    html+='<div class="azk-item"><div class="azk-text" role="button" tabindex="0" data-speak="1" title="'+T("azkListenHint")+'">'+z.t+'</div>'
+      +'<div class="azk-count">'+(counts[z.n]||z.n)+'</div>'+matActions(id)+'</div>';
+  };
+  if(browsing){
+    title.textContent=matFavOnly?T("matFavOnly"):T("matSearchResults");
+    AZK_ORDER.forEach(k=>{
+      let group="";
+      (AZKAR[k]||[]).forEach(z=>{
+        const id=matRegister("azk",z.t,k);
+        if(!matPass(id,z.t,azkTitle(k)+" "+(counts[z.n]||z.n)))return;
+        shown++;
+        group+='<div class="azk-item"><div class="azk-text" role="button" tabindex="0" data-speak="1" title="'+T("azkListenHint")+'">'+z.t+'</div>'
+          +'<div class="azk-count">'+(counts[z.n]||z.n)+'</div>'+matActions(id)+'</div>';
+      });
+      if(group)html+='<div class="azk-group-title">'+azkTitle(k)+'</div>'+group;
+    });
+  }else{
+    title.textContent=(key==="morning"||key==="evening")?T(key==="morning"?"azkMorning":"azkEvening"):azkTitle(key);
+    (AZKAR[key]||[]).forEach(z=>add(key,z));
   }
-  list.innerHTML=html;
+  list.innerHTML=html||'<div class="mat-empty">'+T(matFavOnly?"matFavEmpty":"matNoResults")+'</div>';
+  list.dataset.shown=String(shown);
 }
 function renderAzkar(){
+  MAT_ITEMS.clear();
   renderAzkGrid();
   renderAzkList();
+  renderDuaLibrary();
+  updateMatUI();
 }
 document.addEventListener("click",function(ev){
   let t=ev.target;
@@ -1929,6 +2069,19 @@ document.addEventListener("click",function(ev){
       if(am){toggleAttend(todayStr(),am);return}
       const md=t.getAttribute("data-mode");
       if(md){setTheme(md);return}
+      const fav=t.getAttribute("data-matfav");
+      if(fav){
+        if(MAT_FAVS.has(fav))MAT_FAVS.delete(fav);else MAT_FAVS.add(fav);
+        saveMatFavs();renderAzkar();return;
+      }
+      const cp=t.getAttribute("data-matcopy");
+      if(cp){matCopy(cp);return}
+      const sh=t.getAttribute("data-matshare");
+      if(sh){
+        const item=MAT_ITEMS.get(sh);
+        if(item)shareContent(item.prefix==="dua"?T("shareDua"):T("shareAzk"),item.text,item.ref);
+        return;
+      }
     }
     if(t.getAttribute&&t.getAttribute("data-azk")){
       azkSelKey=t.getAttribute("data-azk");
@@ -1957,7 +2110,8 @@ function renderDuaDay(){
   const now=new Date();
   const d=Math.floor((now-new Date(now.getFullYear(),0,1).getTime())/86400000);
   const d2=DUAS[d%DUAS.length];
-  el.innerHTML='<div class="azk-text">'+d2.t+'</div><div class="azk-count">'+d2.r+'</div>';
+  const id=matRegister("dua",d2.t,d2.r);
+  el.innerHTML='<div class="azk-text">'+d2.t+'</div><div class="azk-count">'+d2.r+'</div>'+matActions(id);
 }
 setInterval(()=>pickHadith(),HADITH_INTERVAL);
 setInterval(()=>pickAyah(),AYAH_INTERVAL);
@@ -4363,6 +4517,7 @@ const _n=new Date();
 viewYM={y:_n.getFullYear(),m:_n.getMonth()};
 viewYear=_n.getFullYear();
 $("duaText").textContent=DUA_AFTER_ADHAN;
+bindMaterials();
 renderDuaDay();
 renderAzkar();
 pickHadith();
