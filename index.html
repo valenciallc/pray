@@ -787,37 +787,89 @@
 
     <!-- ========== 3) الصوت والأذان ========== -->
     <div class="stab-panel" data-stab-panel="audio">
+      <div class="s-group audio-status">
+        <h3 data-i18n="audioStatusTitle">📡 لوحة حالة الصوت</h3>
+        <div class="audio-status-grid">
+          <div><span data-i18n="audioStatusLabel">الحالة</span> <b id="audioStatusLine">…</b></div>
+          <div><span data-i18n="audioEngine">محرك الصوت</span> <b id="audioEngine">…</b></div>
+        </div>
+        <span class="hint" data-i18n="audioHint">يستخدم التطبيق قناة «Alarm» للأذان و«Notification» للإقامة — اضبط كلاً على حدة.</span>
+      </div>
+
       <div class="s-group">
-        <h3>🔊 مستويات الصوت <small>قناتا Alarm وNotification منفصلتان</small></h3>
+        <h3 data-i18n="audioLevelsTitle">🔊 مستويات الصوت</h3>
         <div class="s-row">
-          <label for="volAlarm">صوت الأذان (Alarm):</label>
+          <label for="volAlarm"><span data-i18n="volAlarm">صوت الأذان (Alarm)</span>:</label>
           <input type="range" id="volAlarm" min="0" max="100" value="80">
           <span id="volAlarmVal" class="vol-val">80</span>
         </div>
         <div class="s-row">
-          <label for="volNotif">صوت التنبيهات (Notification):</label>
+          <label for="volNotif"><span data-i18n="volNotif">صوت التنبيهات (Notification)</span>:</label>
           <input type="range" id="volNotif" min="0" max="100" value="70">
           <span id="volNotifVal" class="vol-val">70</span>
         </div>
         <div class="s-row">
-          <label for="volMedia">صوت الوسائط (Media):</label>
+          <label for="volMedia"><span data-i18n="volMedia">صوت الوسائط (Media)</span>:</label>
           <input type="range" id="volMedia" min="0" max="100" value="60">
           <span id="volMediaVal" class="vol-val">60</span>
         </div>
         <div class="s-row">
-          <label for="volControl">مستوى صوت الأذان داخل الصفحة (%):</label>
+          <label for="volControl"><span data-i18n="audioWebVol">صوت الأذان داخل الصفحة</span> (%):</label>
           <input type="number" id="volControl" min="0" max="100" value="70" style="width:70px"> %
         </div>
         <div class="s-row">
-          <label for="muteAlarm">كتم صوت الأذان:</label>
+          <label for="volIqama"><span data-i18n="audioIqamaVol">صوت الإقامة داخل الصفحة</span> (%):</label>
+          <input type="number" id="volIqama" min="0" max="100" value="70" style="width:70px"> %
+        </div>
+        <div class="s-row">
+          <label for="volReminder"><span data-i18n="audioRemVol">صوت التذكير</span> (%):</label>
+          <input type="number" id="volReminder" min="0" max="100" value="60" style="width:70px"> %
+        </div>
+        <div class="s-row">
+          <label for="muteAlarm"><span data-i18n="muteLabel">كتم صوت الأذان</span>:</label>
           <div class="toggle" id="muteAlarm"></div>
           <span class="hint" id="muteStatus">مفعّل</span>
+        </div>
+        <div class="s-row">
+          <label for="masterMute"><span data-i18n="audioMasterMute">كتم عام لصوت التطبيق</span>:</label>
+          <div class="toggle" id="masterMute" role="switch" aria-checked="false" tabindex="0"></div>
+          <span class="hint" id="masterMuteStatus">مسموع</span>
         </div>
         <div class="s-actions" style="justify-content:flex-start">
           <button class="btn sm" id="audioApplyAll">✔ تطبيق الكل</button>
           <button class="btn sm ghost" id="audioRefresh">🔄 تحديث الحالة</button>
         </div>
-        <span class="hint">يستخدم التطبيق قناة «Alarm» للأذان و«Notification» للإقامة — اضبط كلاً على حدة.</span>
+      </div>
+
+      <div class="s-group">
+        <h3 data-i18n="audioPreviewTitle">🧪 معاينة سريعة</h3>
+        <div class="s-actions ap-preview">
+          <button type="button" class="btn sm ghost" id="audioPreviewAdhan" data-i18n="audioPreviewAdhan">▶ الأذان</button>
+          <button type="button" class="btn sm ghost" id="audioPreviewIqama" data-i18n="audioPreviewIqama">▶ الإقامة</button>
+          <button type="button" class="btn sm ghost" id="audioPreviewBell" data-i18n="audioPreviewBell">▶ الجرس</button>
+          <button type="button" class="btn sm ghost" id="audioPreviewGen" data-i18n="audioPreviewGen">▶ النغمة المركبة</button>
+          <button type="button" class="btn sm ghost" id="audioPreviewRem" data-i18n="audioPreviewRem">▶ التذكير</button>
+          <button type="button" class="btn sm" id="audioStop" data-i18n="audioStop">■ إيقاف</button>
+        </div>
+      </div>
+
+      <div class="s-group">
+        <h3 data-i18n="audioPresetsTitle">🕌 إعدادات لكل صلاة</h3>
+        <span class="hint" data-i18n="audioPresetHint">اترك «مثل الإعداد العام» لاستخدام الإعدادات أعلاه، أو خصّص كل صلاة على حدة.</span>
+        <div class="ap-rows" id="audioPresetRows"></div>
+      </div>
+
+      <div class="s-group">
+        <h3 data-i18n="audioFadeTitle">🌊 تلاشي الصوت</h3>
+        <div class="s-row">
+          <label for="fadeToggle"><span data-i18n="audioFadeToggle">تلاشي عند البداية والنهاية</span></label>
+          <div class="toggle on" id="fadeToggle" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="s-row">
+          <label for="fadeSec"><span data-i18n="audioFadeSec">مدة التلاشي (ثانية)</span></label>
+          <input type="number" id="fadeSec" min="0" max="5" step="0.5" value="1.2" style="width:70px">
+        </div>
+        <span class="hint" data-i18n="audioFadeHint">يعمل مع الملفات والنغمات المولّدة داخل الصفحة.</span>
       </div>
 
       <div class="s-group">
@@ -827,12 +879,14 @@
           <select id="adhanSoundSel">
             <option value="srihi">السريحي (افتراضي)</option><option value="bell">جرس</option>
             <option value="gen">نغمة مركبة</option><option value="file">ملف صوتي مخصص</option>
+            <option value="custom">ملف محمّل (مخصص)</option>
           </select>
         </div>
         <div class="s-row">
           <label for="iqamaSoundSel">نغمة الإقامة:</label>
           <select id="iqamaSoundSel">
             <option value="file">ملف (افتراضي)</option><option value="bell">جرس</option><option value="gen">نغمة مركبة</option>
+            <option value="custom">ملف محمّل (مخصص)</option>
           </select>
         </div>
         <div class="s-row">
@@ -856,12 +910,34 @@
           <input type="number" id="leadMin" min="0" max="30" value="7" style="width:60px"> دقيقة
         </div>
         <details class="adv-details">
-          <summary>🎵 ملف صوتي مخصص للأذان (تفاصيل)</summary>
-          <div class="sound-file" id="adhanFileBox" style="display:none">
-            <label>🎵 اختيار نغمة الأذان <input type="file" id="adhanFileInput" accept="audio/*"></label>
-            <span class="fname" id="adhanFileName"></span>
+          <summary>🎵 الملفات الصوتية المخصصة (تفاصيل)</summary>
+          <div class="af-grid">
+            <div class="af-item">
+              <b data-i18n="audioFileAdhan">الأذان</b>
+              <div class="sound-file" id="adhanFileBox">
+                <label><span data-i18n="audioFileChoose">اختيار ملف</span> <input type="file" id="adhanFileInput" accept="audio/*"></label>
+                <span class="fname" id="adhanFileName"></span>
+              </div>
+              <button type="button" class="btn sm ghost" id="adhanFileClear" data-i18n="audioFileRemove">إزالة</button>
+            </div>
+            <div class="af-item">
+              <b data-i18n="audioFileIqama">الإقامة</b>
+              <div class="sound-file" id="iqamaFileBox">
+                <label><span data-i18n="audioFileChoose">اختيار ملف</span> <input type="file" id="iqamaFileInput" accept="audio/*"></label>
+                <span class="fname" id="iqamaFileName"></span>
+              </div>
+              <button type="button" class="btn sm ghost" id="iqamaFileClear" data-i18n="audioFileRemove">إزالة</button>
+            </div>
+            <div class="af-item">
+              <b data-i18n="audioFileReminder">التذكير</b>
+              <div class="sound-file" id="remFileBox">
+                <label><span data-i18n="audioFileChoose">اختيار ملف</span> <input type="file" id="remFileInput" accept="audio/*"></label>
+                <span class="fname" id="remFileName"></span>
+              </div>
+              <button type="button" class="btn sm ghost" id="remFileClear" data-i18n="audioFileRemove">إزالة</button>
+            </div>
           </div>
-          <span class="setting-note">اختر «ملف صوتي مخصص» من نغمة الأذان أعلاه ليظهر اختيار الملف هنا.</span>
+          <span class="setting-note">اختر «ملف محمّل (مخصص)» من نغمة الأذان أو الإقامة أعلاه ليُستخدم الملف المحفوظ على الجهاز.</span>
         </details>
       </div>
 
@@ -978,7 +1054,7 @@
           <button class="btn sm" id="updateUrlSave">💾 حفظ رابط التحديثات</button>
           <button class="btn sm ghost" id="updateCheckNow">🔍 فحص الآن</button>
         </div>
-        <span class="hint" id="updateStatus">الإصدار 33 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
+        <span class="hint" id="updateStatus">الإصدار 34 — الفحص التلقائي والتحقق SHA-256 مفعّلان</span>
         <span class="hint">يُفحص التطبيق تلقائياً عند كل فتح، وعند عودتك له، وكل 4 ساعات — من رابط الموقع الحالي، أو الرابط الافتراضي: <b style="direction:ltr">valenciallc.github.io/pray</b> بلا أي إعداد. غيّر الرابط لمشروع GitHub Pages خاص بك ثم «فحص الآن»</span>
       </div>
 

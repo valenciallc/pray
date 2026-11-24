@@ -136,6 +136,29 @@ async function boot(html, seed) {
       "أنماط المكتبة وبطاقات الأدعية موجودة");
   ok(/matSearchPh:"[^"]+"/.test(APP_JS) && /matFavEmpty:"[^"]+"/.test(APP_JS),
       "نصوص المكتبة مترجمة ضمن حزمة اللغات");
+  // v34 — تحكم كامل في الصوت: كل الأدوات في تبويب الأذان، بلا تعديل native.
+  ok(["audioStatusLine", "audioEngine", "volIqama", "volReminder", "masterMute",
+      "masterMuteStatus", "audioPreviewAdhan", "audioPreviewIqama", "audioPreviewBell",
+      "audioPreviewGen", "audioPreviewRem", "audioStop", "audioPresetRows",
+      "fadeToggle", "fadeSec", "adhanFileClear", "iqamaFileInput", "iqamaFileClear",
+      "remFileInput", "remFileClear"]
+     .every(id => RAW_HTML.includes('id="' + id + '"')),
+      "واجهة التحكم الكامل بالصوت موجودة كاملة داخل تبويب الأذان");
+  ok(APP_JS.includes("function fadeSeconds") && APP_JS.includes("function presetFor") &&
+     APP_JS.includes("function previewAudio") && APP_JS.includes("function bindAudioPresets") &&
+     APP_JS.includes("function clearCustomAudio") && APP_JS.includes("function webAudioBlocked"),
+      "منطق التلاشي والمعاينة والإعدادات لكل صلاة وحظر الصوت موجود");
+  ok(APP_JS.includes('"prayerApp_v3_customIqama"') && APP_JS.includes('"prayerApp_v3_customRem"') &&
+     APP_JS.includes('choice==="custom"'), "ملفات الإقامة والتذكير المخصصة مستقلة وتُشغَّل فعلياً");
+  ok(CSS.includes(".ap-row") && CSS.includes(".af-grid") && CSS.includes(".audio-status-grid"),
+      "أنماط لوحة الصوت والمعاينة وإعدادات الصلوات موجودة");
+  ok((APP_JS.match(/audioPresetsTitle:"/g) || []).length === 6 &&
+     (APP_JS.match(/audioStatusLabel:"/g) || []).length === 6 &&
+     RAW_HTML.includes('data-i18n="audioStatusLabel"'),
+      "نصوص التحكم بالصوت مترجمة للغات الست بلا عنصر {0} ظاهر");
+  ok(APP_JS.includes("function iqamaVolumeFor") && APP_JS.includes("playIqamaSound(ev.key)") &&
+     APP_JS.includes("resetSound(); // stopAllSound()") && APP_JS.includes('Math.max(0.0001'),
+      "مستوى الإقامة الفعلي والتلاشي وحماية الصوت الصفري مدعومة في المحرك");
   ok(/enabled\s*:\s*true/.test(APP_JS) && APP_JS.includes("prayerApp_v3_reminderAuto"),
      "التذكير مفعّل تلقائياً مع ترقية لمرة واحدة");
   ok(RAW_HTML.includes('id="setupOpenBtn"') && APP_JS.includes('$("setupOpenBtn")'),
@@ -247,6 +270,77 @@ async function boot(html, seed) {
   d.getElementById("matClearBtn").click();
   ok(/^\d{2}:\d{2}:\d{2}$/.test(text("cdNum")), "العدّاد يعمل: " + JSON.stringify(text("cdNum")));
   ok(Number(w.eval("APP_VERSION")) >= 20, "APP_VERSION = " + w.eval("APP_VERSION"));
+  // v34运行时: إعدادات كل صلاة والكتم والتلاشي والمعاينة تعمل داخل الصفحة.
+  ok(d.querySelectorAll("#audioPresetRows .ap-row").length === 5,
+      "إعدادات الصوت لكل صلاة تعرض الصلوات الخمس");
+  const fajrRow = d.querySelector('#audioPresetRows .ap-row[data-key="Fajr"]');
+  const fajrSound = fajrRow.querySelector('[data-ap="sound"]');
+  fajrSound.value = "bell";
+  fajrSound.dispatchEvent(new w.Event("change", { bubbles: true }));
+  const fajrVol = fajrRow.querySelector('[data-ap="volume"]');
+  fajrVol.value = "55";
+  fajrVol.dispatchEvent(new w.Event("change", { bubbles: true }));
+  const savedAudio = JSON.parse(w.localStorage.getItem("prayerApp_v3_audio") || "{}");
+  ok(savedAudio.presets && savedAudio.presets.Fajr && savedAudio.presets.Fajr.sound === "bell" &&
+     savedAudio.presets.Fajr.volume === 55, "إعدادات الفجر المخصصة تُحفظ في الذاكرة");
+  d.querySelector('#audioPresetRows [data-apreset="Fajr"]').click();
+  const clearedAudio = JSON.parse(w.localStorage.getItem("prayerApp_v3_audio") || "{}");
+  ok(!(clearedAudio.presets && clearedAudio.presets.Fajr), "زر ↺ يعيد الصلاة للإعداد العام");
+  const masterMuteBtn = d.getElementById("masterMute");
+  masterMuteBtn.click();
+  ok(JSON.parse(w.localStorage.getItem("prayerApp_v3_audio")).masterMute === true &&
+     text("masterMuteStatus").length > 0, "الكتم العام يُحفظ ويُظهر حالته");
+  masterMuteBtn.click();
+  d.getElementById("fadeToggle").click();
+  ok(JSON.parse(w.localStorage.getItem("prayerApp_v3_audio")).fadeOn === false, "مفتاح التلاشي يُحفظ");
+  d.getElementById("fadeToggle").click();
+  d.getElementById("audioPreviewBell").click();
+  ok(/Preview played|المعاينة/.test(text("toast")), "زر المعاينة يعمل ويظهر رسالة");
+  ok(text("audioStatusLine").length > 3 && text("audioEngine").length > 1,
+      "لوحة حالة الصوت ممتلئة: " + JSON.stringify(text("audioStatusLine")));
+  ok(!/\{0\}/.test(text("audioStatusLine")) &&
+     !/\{0\}/.test(d.querySelector('[data-i18n="audioStatusLabel"]').textContent),
+      "لا يظهر عنصر {0} غير محلول في لوحة الحالة");
+
+  // v34 — مسارات الصوت التي لا تكشفها الواجهة وحدها.
+  w.eval(`window.AudioContext = class {
+    constructor(){ this.currentTime = 0; this.state = "running"; this.destination = {}; }
+    createGain(){ return { gain: { value: 1, cancelScheduledValues(){}, setValueAtTime(v){this.value=v},
+      linearRampToValueAtTime(v){this.value=v}, setTargetAtTime(v){this.value=v},
+      exponentialRampToValueAtTime(v){this.value=v} }, connect(){} }; }
+    createOscillator(){ return { type:"sine", frequency:{setValueAtTime(){},exponentialRampToValueAtTime(){}},
+      connect(){}, start(){}, stop(){} }; }
+    resume(){}
+  };`);
+  let toneSafe = true;
+  try {
+    w.eval("AUDIO_SAVED.fadeOn=false; AUDIO_SAVED.reminder=0; ensureAudio(); playBell(0); playGen1(0); playReminderSound();");
+  } catch (e) { toneSafe = false; }
+  ok(toneSafe, "الصوت عند ٠٪ لا يرمي خطأ Web Audio");
+  const gainRestored = w.eval(`(function(){
+    AUDIO_SAVED.masterMute=false; AUDIO_SAVED.mute=false; AUDIO_SAVED.quiet=false;
+    AUDIO_SAVED.alarmMuted=false; AUDIO_SAVED.fadeOn=false; AUDIO_SAVED.reminder=60;
+    cfg.iqamaSound="bell"; ensureAudio(); stopAllSound();
+    var before=masterGain.gain.value; playIqamaSound();
+    return { before:before, after:masterGain.gain.value };
+  })()`);
+  ok(gainRestored.before < 0.01 && gainRestored.after === 1,
+      "الإقامة تستعيد masterGain بعد إيقاف سابق");
+  w.eval("window.__origBell=playBell; playBell=function(v){window.__iqamaVol=v};");
+  w.eval("AUDIO_SAVED.iqama=33; cfg.iqamaSound='bell'; playIqamaSound();");
+  ok(Math.abs(w.__iqamaVol - 0.33) < 0.001, "مستوى الإقامة العام يصل إلى التشغيل الفعلي");
+  w.eval("AUDIO_SAVED.presets.Fajr={iqamaSound:'bell',iqamaVolume:25}; playIqamaSound('Fajr');");
+  ok(Math.abs(w.__iqamaVol - 0.25) < 0.001, "مستوى إقامة الفجر المخصص يصل إلى التشغيل الفعلي");
+  w.eval("playBell=window.__origBell; delete AUDIO_SAVED.presets.Fajr;");
+  d.getElementById("volIqama").value = "44";
+  d.getElementById("volIqama").dispatchEvent(new w.Event("change", { bubbles: true }));
+  d.getElementById("audioApplyAll").click();
+  ok(JSON.parse(w.localStorage.getItem("prayerApp_v3_audio")).iqama === 44 &&
+     /saved|حفظ|applied|طبقت/i.test(text("toast")), "زر تطبيق الكل يعمل في وضع المتصفح");
+  w.eval("AUDIO_SAVED.presets.Fajr={sound:'custom',iqamaSound:'custom'}; clearCustomAudio('adhan'); clearCustomAudio('iqama');");
+  const cleanedPreset = JSON.parse(w.localStorage.getItem("prayerApp_v3_audio")).presets.Fajr;
+  ok(cleanedPreset && !cleanedPreset.sound && !cleanedPreset.iqamaSound,
+      "إزالة الملف المخصص تُنظّف الإعدادات التي تشير إليه");
 
   // v26 — اللغة الافتراضية إنجليزية ومحفوظة تلقائياً، واختيار المستخدم لا يُنسى.
   ok(w.eval("lang") === "en", "اللغة الافتراضية بعد التثبيت هي الإنجليزية: " + w.eval("lang"));

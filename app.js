@@ -284,7 +284,7 @@ const AYAT=[
 ];
 
 /* ============================= الحالة ============================= */
-const APP_VERSION=33;
+const APP_VERSION=34;
 const LS_KEY="prayerApp_v3";
 let VOL=0.7,IQAMA_LEAD=7,ADJ_FAJR=0,ADJ_ISHA=0;
 const cfg={sound:true,soundType:"srihi",iqamaSound:"file",iqamaLead:IQAMA_LEAD,dua:true,hadith:true,lead:true};
@@ -831,6 +831,61 @@ const MAT_I18N={
  id:{matTitle:"📚 Pustaka konten",matDuaLibrary:"📜 Pustaka doa",matSearchPh:"Cari dzikir dan doa...",matFav:"Favorit",matClear:"✕ Hapus",matHint:"Cari atau buka Favorit — salin dan bagikan dengan satu ketukan.",matCount:"{0} konten · {1} favorit",matResults:"{0} hasil",matNoResults:"Tidak ada hasil — coba kata lain atau matikan Favorit.",matFavEmpty:"Belum ada favorit — ketuk ☆ pada konten untuk menyimpannya.",matCopy:"Salin",matCopied:"✅ Tersalin",matShare:"Bagikan",matFavAdd:"Tambah ke favorit",matFavRemove:"Hapus dari favorit",matSearchResults:"Hasil pencarian",matFavOnly:"Favorit",shareAzk:"Bagikan dzikir"}
 };
 Object.keys(MAT_I18N).forEach(k=>{I18N[k]=Object.assign({},I18N[k]||{},MAT_I18N[k])});
+/* v34 — تحكم كامل في الصوت: كل النصوص الجديدة مترجمة، والنصوص الشرعية تبقى كما هي. */
+const AUDIO_I18N={
+ ar:{
+  audioStatusTitle:"📡 لوحة حالة الصوت",audioStatusLabel:"الحالة",audioNativeOnly:"متاح في نسخة الأندرويد",audioRefreshOk:"✔ تم تحديث حالة الصوت",audioRefreshErr:"✖ تعذّر قراءة حالة الصوت",audioStatusLine:"الحالة: {0}",audioNativeOn:"متصل بغلاف أندرويد",audioWebOnly:"وضع المتصفح — التحكم داخل الصفحة متاح",audioQuiet:"الهاتف في وضع هادئ — الأذان مكتوم",audioNotQuiet:"الهاتف ليس في وضع هادئ",audioEngine:"محرك الصوت",audioReady:"جاهز",audioLocked:"ينتظر لمسة واحدة",
+  audioLevelsTitle:"🔊 مستويات الصوت",audioWebVol:"صوت الأذان داخل الصفحة",audioIqamaVol:"صوت الإقامة داخل الصفحة",audioRemVol:"صوت التذكير",audioMasterMute:"كتم عام لصوت التطبيق",audioMasterMuteOn:"مكتوم",audioMasterMuteOff:"مسموع",
+  audioPreviewTitle:"🧪 معاينة سريعة",audioPreviewAdhan:"▶ الأذان",audioPreviewIqama:"▶ الإقامة",audioPreviewBell:"▶ الجرس",audioPreviewGen:"▶ النغمة المركبة",audioPreviewRem:"▶ التذكير",audioStop:"■ إيقاف",audioPreviewDone:"✔ تم تشغيل المعاينة",audioBlocked:"الصوت مكتوم أو الهاتف في وضع هادئ — ألغِ الكتم أولاً",
+  audioPresetsTitle:"🕌 إعدادات لكل صلاة",audioPresetHint:"اترك «مثل الإعداد العام» لاستخدام الإعدادات أعلاه، أو خصّص كل صلاة على حدة.",audioPresetPrayer:"الصلاة",audioPresetSound:"النغمة",audioPresetVol:"الصوت %",audioPresetMode:"النمط",audioPresetIqama:"نغمة الإقامة",audioPresetIqVol:"صوت الإقامة %",audioPresetReset:"↺",audioInherit:"مثل الإعداد العام",audioResetPreset:"↺ عادت للإعداد العام",
+  audioFadeTitle:"🌊 تلاشي الصوت",audioFadeToggle:"تلاشي عند البداية والنهاية",audioFadeSec:"مدة التلاشي (ثانية)",audioFadeHint:"يعمل مع الملفات والنغمات المولّدة داخل الصفحة.",
+  audioFilesTitle:"🎵 الملفات الصوتية المخصصة",audioFileAdhan:"الأذان",audioFileIqama:"الإقامة",audioFileReminder:"التذكير",audioFileChoose:"اختيار ملف",audioFileRemove:"إزالة",audioFileNone:"لا يوجد ملف مخصص",audioFileLoaded:"ملف محمّل",audioFileTooBig:"الملف أكبر من ٢ ميجابايت — اختر ملفاً أصغر",audioSaved:"✔ تم حفظ إعدادات الصوت",audioApplied:"✔ تم تطبيق مستويات النظام"
+ },
+ en:{
+  audioStatusTitle:"📡 Audio status",audioStatusLabel:"Status",audioNativeOnly:"Available in the Android build",audioRefreshOk:"✔ Audio status refreshed",audioRefreshErr:"✖ Could not read audio status",audioStatusLine:"Status: {0}",audioNativeOn:"Connected to Android shell",audioWebOnly:"Browser mode — in-page controls are available",audioQuiet:"Phone is in quiet mode — adhan is muted",audioNotQuiet:"Phone is not in quiet mode",audioEngine:"Audio engine",audioReady:"Ready",audioLocked:"Waiting for one tap",
+  audioLevelsTitle:"🔊 Sound levels",audioWebVol:"In-page adhan volume",audioIqamaVol:"In-page iqama volume",audioRemVol:"Reminder volume",audioMasterMute:"Mute all app audio",audioMasterMuteOn:"Muted",audioMasterMuteOff:"Audible",
+  audioPreviewTitle:"🧪 Quick preview",audioPreviewAdhan:"▶ Adhan",audioPreviewIqama:"▶ Iqama",audioPreviewBell:"▶ Bell",audioPreviewGen:"▶ Generated tone",audioPreviewRem:"▶ Reminder",audioStop:"■ Stop",audioPreviewDone:"✔ Preview played",audioBlocked:"Audio is muted or the phone is in quiet mode — unmute first",
+  audioPresetsTitle:"🕌 Per-prayer settings",audioPresetHint:"Leave “Use global setting” to use the controls above, or customize each prayer separately.",audioPresetPrayer:"Prayer",audioPresetSound:"Sound",audioPresetVol:"Volume %",audioPresetMode:"Mode",audioPresetIqama:"Iqama sound",audioPresetIqVol:"Iqama volume %",audioPresetReset:"↺",audioInherit:"Use global setting",audioResetPreset:"↺ Back to global setting",
+  audioFadeTitle:"🌊 Audio fade",audioFadeToggle:"Fade in and out",audioFadeSec:"Fade duration (seconds)",audioFadeHint:"Works with files and generated tones inside the page.",
+  audioFilesTitle:"🎵 Custom audio files",audioFileAdhan:"Adhan",audioFileIqama:"Iqama",audioFileReminder:"Reminder",audioFileChoose:"Choose file",audioFileRemove:"Remove",audioFileNone:"No custom file",audioFileLoaded:"File loaded",audioFileTooBig:"File is larger than 2 MB — choose a smaller one",audioSaved:"✔ Audio settings saved",audioApplied:"✔ System levels applied"
+ },
+ ur:{
+  audioStatusTitle:"📡 آواز کی حالت",audioStatusLabel:"حالت",audioNativeOnly:"اینڈروئیڈ ورژن میں دستیاب",audioRefreshOk:"✔ آواز کی حالت تازہ ہو گئی",audioRefreshErr:"✖ آواز کی حالت پڑھی نہیں جا سکی",audioStatusLine:"حالت: {0}",audioNativeOn:"اینڈروئیڈ شیل سے منسلک",audioWebOnly:"براؤزر موڈ — صفحے کے اندر کنٹرول دستیاب",audioQuiet:"فون خاموش موڈ میں ہے — اذان بند",audioNotQuiet:"فون خاموش موڈ میں نہیں",audioEngine:"آواز انجن",audioReady:"تیار",audioLocked:"ایک ٹچ کا انتظار",
+  audioLevelsTitle:"🔊 آواز کی سطح",audioWebVol:"صفحے میں اذان کی آواز",audioIqamaVol:"صفحے میں اقامت کی آواز",audioRemVol:"تنبیہ کی آواز",audioMasterMute:"پوری ایپ کی آواز بند",audioMasterMuteOn:"بند",audioMasterMuteOff:"چلتی ہے",
+  audioPreviewTitle:"🧪 فوری پیش نظارہ",audioPreviewAdhan:"▶ اذان",audioPreviewIqama:"▶ اقامت",audioPreviewBell:"▶ گھنٹی",audioPreviewGen:"▶ مرکب آواز",audioPreviewRem:"▶ تنبیہ",audioStop:"■ روکیں",audioPreviewDone:"✔ پیش نظارہ چلایا گیا",audioBlocked:"آواز بند ہے یا فون خاموش ہے — پہلے کھولیں",
+  audioPresetsTitle:"🕌 ہر نماز کی ترتیبات",audioPresetHint:"«عام ترتیب» چھوڑ دیں یا ہر نماز الگ سیٹ کریں۔",audioPresetPrayer:"نماز",audioPresetSound:"آواز",audioPresetVol:"حجم %",audioPresetMode:"موڈ",audioPresetIqama:"اقامت کی آواز",audioPresetIqVol:"اقامت کا حجم %",audioPresetReset:"↺",audioInherit:"عام ترتیب",audioResetPreset:"↺ عام ترتیب پر واپس",
+  audioFadeTitle:"🌊 آواز کا بتدریج کم ہونا",audioFadeToggle:"شروع اور آخر میں نرمی",audioFadeSec:"مدت (سیکنڈ)",audioFadeHint:"فائلوں اور صفحے کی بنائی آوازوں پر کام کرتا ہے۔",
+  audioFilesTitle:"🎵 حسبِ خواہش آوازیں",audioFileAdhan:"اذان",audioFileIqama:"اقامت",audioFileReminder:"تنبیہ",audioFileChoose:"فائل چنیں",audioFileRemove:"ہٹائیں",audioFileNone:"کوئی فائل نہیں",audioFileLoaded:"فائل لوڈ ہو گئی",audioFileTooBig:"فائل ٢ ایم بی سے بڑی ہے — چھوٹی فائل چنیں",audioSaved:"✔ آواز کی ترتیب محفوظ",audioApplied:"✔ سسٹم لیول لاگو"
+ },
+ fr:{
+  audioStatusTitle:"📡 État de l'audio",audioStatusLabel:"État",audioNativeOnly:"Disponible dans la version Android",audioRefreshOk:"✔ État audio actualisé",audioRefreshErr:"✖ Impossible de lire l'état audio",audioStatusLine:"État : {0}",audioNativeOn:"Connecté au shell Android",audioWebOnly:"Mode navigateur — contrôles dans la page disponibles",audioQuiet:"Téléphone en mode silencieux — adhan coupé",audioNotQuiet:"Téléphone hors mode silencieux",audioEngine:"Moteur audio",audioReady:"Prêt",audioLocked:"Attend un premier toucher",
+  audioHint:"L'app utilise le canal « Alarm » pour l'adhan et « Notification » pour l'iqama — réglez-les séparément",volAlarm:"Volume de l'adhan (Alarm)",volNotif:"Volume des alertes (Notification)",volMedia:"Volume des médias",muteLabel:"Couper l'adhan",dndStatusLabel:"Ne pas déranger",dndChecking:"Vérification...",dndActiveLabel:"Actif (peut bloquer les alertes)",dndInactiveLabel:"Inactif",dndPermBtn:"🛡️ Demander l'exception",dndOpenBtn:"⚙️ Réglages",audioRefresh:"🔄 Actualiser",audioApplyAll:"✔ Tout appliquer",
+  audioLevelsTitle:"🔊 Niveaux sonores",audioWebVol:"Volume de l'adhan dans la page",audioIqamaVol:"Volume de l'iqama dans la page",audioRemVol:"Volume du rappel",audioMasterMute:"Couper tout l'audio de l'app",audioMasterMuteOn:"Coupé",audioMasterMuteOff:"Actif",
+  audioPreviewTitle:"🧪 Aperçu rapide",audioPreviewAdhan:"▶ Adhan",audioPreviewIqama:"▶ Iqama",audioPreviewBell:"▶ Cloche",audioPreviewGen:"▶ Son généré",audioPreviewRem:"▶ Rappel",audioStop:"■ Arrêter",audioPreviewDone:"✔ Aperçu joué",audioBlocked:"Audio coupé ou téléphone en mode silencieux — réactivez d'abord",
+  audioPresetsTitle:"🕌 Réglages par prière",audioPresetHint:"Laissez « Réglage global » pour utiliser les commandes ci-dessus, ou personnalisez chaque prière.",audioPresetPrayer:"Prière",audioPresetSound:"Son",audioPresetVol:"Volume %",audioPresetMode:"Mode",audioPresetIqama:"Son d'iqama",audioPresetIqVol:"Volume iqama %",audioPresetReset:"↺",audioInherit:"Réglage global",audioResetPreset:"↺ Retour au réglage global",
+  audioFadeTitle:"🌊 Fondu audio",audioFadeToggle:"Fondu à l'ouverture et à la fin",audioFadeSec:"Durée du fondu (secondes)",audioFadeHint:"Fonctionne avec les fichiers et les sons générés dans la page.",
+  audioFilesTitle:"🎵 Fichiers audio personnalisés",audioFileAdhan:"Adhan",audioFileIqama:"Iqama",audioFileReminder:"Rappel",audioFileChoose:"Choisir un fichier",audioFileRemove:"Retirer",audioFileNone:"Aucun fichier",audioFileLoaded:"Fichier chargé",audioFileTooBig:"Fichier supérieur à 2 Mo — choisissez-en un plus petit",audioSaved:"✔ Réglages audio enregistrés",audioApplied:"✔ Niveaux système appliqués"
+ },
+ tr:{
+  audioStatusTitle:"📡 Ses durumu",audioStatusLabel:"Durum",audioNativeOnly:"Android sürümünde kullanılabilir",audioRefreshOk:"✔ Ses durumu güncellendi",audioRefreshErr:"✖ Ses durumu okunamadı",audioStatusLine:"Durum: {0}",audioNativeOn:"Android kabuğuna bağlı",audioWebOnly:"Tarayıcı modu — sayfa içi kontroller kullanılabilir",audioQuiet:"Telefon sessiz modda — ezan kapalı",audioNotQuiet:"Telefon sessiz modda değil",audioEngine:"Ses motoru",audioReady:"Hazır",audioLocked:"Tek dokunuş bekliyor",
+  audioHint:"Uygulama ezan için « Alarm », ikamet için « Notification » kanalını kullanır — ayrı ayrı ayarlayın",volAlarm:"Ezan sesi (Alarm)",volNotif:"Uyarı sesi (Notification)",volMedia:"Medya sesi",muteLabel:"Ezanı kapat",dndStatusLabel:"Rahatsız etmeyin",dndChecking:"Kontrol ediliyor...",dndActiveLabel:"Açık (uyarıları engelleyebilir)",dndInactiveLabel:"Kapalı",dndPermBtn:"🛡️ İstisna iste",dndOpenBtn:"⚙️ Ayarlar",audioRefresh:"🔄 Yenile",audioApplyAll:"✔ Tümünü uygula",
+  audioLevelsTitle:"🔊 Ses seviyeleri",audioWebVol:"Sayfa içi ezan sesi",audioIqamaVol:"Sayfa içi ikamet sesi",audioRemVol:"Hatırlatma sesi",audioMasterMute:"Uygulamanın tüm sesini kapat",audioMasterMuteOn:"Kapalı",audioMasterMuteOff:"Açık",
+  audioPreviewTitle:"🧪 Hızlı önizleme",audioPreviewAdhan:"▶ Ezan",audioPreviewIqama:"▶ İkamet",audioPreviewBell:"▶ Zil",audioPreviewGen:"▶ Üretilen ses",audioPreviewRem:"▶ Hatırlatma",audioStop:"■ Durdur",audioPreviewDone:"✔ Önizleme çalındı",audioBlocked:"Ses kapalı veya telefon sessiz — önce açın",
+  audioPresetsTitle:"🕌 Namaza göre ayarlar",audioPresetHint:"«Genel ayar» bırakılırsa yukarıdaki ayarlar kullanılır; her namazı ayrı özelleştirebilirsiniz.",audioPresetPrayer:"Namaz",audioPresetSound:"Ses",audioPresetVol:"Ses %",audioPresetMode:"Mod",audioPresetIqama:"İkamet sesi",audioPresetIqVol:"İkamet sesi %",audioPresetReset:"↺",audioInherit:"Genel ayar",audioResetPreset:"↺ Genel ayara döndü",
+  audioFadeTitle:"🌊 Ses yumuşatma",audioFadeToggle:"Başta ve sonda yumuşat",audioFadeSec:"Süre (saniye)",audioFadeHint:"Dosyalar ve sayfada üretilen sesler için çalışır.",
+  audioFilesTitle:"🎵 Özel ses dosyaları",audioFileAdhan:"Ezan",audioFileIqama:"İkamet",audioFileReminder:"Hatırlatma",audioFileChoose:"Dosya seç",audioFileRemove:"Kaldır",audioFileNone:"Özel dosya yok",audioFileLoaded:"Dosya yüklendi",audioFileTooBig:"Dosya 2 MB'dan büyük — daha küçük bir dosya seçin",audioSaved:"✔ Ses ayarları kaydedildi",audioApplied:"✔ Sistem seviyeleri uygulandı"
+ },
+ id:{
+  audioStatusTitle:"📡 Status audio",audioStatusLabel:"Status",audioNativeOnly:"Tersedia di versi Android",audioRefreshOk:"✔ Status audio diperbarui",audioRefreshErr:"✖ Gagal membaca status audio",audioStatusLine:"Status: {0}",audioNativeOn:"Terhubung ke shell Android",audioWebOnly:"Mode browser — kontrol dalam halaman tersedia",audioQuiet:"Ponsel dalam mode senyap — adzan dibungkam",audioNotQuiet:"Ponsel tidak dalam mode senyap",audioEngine:"Mesin audio",audioReady:"Siap",audioLocked:"Menunggu satu ketukan",
+  audioHint:"Aplikasi memakai kanal « Alarm » untuk adzan dan « Notification » untuk iqama — atur masing-masing",volAlarm:"Volume adzan (Alarm)",volNotif:"Volume notifikasi (Notification)",volMedia:"Volume media",muteLabel:"Bisukan adzan",dndStatusLabel:"Jangan Ganggu",dndChecking:"Memeriksa...",dndActiveLabel:"Aktif (dapat memblokir notifikasi)",dndInactiveLabel:"Nonaktif",dndPermBtn:"🛡️ Minta pengecualian",dndOpenBtn:"⚙️ Pengaturan",audioRefresh:"🔄 Segarkan",audioApplyAll:"✔ Terapkan semua",
+  audioLevelsTitle:"🔊 Tingkat suara",audioWebVol:"Volume adzan dalam halaman",audioIqamaVol:"Volume iqama dalam halaman",audioRemVol:"Volume pengingat",audioMasterMute:"Bisukan semua audio aplikasi",audioMasterMuteOn:"Dibisukan",audioMasterMuteOff:"Terdengar",
+  audioPreviewTitle:"🧪 Pratinjau cepat",audioPreviewAdhan:"▶ Adzan",audioPreviewIqama:"▶ Iqama",audioPreviewBell:"▶ Bel",audioPreviewGen:"▶ Nada buatan",audioPreviewRem:"▶ Pengingat",audioStop:"■ Berhenti",audioPreviewDone:"✔ Pratinjau diputar",audioBlocked:"Audio dibisukan atau ponsel senyap — aktifkan dulu",
+  audioPresetsTitle:"🕌 Pengaturan per shalat",audioPresetHint:"Biarkan «Gunakan pengaturan umum» untuk memakai kontrol di atas, atau sesuaikan tiap shalat.",audioPresetPrayer:"Shalat",audioPresetSound:"Suara",audioPresetVol:"Volume %",audioPresetMode:"Mode",audioPresetIqama:"Suara iqama",audioPresetIqVol:"Volume iqama %",audioPresetReset:"↺",audioInherit:"Gunakan pengaturan umum",audioResetPreset:"↺ Kembali ke pengaturan umum",
+  audioFadeTitle:"🌊 Fade audio",audioFadeToggle:"Fade saat awal dan akhir",audioFadeSec:"Durasi fade (detik)",audioFadeHint:"Bekerja untuk berkas dan nada buatan dalam halaman.",
+  audioFilesTitle:"🎵 Berkas audio kustom",audioFileAdhan:"Adzan",audioFileIqama:"Iqama",audioFileReminder:"Pengingat",audioFileChoose:"Pilih berkas",audioFileRemove:"Hapus",audioFileNone:"Tidak ada berkas kustom",audioFileLoaded:"Berkas dimuat",audioFileTooBig:"Berkas lebih dari 2 MB — pilih yang lebih kecil",audioSaved:"✔ Pengaturan audio disimpan",audioApplied:"✔ Tingkat sistem diterapkan"
+ }
+};
+Object.keys(AUDIO_I18N).forEach(k=>{I18N[k]=Object.assign({},I18N[k]||{},AUDIO_I18N[k])});
 const PRAYER_NAMES={
   ar:{Fajr:"الفجر",Dhuhr:"الظهر",Asr:"العصر",Maghrib:"المغرب",Isha:"العشاء"},
   en:{Fajr:"Fajr",Dhuhr:"Dhuhr",Asr:"Asr",Maghrib:"Maghrib",Isha:"Isha"},
@@ -978,6 +1033,8 @@ function setLang(l){
   lang=l;
   try{localStorage.setItem(LANG_KEY,l)}catch(e){}
   applyLang();
+  try{renderAudioPresets()}catch(e){}
+  try{applyAudioUI(null)}catch(e){}
   renderAzkar();
   renderDailyTip();
   renderGreet(new Date());
@@ -991,6 +1048,33 @@ function setLang(l){
 
 let audioCtx=null,masterGain=null;
 const soundTimeouts=[];
+const fadeTimers=[];
+function clampPct(v,fallback){
+  const n=parseInt(v,10);
+  return Number.isFinite(n)?Math.max(0,Math.min(100,n)):(fallback||0);
+}
+function fadeSeconds(){
+  if(!AUDIO_SAVED||AUDIO_SAVED.fadeOn===false)return 0;
+  const v=parseFloat(AUDIO_SAVED.fadeSec);
+  return Number.isFinite(v)?Math.max(0,Math.min(5,v)):0;
+}
+function clearFadeTimers(){fadeTimers.splice(0).forEach(clearInterval)}
+function fadeElement(a,to,sec,done){
+  if(!a)return;
+  const from=typeof a.volume==="number"?a.volume:1;
+  const ms=Math.max(30,sec*1000);
+  const start=Date.now();
+  const id=setInterval(()=>{
+    const p=Math.min(1,(Date.now()-start)/ms);
+    try{a.volume=Math.max(0,Math.min(1,from+(to-from)*p))}catch(e){}
+    if(p>=1){
+      clearInterval(id);
+      const idx=fadeTimers.indexOf(id);if(idx>=0)fadeTimers.splice(idx,1);
+      try{done&&done()}catch(e){}
+    }
+  },30);
+  fadeTimers.push(id);
+}
 
 const firedEvents=new Set();
 const firedLead=new Set();
@@ -1017,22 +1101,40 @@ function ensureAudio(){
   return audioCtx;
 }
 function resetSound(){
-  if(audioCtx&&masterGain){try{masterGain.gain.cancelScheduledValues(audioCtx.currentTime);masterGain.gain.setValueAtTime(1,audioCtx.currentTime)}catch(e){}}
+  if(audioCtx&&masterGain){try{
+    const now=audioCtx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    const sec=fadeSeconds();
+    if(sec>0){masterGain.gain.setValueAtTime(0.0001,now);masterGain.gain.linearRampToValueAtTime(1,now+sec)}
+    else masterGain.gain.setValueAtTime(1,now);
+  }catch(e){}}
 }
-function stopAllSound(){
+function stopAllSound(immediate){
   soundTimeouts.splice(0).forEach(clearTimeout);
-  if(srihiAudio){try{srihiAudio.pause()}catch(e){}}
-  if(iqamaAudio){try{iqamaAudio.pause()}catch(e){}}
-  if(customAudio){try{customAudio.pause()}catch(e){}}
-  if(audioCtx&&masterGain){try{masterGain.gain.cancelScheduledValues(audioCtx.currentTime);masterGain.gain.setTargetAtTime(0.0001,audioCtx.currentTime,0.03)}catch(e){}}
+  clearFadeTimers();
+  const list=[srihiAudio,iqamaAudio,customAudio,customIqamaAudio,customReminderAudio];
+  const sec=(immediate===false)?fadeSeconds():0;
+  if(sec>0){
+    list.forEach(a=>{if(a&&!a.paused)fadeElement(a,0,sec,()=>{try{a.pause();a.currentTime=0}catch(e){}})});
+    if(audioCtx&&masterGain){try{
+      const now=audioCtx.currentTime;
+      masterGain.gain.cancelScheduledValues(now);
+      masterGain.gain.setValueAtTime(Math.max(0.0001,masterGain.gain.value),now);
+      masterGain.gain.linearRampToValueAtTime(0.0001,now+sec);
+    }catch(e){}}
+  }else{
+    list.forEach(a=>{if(a){try{a.pause()}catch(e){}}});
+    if(audioCtx&&masterGain){try{masterGain.gain.cancelScheduledValues(audioCtx.currentTime);masterGain.gain.setTargetAtTime(0.0001,audioCtx.currentTime,0.03)}catch(e){}}
+  }
 }
 function tone(ctx,f0,f1,dur,when,vol){
   const o=ctx.createOscillator(),g=ctx.createGain();
+  const level=Math.max(0.0001,Math.min(1,Number(vol)||0));
   o.type="sine";
   o.frequency.setValueAtTime(f0,when);
   o.frequency.exponentialRampToValueAtTime(f1,when+dur);
   g.gain.setValueAtTime(0.0001,when);
-  g.gain.exponentialRampToValueAtTime(vol,when+0.03);
+  g.gain.exponentialRampToValueAtTime(level,when+0.03);
   g.gain.exponentialRampToValueAtTime(0.0001,when+dur);
   o.connect(g);g.connect(masterGain||ctx.destination);
   o.start(when);o.stop(when+dur+0.05);
@@ -1055,13 +1157,15 @@ let srihiAudio=null;
 const IQAMA_URL="اقامة.mp3";
 let iqamaAudio=null;
 let customAudio=null;
+let customIqamaAudio=null;
+let customReminderAudio=null;
 const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)&&!window.MSStream;
 let audioUnlocked=false;
 function unlockAudio(){
   if(audioUnlocked)return;
   audioUnlocked=true;
   try{const ctx=ensureAudio();if(ctx&&ctx.state==="suspended")ctx.resume()}catch(e){}
-  for(const a of [srihiAudio,iqamaAudio,customAudio]){
+  for(const a of [srihiAudio,iqamaAudio,customAudio,customIqamaAudio,customReminderAudio]){
     if(!a)continue;
     const v=a.volume;
     try{a.volume=0;a.currentTime=0;const p=a.play();if(p&&p.then)p.then(()=>{a.pause();a.currentTime=0;a.volume=v}).catch(()=>{a.volume=v})}catch(e){a.volume=v}
@@ -1072,6 +1176,8 @@ try{
   srihiAudio=new Audio(SRIHI_URL);srihiAudio.preload="auto";srihiAudio.load();
   iqamaAudio=new Audio(IQAMA_URL);iqamaAudio.preload="auto";iqamaAudio.load();
   customAudio=new Audio();customAudio.preload="auto";
+  customIqamaAudio=new Audio();customIqamaAudio.preload="auto";
+  customReminderAudio=new Audio();customReminderAudio.preload="auto";
 }catch(e){}
 document.addEventListener("pointerdown",unlockAudio);
 document.addEventListener("keydown",unlockAudio);
@@ -1080,12 +1186,17 @@ function playFileAudio(which,vol){
   try{
     let a;
     if(which==="iqama")a=iqamaAudio;
+    else if(which==="iqamaCustom")a=customIqamaAudio;
+    else if(which==="reminder")a=customReminderAudio;
     else if(which==="custom")a=customAudio;
     else a=srihiAudio;
     if(!a)return;
-    a.volume=Math.max(0,Math.min(1,vol));
+    const target=Math.max(0,Math.min(1,vol));
+    const sec=fadeSeconds();
+    a.volume=sec>0?0.0001:target;
     a.currentTime=0;
     const p=a.play();
+    if(sec>0)fadeElement(a,target,sec);
     if(p&&p.catch)p.catch(()=>{
       if(isIOS&&!audioUnlocked){const h=$("iosHint");if(h)h.classList.remove("hidden")}
     });
@@ -1094,14 +1205,31 @@ function playFileAudio(which,vol){
 function playSrihi(vol){playFileAudio("srihi",vol)}
 function playIqama(vol){playFileAudio("iqama",vol)}
 function playCustom(vol){playFileAudio("custom",vol)}
-function playIqamaSound(vol){
-  if(cfg.iqamaSound==="bell")playBell(vol);
-  else if(cfg.iqamaSound==="gen")playGen1(vol);
+function webAudioBlocked(){
+  if(!AUDIO_SAVED)return false;
+  return !!(AUDIO_SAVED.masterMute||AUDIO_SAVED.mute||AUDIO_SAVED.alarmMuted||AUDIO_SAVED.quiet);
+}
+function iqamaVolumeFor(key){
+  const pre=key?presetFor(key):{};
+  if(pre.iqamaVolume!==undefined&&pre.iqamaVolume!==null&&pre.iqamaVolume!=="")
+    return clampPct(pre.iqamaVolume,0)/100;
+  return clampPct(AUDIO_SAVED.iqama,Math.round(VOL*100))/100;
+}
+function playIqamaSound(key){
+  if(webAudioBlocked())return;
+  resetSound(); // stopAllSound() يخفض masterGain — يجب استعادته قبل أي نغمة Web Audio
+  const vol=iqamaVolumeFor(key);
+  const pre=key?presetFor(key):{};
+  const choice=pre.iqamaSound||cfg.iqamaSound||"file";
+  if(choice==="custom")playFileAudio("iqamaCustom",vol);
+  else if(choice==="bell")playBell(vol);
+  else if(choice==="gen")playGen1(vol);
   else playIqama(vol);
 }
 function playSound(type,vol){
+  if(webAudioBlocked())return;
   resetSound();
-  if(type==="srihi")playSrihi(vol);
+  if(type==="srihi"||type==="file")playSrihi(vol);
   else if(type==="iqama")playIqama(vol);
   else if(type==="bell")playBell(vol);
   else if(type==="custom")playCustom(vol);
@@ -1111,7 +1239,11 @@ function playSound(type,vol){
 /* ======================== دالة تشغيل صوت التذكير ======================== */
 function playReminderSound(vol) {
   if(REMINDER&&REMINDER.sound===false)return;
-  playBell(vol || 0.6);
+  if(AUDIO_SAVED&&(AUDIO_SAVED.masterMute||AUDIO_SAVED.quiet))return;
+  resetSound(); // نفس سبب الإقامة: تأكد من أن masterGain ليس مكتوماً بعد إيقاف سابق
+  const v=(AUDIO_SAVED&&AUDIO_SAVED.reminder!=null)?clampPct(AUDIO_SAVED.reminder,60)/100:(vol||0.6);
+  if(customReminderAudio&&customReminderAudio.src)playFileAudio("reminder",v);
+  else playBell(v);
 }
 
 /* ======================== دوال التذكير ======================== */
@@ -2254,16 +2386,17 @@ function adhanModeFor(key){
 }
 let adhanStopTimer=null;
 function playAdhanFor(key){
-  const mode=adhanModeFor(key);
-  if(mode==="silent")return;
+  const pre=presetFor(key);
+  const mode=pre.mode||adhanModeFor(key);
+  if(mode==="silent"||webAudioBlocked())return;
   clearTimeout(adhanStopTimer);
-  playSound(cfg.soundType,VOL);
-  const ms=mode==="short60"?60000:(mode==="short90"?90000:0);
-  if(ms){
-    adhanStopTimer=setTimeout(()=>{
-      try{if(srihiAudio)srihiAudio.pause();if(customAudio)customAudio.pause()}catch(e){}
-    },ms);
-  }
+  const sound=pre.sound||cfg.soundType;
+  const hasVol=pre.volume!==undefined&&pre.volume!==null&&pre.volume!=="";
+  const vol=hasVol?clampPct(pre.volume)/100:VOL;
+  playSound(sound,vol);
+  const ms=mode==="short60"?60000:(mode==="short90"?90000:
+    (EXTRA.silentPrayer?(parseInt(EXTRA.silentDuration)||15)*60000:0));
+  if(ms)adhanStopTimer=setTimeout(()=>stopAllSound(false),ms);
 }
 function triggerSilentAtPrayer(key){
   if(!EXTRA.silentPrayer)return;
@@ -2285,7 +2418,7 @@ function checkAlerts(ds,events,now){
         firedEvents.add(id);
         const isIqama=ev.type==="iqama";
         if(cfg.sound){
-          if(isIqama)playIqamaSound(VOL);
+          if(isIqama)playIqamaSound(ev.key);
           else playAdhanFor(ev.key);
         }
         showAlert(
@@ -2311,7 +2444,7 @@ function checkAlerts(ds,events,now){
       const id=ds+ev.label+"-lead";
       if(!firedLead.has(id)){
         firedLead.add(id);
-        if(cfg.sound)playIqamaSound(VOL);
+        if(cfg.sound)playIqamaSound(ev.key);
         showAlert(T("alertLead",ev.prayer,cfg.iqamaLead,ev.time),"","");
         if(EXTRA.webNotify)notifyWeb(T("webNotifyLead",ev.prayer,cfg.iqamaLead),T("iqamaOf",ev.prayer)+" · "+ev.time,"lead-"+ds+"-"+ev.key);
       }
@@ -2846,61 +2979,227 @@ function _bindNotif(){
 }
 
 /* ============================= التحكم الصوتي و DND ============================= */
-let AUDIO_SAVED={alarm:80,notif:70,media:60,mute:false};
+const AUDIO_DEFAULT={alarm:80,notif:70,media:60,mute:false,masterMute:false,
+  web:70,iqama:70,reminder:60,fadeOn:true,fadeSec:1.2,presets:{},custom:{},quiet:false,alarmMuted:false};
+let AUDIO_SAVED=Object.assign({},AUDIO_DEFAULT);
 function loadAudioPrefs(){
-  try{const s=localStorage.getItem("prayerApp_v3_audio");if(s)AUDIO_SAVED=JSON.parse(s)}catch(e){}
+  let s={};
+  try{s=JSON.parse(localStorage.getItem("prayerApp_v3_audio")||"{}")||{}}catch(e){}
+  AUDIO_SAVED=Object.assign({},AUDIO_DEFAULT,s);
+  AUDIO_SAVED.alarm=clampPct(AUDIO_SAVED.alarm,80);
+  AUDIO_SAVED.notif=clampPct(AUDIO_SAVED.notif,70);
+  AUDIO_SAVED.media=clampPct(AUDIO_SAVED.media,60);
+  const legacyWeb=Math.round((Number.isFinite(VOL)?VOL:0.7)*100);
+  AUDIO_SAVED.web=clampPct(s.web!=null?s.web:legacyWeb,legacyWeb);
+  AUDIO_SAVED.iqama=clampPct(AUDIO_SAVED.iqama,AUDIO_SAVED.web);
+  AUDIO_SAVED.reminder=clampPct(AUDIO_SAVED.reminder,60);
+  AUDIO_SAVED.fadeSec=Number.isFinite(parseFloat(AUDIO_SAVED.fadeSec))?Math.max(0,Math.min(5,parseFloat(AUDIO_SAVED.fadeSec))):1.2;
+  AUDIO_SAVED.presets=(s.presets&&typeof s.presets==="object"&&!Array.isArray(s.presets))?s.presets:{};
+  AUDIO_SAVED.custom=(s.custom&&typeof s.custom==="object"&&!Array.isArray(s.custom))?s.custom:{};
+  AUDIO_SAVED.quiet=false;AUDIO_SAVED.alarmMuted=false;
+  VOL=AUDIO_SAVED.web/100;
 }
 function saveAudioPrefs(){
-  try{localStorage.setItem("prayerApp_v3_audio",JSON.stringify(AUDIO_SAVED))}catch(e){}
+  try{
+    const data=Object.assign({},AUDIO_SAVED);
+    delete data.quiet;delete data.alarmMuted; // حالة اللحظة لا تُحفظ كإعداد دائم
+    localStorage.setItem("prayerApp_v3_audio",JSON.stringify(data));
+  }catch(e){}
+}
+function presetFor(key){return (AUDIO_SAVED.presets&&AUDIO_SAVED.presets[key])||{}}
+function ensurePreset(key){
+  if(!AUDIO_SAVED.presets)AUDIO_SAVED.presets={};
+  if(!AUDIO_SAVED.presets[key])AUDIO_SAVED.presets[key]={};
+  return AUDIO_SAVED.presets[key];
+}
+function presetOptions(current,inherit,items){
+  let h='<option value="">'+inherit+'</option>';
+  for(const [v,label] of items)h+='<option value="'+v+'"'+(current===v?" selected":"")+'>'+label+'</option>';
+  return h;
+}
+function renderAudioPresets(){
+  const box=$("audioPresetRows");if(!box)return;
+  const sounds=[["srihi","السريحي"],["bell",T("audioPreviewBell").replace("▶ ","")],
+    ["gen",T("audioPreviewGen").replace("▶ ","")],["file",T("audioFileChoose")],["custom",T("audioFileLoaded")]];
+  const modes=[["full",T("fullAdhan")],["short60",T("shortAdhan")],["short90",T("shortAdhan90")],["silent",T("silentAdhan")]];
+  box.innerHTML=PRAYER_DEFS.map(d=>{
+    const p=presetFor(d.key);
+    const num=(field,ph)=>'<input type="number" data-ap="'+field+'" min="0" max="100" value="'+
+      (p[field]!=null?clampPct(p[field],""):"")+'" placeholder="'+ph+'" aria-label="'+T("audioPresetVol")+'">';
+    return '<div class="ap-row" data-key="'+d.key+'">'
+      +'<b>'+(d.icon||"🕌")+' '+PN(d.key)+'</b>'
+      +'<select data-ap="sound" aria-label="'+T("audioPresetSound")+'">'+presetOptions(p.sound,T("audioInherit"),sounds)+'</select>'
+      +num("volume","—")
+      +'<select data-ap="mode" aria-label="'+T("audioPresetMode")+'">'+presetOptions(p.mode,T("audioInherit"),modes)+'</select>'
+      +'<select data-ap="iqamaSound" aria-label="'+T("audioPresetIqama")+'">'+presetOptions(p.iqamaSound,T("audioInherit"),sounds)+'</select>'
+      +num("iqamaVolume","—")
+      +'<button type="button" class="ap-reset" data-apreset="'+d.key+'" title="'+T("audioResetPreset")+'" aria-label="'+T("audioResetPreset")+'">↺</button>'
+      +'</div>';
+  }).join("");
+}
+function bindAudioPresets(){
+  const box=$("audioPresetRows");if(!box)return;
+  box.addEventListener("change",e=>{
+    const row=e.target.closest(".ap-row");if(!row)return;
+    const field=e.target.getAttribute("data-ap");if(!field)return;
+    const key=row.getAttribute("data-key");
+    const p=ensurePreset(key);
+    const v=e.target.value;
+    if(v==="")delete p[field];
+    else if(field==="volume"||field==="iqamaVolume")p[field]=clampPct(v,0);
+    else p[field]=v;
+    if(!Object.keys(p).length)delete AUDIO_SAVED.presets[key];
+    saveAudioPrefs();toast(T("audioSaved"));
+  });
+  box.addEventListener("click",e=>{
+    const b=e.target.closest("[data-apreset]");if(!b)return;
+    delete AUDIO_SAVED.presets[b.getAttribute("data-apreset")];
+    saveAudioPrefs();renderAudioPresets();toast(T("audioResetPreset"));
+  });
+}
+function updateAudioFileNames(){
+  const set=(id,name,audio)=>{
+    const el=$(id);if(!el)return;
+    el.textContent=name||((audio&&audio.src)?T("audioFileLoaded"):T("audioFileNone"));
+  };
+  set("adhanFileName",AUDIO_SAVED.custom.adhan,customAudio);
+  set("iqamaFileName",AUDIO_SAVED.custom.iqama,customIqamaAudio);
+  set("remFileName",AUDIO_SAVED.custom.reminder,customReminderAudio);
+}
+function clearCustomAudio(which){
+  const map={adhan:[customAudio,"prayerApp_v3_customSound"],iqama:[customIqamaAudio,"prayerApp_v3_customIqama"],
+    reminder:[customReminderAudio,"prayerApp_v3_customRem"]};
+  const item=map[which];if(!item)return;
+  const [audio,key]=item;
+  try{audio.pause();audio.removeAttribute("src");audio.load()}catch(e){}
+  try{localStorage.removeItem(key)}catch(e){}
+  AUDIO_SAVED.custom[which]="";
+  if(which==="adhan"&&cfg.soundType==="custom")cfg.soundType="srihi";
+  if(which==="iqama"&&cfg.iqamaSound==="custom")cfg.iqamaSound="file";
+  const sel=$(which==="adhan"?"adhanSoundSel":"iqamaSoundSel");
+  if(sel)sel.value=which==="adhan"?cfg.soundType:cfg.iqamaSound;
+  if(which==="adhan"||which==="iqama"){
+    const field=which==="adhan"?"sound":"iqamaSound";
+    Object.keys(AUDIO_SAVED.presets||{}).forEach(k=>{
+      if(AUDIO_SAVED.presets[k]&&AUDIO_SAVED.presets[k][field]==="custom")
+        delete AUDIO_SAVED.presets[k][field];
+    });
+    renderAudioPresets();
+  }
+  saveAudioPrefs();updateAudioFileNames();toast(T("audioSaved"));
+}
+function bindAudioFiles(){
+  const bind=(inputId,which)=>{
+    const input=$(inputId);if(!input)return;
+    input.addEventListener("change",()=>{
+      const f=input.files&&input.files[0];if(!f)return;
+      if(f.size>2*1024*1024){toast(T("audioFileTooBig"),"err");input.value="";return}
+      const r=new FileReader();
+      r.onload=()=>setCustomAudio(which,r.result,f.name);
+      r.readAsDataURL(f);
+    });
+  };
+  bind("adhanFileInput","adhan");bind("iqamaFileInput","iqama");bind("remFileInput","reminder");
+  [["adhanFileClear","adhan"],["iqamaFileClear","iqama"],["remFileClear","reminder"]].forEach(([id,which])=>{
+    const b=$(id);if(b)b.addEventListener("click",()=>clearCustomAudio(which));
+  });
+}
+function previewAudio(kind){
+  if(webAudioBlocked()){toast(T("audioBlocked"),"err");return}
+  unlockAudio();stopAllSound();
+  if(kind==="iqama")playIqamaSound();
+  else if(kind==="rem")playReminderSound(AUDIO_SAVED.reminder/100);
+  else if(kind==="bell")playSound("bell",VOL);
+  else if(kind==="gen")playSound("gen",VOL);
+  else playSound(cfg.soundType,VOL);
+  toast(T("audioPreviewDone"));
 }
 function applyAudioUI(s){
   if(!s)s={};
-  const av=$("volAlarm"),nv=$("volNotif"),mv=$("volMedia"),mt=$("muteAlarm"),ms=$("muteStatus"),ds=$("dndStatus");
-  if(av){av.value=s.alarmVolume!=null?s.alarmVolume:AUDIO_SAVED.alarm;$("volAlarmVal").textContent=av.value}
-  if(nv){nv.value=s.notificationVolume!=null?s.notificationVolume:AUDIO_SAVED.notif;$("volNotifVal").textContent=nv.value}
-  if(mv){mv.value=s.mediaVolume!=null?s.mediaVolume:AUDIO_SAVED.media;$("volMediaVal").textContent=mv.value}
-  if(mt){mt.classList.toggle("on",s.alarmMuted===true);ms.textContent=s.alarmMuted?T("muteStatusOn"):T("muteStatusOff")}
+  const setVal=(id,val)=>{
+    const el=$(id);if(!el)return;
+    el.value=val;
+    const out=$(id+"Val");if(out)out.textContent=val;
+  };
+  setVal("volAlarm",s.alarmVolume!=null?s.alarmVolume:AUDIO_SAVED.alarm);
+  setVal("volNotif",s.notificationVolume!=null?s.notificationVolume:AUDIO_SAVED.notif);
+  setVal("volMedia",s.mediaVolume!=null?s.mediaVolume:AUDIO_SAVED.media);
+  const vc=$("volControl");if(vc)vc.value=AUDIO_SAVED.web;
+  const vi=$("volIqama");if(vi)vi.value=AUDIO_SAVED.iqama;
+  const vr=$("volReminder");if(vr)vr.value=AUDIO_SAVED.reminder;
+  const mt=$("muteAlarm"),ms=$("muteStatus");
+  if(mt){mt.classList.toggle("on",!!AUDIO_SAVED.mute);mt.setAttribute("aria-checked",AUDIO_SAVED.mute?"true":"false")}
+  if(ms)ms.textContent=AUDIO_SAVED.mute?T("muteStatusOn"):T("muteStatusOff");
+  const mm=$("masterMute"),mms=$("masterMuteStatus");
+  if(mm){mm.classList.toggle("on",!!AUDIO_SAVED.masterMute);mm.setAttribute("aria-checked",AUDIO_SAVED.masterMute?"true":"false")}
+  if(mms)mms.textContent=AUDIO_SAVED.masterMute?T("audioMasterMuteOn"):T("audioMasterMuteOff");
+  const ft=$("fadeToggle");
+  if(ft){ft.classList.toggle("on",AUDIO_SAVED.fadeOn!==false);ft.setAttribute("aria-checked",AUDIO_SAVED.fadeOn!==false?"true":"false")}
+  const fsec=$("fadeSec");if(fsec)fsec.value=AUDIO_SAVED.fadeSec;
+  const ds=$("dndStatus");
   if(ds){
-    if(!window.AndroidUpdater)ds.textContent="متاح في نسخة الأندرويد";
-    else if(s.dndActive===true)ds.textContent=T("dndActiveLabel");
+    if(!window.AndroidUpdater)ds.textContent=T("audioNativeOnly");
+    else if(AUDIO_SAVED.quiet)ds.textContent=T("dndActiveLabel");
     else ds.textContent=T("dndInactiveLabel");
   }
+  const status=$("audioStatusLine");
+  if(status){
+    const base=window.AndroidUpdater?T("audioNativeOn"):T("audioWebOnly");
+    status.textContent=base+" · "+(AUDIO_SAVED.quiet?T("audioQuiet"):T("audioNotQuiet"));
+  }
+  const eng=$("audioEngine");
+  if(eng)eng.textContent=audioCtx?T("audioReady"):T("audioLocked");
+  updateAudioFileNames();
 }
 async function refreshAudioStatus(){
   const br=window.AndroidUpdater;if(!br){applyAudioUI(null);return}
   try{
     const txt=await br.getAudioStatus();
     const s=JSON.parse(txt||"{}");
-    applyAudioUI(s);
-    AUDIO_SAVED={alarm:s.alarmVolume||80,notif:s.notificationVolume||70,media:s.mediaVolume||60,mute:s.alarmMuted||false};
-    saveAudioPrefs();
-    toast("✔ تم تحديث حالة الصوت");
-  }catch(e){toast("✖ تعذّر قراءة حالة الصوت","err")}
+    if(s.alarmVolume!=null)AUDIO_SAVED.alarm=clampPct(s.alarmVolume,AUDIO_SAVED.alarm);
+    if(s.notificationVolume!=null)AUDIO_SAVED.notif=clampPct(s.notificationVolume,AUDIO_SAVED.notif);
+    if(s.mediaVolume!=null)AUDIO_SAVED.media=clampPct(s.mediaVolume,AUDIO_SAVED.media);
+    AUDIO_SAVED.alarmMuted=!!s.alarmMuted;
+    AUDIO_SAVED.quiet=!!(s.dndActive||s.quiet||s.alarmMuted);
+    saveAudioPrefs();applyAudioUI(s);
+    toast(T("audioRefreshOk"));
+  }catch(e){toast(T("audioRefreshErr"),"err")}
 }
 /* يستدعيه غلاف أندرويد بعد ضغط أزرار الصوت الفيزيائية — يحدّث الواجهة بلا إشعار منبثق. */
 function syncAudioFromNative(){
   const br=window.AndroidUpdater;if(!br)return;
   try{
     const s=JSON.parse(br.getAudioStatus()||"{}");
-    applyAudioUI(s);
-    if(s.alarmVolume!=null)AUDIO_SAVED.alarm=s.alarmVolume;
-    if(s.notificationVolume!=null)AUDIO_SAVED.notif=s.notificationVolume;
-    if(s.mediaVolume!=null)AUDIO_SAVED.media=s.mediaVolume;
-    saveAudioPrefs();
+    if(s.alarmVolume!=null)AUDIO_SAVED.alarm=clampPct(s.alarmVolume,AUDIO_SAVED.alarm);
+    if(s.notificationVolume!=null)AUDIO_SAVED.notif=clampPct(s.notificationVolume,AUDIO_SAVED.notif);
+    if(s.mediaVolume!=null)AUDIO_SAVED.media=clampPct(s.mediaVolume,AUDIO_SAVED.media);
+    AUDIO_SAVED.alarmMuted=!!s.alarmMuted;
+    AUDIO_SAVED.quiet=!!(s.dndActive||s.quiet||s.alarmMuted);
+    saveAudioPrefs();applyAudioUI(s);
   }catch(e){}
 }
 function applyAudioSettings(){
-  const br=window.AndroidUpdater;if(!br){toast("✖ ميزة الصوت متاحة في نسخة Android فقط","err");return}
-  AUDIO_SAVED.alarm=parseInt($("volAlarm").value)||80;
-  AUDIO_SAVED.notif=parseInt($("volNotif").value)||70;
-  AUDIO_SAVED.media=parseInt($("volMedia").value)||60;
+  const br=window.AndroidUpdater;
+  AUDIO_SAVED.alarm=clampPct($("volAlarm").value,80);
+  AUDIO_SAVED.notif=clampPct($("volNotif").value,70);
+  AUDIO_SAVED.media=clampPct($("volMedia").value,60);
   AUDIO_SAVED.mute=$("muteAlarm").classList.contains("on");
-  br.setStreamVolume("alarm",AUDIO_SAVED.alarm);
-  br.setStreamVolume("notification",AUDIO_SAVED.notif);
-  br.setStreamVolume("media",AUDIO_SAVED.media);
-  br.setMute(AUDIO_SAVED.mute);
-  saveAudioPrefs();
-  toast("✔ تم تطبيق إعدادات الصوت");
+  AUDIO_SAVED.masterMute=$("masterMute").classList.contains("on");
+  AUDIO_SAVED.web=clampPct($("volControl").value,70);
+  AUDIO_SAVED.iqama=clampPct($("volIqama").value,AUDIO_SAVED.web);
+  AUDIO_SAVED.reminder=clampPct($("volReminder").value,60);
+  AUDIO_SAVED.fadeOn=$("fadeToggle").classList.contains("on");
+  AUDIO_SAVED.fadeSec=Math.max(0,Math.min(5,parseFloat($("fadeSec").value)||0));
+  VOL=AUDIO_SAVED.web/100;
+  if(br){
+    br.setStreamVolume("alarm",AUDIO_SAVED.alarm);
+    br.setStreamVolume("notification",AUDIO_SAVED.notif);
+    br.setStreamVolume("media",AUDIO_SAVED.media);
+    br.setMute(AUDIO_SAVED.mute);
+  }
+  if(AUDIO_SAVED.masterMute)stopAllSound();
+  saveAudioPrefs();applyAudioUI(null);
+  toast(br?T("audioApplied"):T("audioSaved"));
 }
 function _bindAudio(){
   loadAudioPrefs();
@@ -2908,11 +3207,45 @@ function _bindAudio(){
   ["volAlarm","volNotif","volMedia"].forEach(id=>{
     const el=$(id);if(el){el.addEventListener("input",function(){const v=$(id+"Val");if(v)v.textContent=this.value})}
   });
-  const mt=$("muteAlarm");if(mt){mt.addEventListener("click",function(){this.classList.toggle("on");const ms=$("muteStatus");if(ms)ms.textContent=this.classList.contains("on")?T("muteStatusOn"):T("muteStatusOff")})}
+  [["volIqama","iqama"],["volReminder","reminder"]].forEach(([id,key])=>{
+    const el=$(id);if(el)el.addEventListener("change",()=>{AUDIO_SAVED[key]=clampPct(el.value,AUDIO_SAVED[key]);saveAudioPrefs()});
+  });
+  const fsec=$("fadeSec");
+  if(fsec)fsec.addEventListener("change",()=>{
+    AUDIO_SAVED.fadeSec=Math.max(0,Math.min(5,parseFloat(fsec.value)||0));saveAudioPrefs();
+  });
+  const mt=$("muteAlarm");
+  if(mt)mt.addEventListener("click",()=>{
+    AUDIO_SAVED.mute=!AUDIO_SAVED.mute;
+    mt.classList.toggle("on",AUDIO_SAVED.mute);mt.setAttribute("aria-checked",AUDIO_SAVED.mute?"true":"false");
+    const ms=$("muteStatus");if(ms)ms.textContent=AUDIO_SAVED.mute?T("muteStatusOn"):T("muteStatusOff");
+    if(AUDIO_SAVED.mute)stopAllSound();saveAudioPrefs();
+  });
+  const mm=$("masterMute");
+  if(mm)mm.addEventListener("click",()=>{
+    AUDIO_SAVED.masterMute=!AUDIO_SAVED.masterMute;
+    mm.classList.toggle("on",AUDIO_SAVED.masterMute);mm.setAttribute("aria-checked",AUDIO_SAVED.masterMute?"true":"false");
+    const ms=$("masterMuteStatus");if(ms)ms.textContent=AUDIO_SAVED.masterMute?T("audioMasterMuteOn"):T("audioMasterMuteOff");
+    if(AUDIO_SAVED.masterMute)stopAllSound();saveAudioPrefs();
+  });
+  const ft=$("fadeToggle");
+  if(ft)ft.addEventListener("click",()=>{
+    AUDIO_SAVED.fadeOn=AUDIO_SAVED.fadeOn===false;
+    ft.classList.toggle("on",AUDIO_SAVED.fadeOn);ft.setAttribute("aria-checked",AUDIO_SAVED.fadeOn?"true":"false");
+    saveAudioPrefs();
+  });
+  [["audioPreviewAdhan","adhan"],["audioPreviewIqama","iqama"],["audioPreviewBell","bell"],
+   ["audioPreviewGen","gen"],["audioPreviewRem","rem"]].forEach(([id,kind])=>{
+    const b=$(id);if(b)b.addEventListener("click",()=>previewAudio(kind));
+  });
+  const stop=$("audioStop");if(stop)stop.addEventListener("click",()=>{stopAllSound(false);toast(T("audioStop"))});
   const rf=$("audioRefresh");if(rf)rf.addEventListener("click",refreshAudioStatus);
   const aa=$("audioApplyAll");if(aa)aa.addEventListener("click",applyAudioSettings);
   const dp=$("dndPermBtn");if(dp)dp.addEventListener("click",function(){if(br)br.requestDndPermission()});
   const doBtn=$("dndOpenBtn");if(doBtn)doBtn.addEventListener("click",function(){if(br)br.openDndSettings()});
+  bindAudioPresets();bindAudioFiles();
+  renderAudioPresets();
+  applyAudioUI(null);
   refreshAudioStatus();
 }
 /* ====== معالج تفعيل الصلاحيات خطوة بخطوة ====== */
@@ -3094,30 +3427,32 @@ function loadSettings(){
   $("volControl").value=Math.round(VOL*100);
   $("leadMin").value=cfg.iqamaLead;
   $("adhanSoundSel").value=cfg.soundType;
-  $("adhanFileBox").style.display=cfg.soundType==="file"?"block":"none";
+  $("adhanFileBox").style.display="block";
   $("iqamaSoundSel").value=cfg.iqamaSound||"file";
   $("toggleLead").classList.toggle("on",cfg.lead);
   try{syncReminderUI()}catch(e){}
+  renderAudioPresets();
   refreshAudioStatus();
 }
 function canUseLocalFile(url){return /^data:|^blob:/.test(url)}
 function setCustomAudio(which,dataUrl,name){
   try{
-    const a=which==="adhan"?srihiAudio:(which==="iqama"?iqamaAudio:customAudio);
-    const ng=which==="adhan"?customAudio:customAudio;
-    if(!ng)return;
-    ng.src=dataUrl;ng.preload="auto";ng.load();
+    const map={adhan:[customAudio,"prayerApp_v3_customSound"],
+      iqama:[customIqamaAudio,"prayerApp_v3_customIqama"],
+      reminder:[customReminderAudio,"prayerApp_v3_customRem"]};
+    const item=map[which];if(!item||!item[0])return;
+    const [audio,key]=item;
+    audio.src=dataUrl;audio.preload="auto";audio.load();
+    localStorage.setItem(key,dataUrl);
+    AUDIO_SAVED.custom[which]=name||T("audioFileLoaded");
     if(which==="adhan"){
-      customAudio=ng; cfg.soundType="custom";
-      localStorage.setItem("prayerApp_v3_customSound",dataUrl);
-      $("adhanFileName").textContent=name;
-    } else if(which==="iqama"){
-      iqamaAudio=ng; cfg.soundType="custom";
-      localStorage.setItem("prayerApp_v3_customIqama",dataUrl);
-    } else {
-      reminderAudio=ng;
-      localStorage.setItem("prayerApp_v3_customRem",dataUrl);
+      cfg.soundType="custom";
+      const sel=$("adhanSoundSel");if(sel)sel.value="custom";
+    }else if(which==="iqama"){
+      cfg.iqamaSound="custom";
+      const sel=$("iqamaSoundSel");if(sel)sel.value="custom";
     }
+    saveAudioPrefs();updateAudioFileNames();
     toast("✔ تم تحميل النغمة: "+name);
   }catch(e){toast("✖ تعذّر تحميل النغمة","err")}
 }
@@ -3278,8 +3613,10 @@ $("applyIqama").onclick=()=>{
 
 /* إدارة الصوت والنغمات */
 $("volControl").addEventListener("change",e=>{
-  VOL=Math.max(0,Math.min(1,parseInt(e.target.value)/100));
+  AUDIO_SAVED.web=clampPct(e.target.value,AUDIO_SAVED.web);
+  VOL=AUDIO_SAVED.web/100;
   localStorage.setItem("prayerApp_v3_vol",String(VOL));
+  saveAudioPrefs();
 });
 $("leadMin").addEventListener("change",e=>{
   cfg.iqamaLead=Math.max(0,Math.min(30,parseInt(e.target.value)||7));
@@ -3299,21 +3636,9 @@ document.querySelectorAll("#remindInterval").forEach(sel=>{
     syncReminderUI();
   });
 });
-$("adhanSoundSel").addEventListener("change",e=>{
-  cfg.soundType=e.target.value;
-  $("adhanFileBox").style.display=cfg.soundType==="file"?"block":"none";
-});
-$("iqamaSoundSel").addEventListener("change",e=>{
-  cfg.iqamaSound=e.target.value;
-});
-
-/* رفع ملف الأذان */
-$("adhanFileInput").addEventListener("change",e=>{
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>setCustomAudio("adhan",r.result,f.name);
-  r.readAsDataURL(f);
-});
+$("adhanSoundSel").addEventListener("change",e=>{cfg.soundType=e.target.value});
+$("iqamaSoundSel").addEventListener("change",e=>{cfg.iqamaSound=e.target.value});
+/* رفع الملفات الصوتية ومسحها يُدار في bindAudioFiles() — مصدر واحد لكل الأنواع. */
 
 /* أزرار التنقل في الجدول */
 $("mPrev").onclick=prevMonth;
@@ -4502,6 +4827,10 @@ try{
   if(iq)IQAMA_OFFSET=JSON.parse(iq);
   const cs=localStorage.getItem("prayerApp_v3_customSound");
   if(cs){try{customAudio.src=cs;customAudio.preload="auto";customAudio.load();cfg.soundType="custom"}catch(e){}}
+  const ci=localStorage.getItem("prayerApp_v3_customIqama");
+  if(ci){try{customIqamaAudio.src=ci;customIqamaAudio.preload="auto";customIqamaAudio.load();cfg.iqamaSound="custom"}catch(e){}}
+  const cr=localStorage.getItem("prayerApp_v3_customRem");
+  if(cr){try{customReminderAudio.src=cr;customReminderAudio.preload="auto";customReminderAudio.load()}catch(e){}}
 }catch(e){}
 applyLang();
 updateLocText();
